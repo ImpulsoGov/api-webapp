@@ -1,0 +1,17 @@
+# Environments
+.env
+*.env
+*.venv
+*env
+*venv/
+*envetl/
+*ENV/
+*env.bak/
+*venv.bak/
+/env
+env/
+
+### Python ###
+__pycache__/
+/__pycache__
+/Scripts
