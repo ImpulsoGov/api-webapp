@@ -1,13 +1,10 @@
-from fastapi import APIRouter,Request
+from fastapi import APIRouter
+from typing import Optional
 from controllers import municipios
 router = APIRouter()
 
-@router.get("/suporte/municipios_id")
-async def consulta(id_sus: str):
-    res = municipios.consulta_id(id_sus)
+@router.get("/suporte/municipios/")
+async def consulta(id_sus: Optional[str] = None, nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None ):
+    res = municipios.consulta_municipio(id_sus,nome,estado_sigla,estado_nome)
     return res
 
-@router.get("/suporte/municipios")
-async def consulta(uf_municipio: str):
-    res = municipios.consulta_slug(uf_municipio)
-    return res
