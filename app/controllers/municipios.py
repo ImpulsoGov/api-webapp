@@ -1,16 +1,22 @@
 from models import db,municipios
 session = db.session
 Municipios = municipios.Municipios
+from .response_pages.municipios import html as response_municipios
+from fastapi.responses import HTMLResponse
 
-def consulta_municipio(id_sus,nome,estado_sigla,estado_nome):
-    if estado_sigla != None or nome != None:
-        if estado_sigla != None and nome != None:
-            slug = estado_sigla+'-'+nome
+def consulta_municipio(id_sus,municipio_nome,estado_sigla,estado_nome):
+    print(response_municipios)
+    if estado_sigla == None and municipio_nome == None and id_sus==None and estado_nome==None:
+        return HTMLResponse(content=response_municipios(), status_code=200)
+
+    if estado_sigla != None or municipio_nome != None:
+        if estado_sigla != None and municipio_nome != None:
+            slug = estado_sigla+'-'+municipio_nome
             query = session.query(Municipios).filter_by(slug=slug)
             res = query.all()
             return res
         else:
-            if estado_sigla != None and nome == None:
+            if estado_sigla != None and municipio_nome == None:
                 query = session.query(Municipios).with_entities(
                     Municipios.id,
                     Municipios.estado_sigla,
@@ -24,8 +30,8 @@ def consulta_municipio(id_sus,nome,estado_sigla,estado_nome):
                 ).filter_by(estado_sigla=estado_sigla.upper())
                 res = query.all()
                 return res
-            if estado_sigla == None and nome != None:
-                query = session.query(Municipios).filter_by(municipio_nome_normalizado=nome)
+            if estado_sigla == None and municipio_nome != None:
+                query = session.query(Municipios).filter_by(municipio_nome_normalizado=municipio_nome)
                 res = query.all()
                 return res
     if id_sus != None:
