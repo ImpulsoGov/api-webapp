@@ -1,11 +1,14 @@
 from fastapi import FastAPI
-from routers import hello,suporte,impulso_previne
+from routers import suporte,impulso_previne
+from pydantic import BaseModel
 app = FastAPI()
 
-app.include_router(hello.router)
 app.include_router(suporte.router)
 app.include_router(impulso_previne.router)
 
-@app.get("/")
+class Welcome(BaseModel):
+    mensagem : str
+
+@app.get("/", response_model=Welcome)
 async def main():
-    return {"message":"Olha uma nova API esta rodando :)"}
+    return {"mensagem":"Olha uma nova API esta rodando :)"}
