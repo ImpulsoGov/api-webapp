@@ -1,10 +1,10 @@
 from fastapi import APIRouter
-from typing import Optional
+from typing import Optional, List
 from controllers import indicadores
 from pydantic import BaseModel
 router = APIRouter()
 
-class Indicadores(BaseModel):
+class Indicador(BaseModel):
     id : int
     estado_sigla : str
     estado_nome : str
@@ -25,7 +25,7 @@ class Indicadores(BaseModel):
         orm_mode = True
 
 
-@router.get("/impulsoprevine/indicadores/", response_model=Indicadores)
+@router.get("/impulsoprevine/indicadores/", response_model=List[Indicador])
 async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, indicadores_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, id_sus: Optional[str] = None, municipio_nome: Optional[str] = None):
     res = indicadores.consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id)
-    return res[0]
+    return res

@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends
-from typing import Optional
-from controllers import municipios,auth
+from fastapi import APIRouter, Depends,Form
+from typing import Optional,List
+from controllers import municipios,auth,cadastro_usuarios
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter()
 
-class Municipios(BaseModel):
+class Municipio(BaseModel):
     id : int
     estado_sigla : str
     estado_nome : str
@@ -42,10 +42,10 @@ class User(BaseModel):
     full_name: Optional[str] = None
     disabled: Optional[bool] = None
 
-@router.get("/suporte/municipios/", response_model=Municipios)
-async def consulta_municipio(id_sus: Optional[str] = None, municipio_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, current_user: User =Depends(auth.get_current_user) ):
+@router.get("/suporte/municipios/", response_model=List[Municipio])
+async def consulta_municipio(id_sus: Optional[str] = None, municipio_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None):
     res = municipios.consulta_municipio(id_sus,municipio_nome,estado_sigla,estado_nome)
-    return res[0]
+    return res
 
 class Token(BaseModel):
     access_token: str
@@ -59,4 +59,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     print(form_data)
     return auth.login(form_data)
 
-    
+@router.post("/suporte/usuarios/cadastro")
+async def cadastro(
+    nome: str = Form(...),
+    mail: str = Form(...),
+    senha: str = Form(...),
+    cpf: str = Form(...)
+    ):
+    return cadastro_usuarios.cadastrar(nome,mail,senha,cpf)
+
