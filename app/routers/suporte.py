@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from controllers import municipios,auth,cadastro_usuarios
+from controllers import municipios,auth,cadastro_usuarios,recuperação_senha
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -56,8 +56,11 @@ class Token(BaseModel):
 
 @router.post("/suporte/usuarios/token", response_model=Token )
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    print(form_data)
     return auth.login(form_data)
+
+class Mensagem(BaseModel):
+    erros : Optional[List] = None
+    mensagem : Optional[str] = None
 
 @router.post("/suporte/usuarios/cadastro")
 async def cadastro(
@@ -68,3 +71,10 @@ async def cadastro(
     ):
     return cadastro_usuarios.cadastrar(nome,mail,senha,cpf)
 
+@router.post("/suporte/usuarios/solicitar-recuperacao")
+async def solicita_recuperacao(mail: str = Form(...)):
+    return recuperação_senha.solicita_recuperacao(mail)
+
+@router.post("/suporte/usuarios/alterar-senha", response_model=Mensagem)
+async def solicita_recuperacao(mail: str = Form(...),codigo: str = Form(...),senha: str = Form(...)):
+    return recuperação_senha.recuperar(mail,codigo,senha)

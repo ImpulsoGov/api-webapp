@@ -11,10 +11,7 @@ class Usuario(Base):
     nome_usuario = Column(String,nullable=False,comment='Nome Completo do Usuario')
     hash_senha = Column(String,nullable=False,comment='Hash da senha de acesso')
     mail = Column(String,nullable=False,comment='e-mail do usuario')
-    perfil = Column(Integer,nullable=True,comment='Perfil de Acesso')
     cpf = Column(String,nullable=False,comment='ID Cadastro de Pessoa Fisica')
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualização')
     __table_args__ = {'schema': 'suporte'}
-
-Base.metadata.create_all(db.engine)
