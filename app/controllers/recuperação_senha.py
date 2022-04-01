@@ -8,6 +8,11 @@ session = db.session
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
+
+env_path = os.path.dirname(os.path.realpath(__file__))+'/.env'
+load_dotenv(dotenv_path=env_path)
 
 def consulta_mail(email):
     try:
@@ -24,8 +29,8 @@ def enviar_mail(destinatario,texto):
     # Configuração
     host = 'smtp.gmail.com'
     port = 587
-    user = 'api.impulso'
-    password = 'APIimpulso2022'
+    user = os.getenv("MAIL")
+    password = os.getenv("PASSWORD")
 
     # Criando objeto
     print('Criando objeto servidor...')
