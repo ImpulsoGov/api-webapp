@@ -48,11 +48,11 @@ def get_user(mail: str):
         res = query.all()
         return res[0]
     except:
-        return NULL
+        return None
 
 def autenticar(mail: str, senha: str):
     usuario = get_user(mail)
-    if usuario==NULL or usuario.mail != mail:return 1
+    if usuario==None or usuario.mail != mail:return 1
     if not verificar_senha(senha, usuario.hash_senha):return 2
     return usuario.mail
 
