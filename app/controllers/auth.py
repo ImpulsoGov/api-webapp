@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import Depends, HTTPException, status
@@ -7,13 +6,16 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from models import db,usuarios
+import os
+from dotenv import load_dotenv
+
+env_path = os.path.dirname(os.path.realpath(__file__))+'/.env'
+load_dotenv(dotenv_path=env_path)
 
 # openssl rand -base64 32
-SECRET_KEY = "v5oY81w077SDsgs/2VLSGql/5PJ3vwrWoHJISb2zCZk="
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 class Token(BaseModel):
     access_token: str
