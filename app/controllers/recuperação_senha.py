@@ -1,9 +1,9 @@
-from models import db,recuperacao_senha,usuarios
+from app.models import db,recuperacao_senha,usuarios
 import uuid
 Recuperar = recuperacao_senha.Recuperar
 Usuario = usuarios.Usuario
-from controllers.auth import senha_hash
-from controllers.cadastro_usuarios import validar_senha
+from app.controllers.auth import senha_hash
+from app.controllers.cadastro_usuarios import validar_senha
 session = db.session
 import smtplib
 from email.mime.multipart import MIMEMultipart

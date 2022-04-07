@@ -1,6 +1,6 @@
 from xml.etree.ElementTree import Comment
 from sqlalchemy import Column, Integer, String,Boolean,DATE
-from models import db
+from app.models import db
 Base = db.Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID

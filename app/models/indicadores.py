@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from models import db
+from app.models import db
 Base = db.Base
 
 class Indicadores(Base):

@@ -1,4 +1,4 @@
-from models import db,indicadores
+from app.models import db,indicadores
 session = db.session
 Indicadores = indicadores.Indicadores
 

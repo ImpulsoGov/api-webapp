@@ -1,4 +1,4 @@
-from models import db,municipios
+from app.models import db,municipios
 session = db.session
 Municipios = municipios.Municipios
 from .response_pages.municipios import html as response_municipios
