@@ -1,4 +1,4 @@
-from models import db,usuarios
+from app.models import db,usuarios
 from passlib.context import CryptContext
 from datetime import datetime
 import uuid

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import suporte,impulso_previne
+from app.routers import suporte,impulso_previne
 from pydantic import BaseModel
 app = FastAPI()
 

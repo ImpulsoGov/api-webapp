@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from controllers import municipios,auth,cadastro_usuarios,recuperação_senha
+from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
+from app.models.usuarios import Usuario
 
 router = APIRouter()
 
@@ -62,6 +63,9 @@ class Mensagem(BaseModel):
     erros : Optional[List] = None
     mensagem : Optional[str] = None
 
+    class Config:
+        orm_mode = True
+
 @router.post("/suporte/usuarios/cadastro")
 async def cadastro(
     nome: str = Form(...),
@@ -76,5 +80,60 @@ async def solicita_recuperacao(mail: str = Form(...)):
     return recuperação_senha.solicita_recuperacao(mail)
 
 @router.post("/suporte/usuarios/alterar-senha", response_model=Mensagem)
-async def solicita_recuperacao(mail: str = Form(...),codigo: str = Form(...),senha: str = Form(...)):
+async def alterar_senha(mail: str = Form(...),codigo: str = Form(...),senha: str = Form(...)):
     return recuperação_senha.recuperar(mail,codigo,senha)
+
+class Usuarios_lista(BaseModel):
+    usuarios : Optional[List] = None
+    erros : Optional[List] = None
+
+
+@router.get("/suporte/ger_usuarios/lista-usuarios-sem-liberacao", response_model=Usuarios_lista)
+async def lista_usuarios_sem_liberacao(username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.lista_usuarios_sem_liberacao(username["perfil"],2)
+    return res
+
+@router.get("/suporte/ger_usuarios/lista-usuarios", response_model=Usuarios_lista)
+async def lista_usuarios(username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.lista_usuarios(username["perfil"],2)
+    return res
+
+class Cadastro(BaseModel):
+    erros : Optional[List] = None
+    cadastro : Optional[List] = None
+
+@router.get("/suporte/ger_usuarios/cadastro", response_model=Cadastro)
+async def dados_cadastro(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.dados_usuarios(id_cod,id,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/add-perfil", response_model=Mensagem)
+async def adicionar_perfil(perfil: int, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.add_perfil(id_cod,id_usuario,perfil,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/remove-perfil", response_model=Mensagem)
+async def remover_perfil(perfil: int, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.remove_perfil(id_cod,id_usuario,perfil,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/desativa-usuario", response_model=Mensagem)
+async def desativar_usuario(id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.desativar_usuario(id_cod,id_usuario,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/reativa-usuario", response_model=Mensagem)
+async def reativar_usuario(id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.reativar_usuario(id_cod,id_usuario,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/perfil-primeiro-acesso", response_model=Mensagem)
+async def liberar_primeiro_acesso(perfil: int, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.primeiro_acesso(id_cod,id_usuario,perfil,username["perfil"],2)
+    return res
+
+@router.post("/suporte/ger_usuarios/ativacao-primeiro-acesso", response_model=Mensagem)
+async def ativacao_inicial_usuario(codigo: str, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.primeira_ativacao(id_cod,id_usuario,codigo,username["perfil"],2)
+    return res
+
