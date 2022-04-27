@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String,Boolean
-from app.models import db
+from models import db
 Base = db.Base
 
 class Municipios(Base):

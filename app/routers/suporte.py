@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha
+from controllers import municipios,auth,cadastro_usuarios,recuperação_senha
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 

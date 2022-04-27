@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from typing import Optional, List
-from app.controllers import indicadores
+from controllers import indicadores
 from pydantic import BaseModel
 router = APIRouter()
 
