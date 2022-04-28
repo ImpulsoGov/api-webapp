@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from models import db
+from app.models import db
 Base = db.Base
 
 class Indicadores(Base):
@@ -20,4 +20,3 @@ class Indicadores(Base):
     indicadores_resultados_porcentagem = Column(Float)
     diff_numerador_para_meta = Column(Integer)
     __table_args__ = {'schema': 'impulso_previne'}
-

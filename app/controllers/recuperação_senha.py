@@ -1,9 +1,9 @@
-from models import db,recuperacao_senha,usuarios
+from app.models import db,recuperacao_senha,usuarios
 import uuid
 Recuperar = recuperacao_senha.Recuperar
 Usuario = usuarios.Usuario
-from controllers.auth import senha_hash
-from controllers.cadastro_usuarios import validar_senha
+from app.controllers.auth import senha_hash
+from app.controllers.cadastro_usuarios import validar_senha
 session = db.session
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -59,6 +59,7 @@ def enviar_mail(destinatario,texto):
     server.quit()
 
 def solicita_recuperacao(usuario_mail):
+    #if usuario_mail != username : return {"mensagem" : "Somente o proprio usuário tem privilegios para solicitar alteração de senha"}
     #gerar codigo de recuperação uuid
     codigo = str(uuid.uuid4())
     #inseir na tabela usuario_mail codigo de alteração/recuperação de senha

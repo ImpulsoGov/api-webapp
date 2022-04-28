@@ -5,9 +5,13 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from models import db,usuarios
+from requests import session
+from app.models import db,usuarios,perfil_acesso,perfil_usuario
 import os
 from dotenv import load_dotenv
+Usuarios = usuarios.Usuario
+Perfil = perfil_usuario.Perfil
+Perfil_lista = perfil_acesso.Perfil_lista 
 
 env_path = os.path.dirname(os.path.realpath(__file__))+'/.env'
 load_dotenv(dotenv_path=env_path)
@@ -15,7 +19,7 @@ load_dotenv(dotenv_path=env_path)
 # openssl rand -base64 32
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 class Token(BaseModel):
     access_token: str
@@ -44,11 +48,43 @@ def senha_hash(senha):
 
 def get_user(mail: str):
     try:
-        query = db.session.query(usuarios.Usuario).filter_by(mail=mail)
-        res = query.all()
+        res = db.session.query(usuarios.Usuario).filter_by(mail=mail).all()
         return res[0]
-    except:
+    except Exception as error:
+        db.session.rollback()
+        print({"error" : error})
         return None
+
+def get_perfil(mail:str):
+    try:
+        res = db.session.query(
+            Perfil
+        ).join(Perfil_lista
+        ).join(Usuarios
+        ).with_entities(
+            Usuarios.id,
+            Usuarios.mail,
+            Usuarios.cpf,
+            Usuarios.perfil_ativo,
+            Usuarios.nome_usuario,
+            Perfil_lista.perfil
+        ).filter_by(mail=mail
+        ).all()
+        perfil=[]
+        for item in res : perfil.append(item["perfil"])
+        user={
+            "id": res[0].id,
+            "mail": res[0].mail,
+            "cpf": res[0].cpf,
+            "perfil_ativo": res[0].perfil_ativo,
+            "nome_usuario": res[0].nome_usuario,
+            "perfil": perfil
+        }
+        return user
+    except Exception as error:
+        db.session.rollback()
+        print({"erros" : [error]})
+        return {"erros" : [error]}
 
 def autenticar(mail: str, senha: str):
     usuario = get_user(mail)
@@ -83,7 +119,18 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user(mail=token_data.username)
     if user is None:
         raise credentials_exception
-    return user
+    if user.perfil_ativo == False : 
+        user_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário Inativo",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        return user_exception
+    return get_perfil(user.mail)
+
+def controle_perfil(perfil_usuario,perfil_rota):
+    return True if perfil_rota in perfil_usuario else {"mensagem" : "Perfil de usuário com Privilégio insuficiente para essa rota"}
+
 
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     mail = autenticar(form_data.username, form_data.password)
@@ -99,5 +146,4 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": mail}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
 

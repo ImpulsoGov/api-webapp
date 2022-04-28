@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi.security import OAuth2PasswordRequestForm
+from app.controllers import indicadores,forum_ip,auth
+from fastapi import APIRouter, Depends
 from typing import Optional, List
-from controllers import indicadores
 from pydantic import BaseModel
+from app.controllers.auth import get_current_user,Usuario
 router = APIRouter()
 
 class Indicador(BaseModel):
@@ -24,8 +26,39 @@ class Indicador(BaseModel):
     class Config:
         orm_mode = True
 
-
-@router.get("/impulsoprevine/indicadores/", response_model=List[Indicador])
+@router.get("/impulsoprevine/indicadores/resumo", response_model=List[Indicador])
 async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, indicadores_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, id_sus: Optional[str] = None, municipio_nome: Optional[str] = None):
     res = indicadores.consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id)
     return res
+
+class Mensagem(BaseModel):
+    erros : Optional[List] = None
+    mensagem : Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+@router.post("/impulsoprevine/forum/criar-topico", response_model=Mensagem)
+async def criar_topico(titulo: str, texto: str,username: Usuario = Depends(get_current_user)):
+    res = forum_ip.criar_topico(titulo,texto)
+    return res
+
+@router.post("/impulsoprevine/forum/responder-topico", response_model=Mensagem)
+async def responder_topico(resposta: str, topico_id: str, usuario: str,username: Usuario = Depends(get_current_user)):
+    res = forum_ip.resposta_topico(resposta,topico_id,usuario)
+    return res
+
+class Topico(BaseModel):
+    erros : Optional[List] = None
+    topicos : Optional[List] = None
+
+    class Config:
+        orm_mode = True
+
+@router.get("/impulsoprevine/forum/", response_model=Topico)
+async def buscar_topicos(respostas: Optional[int] = None, topico_id: Optional[str] = None, username: Usuario = Depends(get_current_user)):
+    return forum_ip.buscar_topico(topico_id,respostas)
+
+@router.post("/impulsoprevine/forum/excluir-topico", response_model=Mensagem)
+async def excluir_topicos(topico_id: Optional[str] = None, username: Usuario = Depends(get_current_user)):
+    return forum_ip.excluir_topico(topico_id)
