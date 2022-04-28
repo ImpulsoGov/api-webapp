@@ -19,11 +19,11 @@ credencial_ = {
    ],
    "homologacao":[
       {
-        "USERNAME":os.getenv("USERNAME_HOMOLOGACAO"),
-        "PASSWORD":os.getenv("PASSWORD_HOMOLOGACAO"),
-        "HOSTNAME":os.getenv("HOSTNAME_HOMOLOGACAO"),
-        "PORT":os.getenv("PORT_HOMOLOGACAO"),
-        "DATABASE":os.getenv("DATABASE_HOMOLOGACAO")
+        "USERNAME":os.environ("USERNAME_PROD"),
+        "PASSWORD":os.environ("PASSWORD_PROD"),
+        "HOSTNAME":os.environ("HOSTNAME_PROD"),
+        "PORT":os.environ("PORT_PROD"),
+        "DATABASE":os.environ("DATABASE_PROD")
      }],
    "prod":[
       {
@@ -36,7 +36,8 @@ credencial_ = {
   ]
 }
 
-credencial = credencial_["prod"][0]
+credencial = credencial_["homologacao"][0] if os.environ("HEROKU") == "TRUE" else credencial_["prod"][0]
+   
 engine = create_engine(
    'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
                      credencial['PASSWORD'],
