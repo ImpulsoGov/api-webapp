@@ -20,4 +20,3 @@ class Indicadores(Base):
     indicadores_resultados_porcentagem = Column(Float)
     diff_numerador_para_meta = Column(Integer)
     __table_args__ = {'schema': 'impulso_previne'}
-

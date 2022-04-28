@@ -12,6 +12,7 @@ class Usuario(Base):
     hash_senha = Column(String,nullable=False,comment='Hash da senha de acesso')
     mail = Column(String,nullable=False,comment='e-mail do usuario')
     cpf = Column(String,nullable=False,comment='ID Cadastro de Pessoa Fisica')
+    perfil_ativo = Column(Boolean,comment='Perfil Ativo')
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualização')
     __table_args__ = {'schema': 'suporte'}

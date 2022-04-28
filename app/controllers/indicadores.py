@@ -17,8 +17,6 @@ def consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicado
     }
     params = {coluna:parametro for coluna, parametro in params.items() if parametro!=None}
     if len(params)==0: 
-        return HTMLResponse(content=response_indicadores(), status_code=200)
+        return session.query(Indicadores).all()
     else:
-        query = session.query(Indicadores).filter_by(**params)
-        res = query.all()
-        return res
+        return session.query(Indicadores).filter_by(**params).all()

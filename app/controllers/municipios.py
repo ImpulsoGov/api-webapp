@@ -14,7 +14,9 @@ def consulta_municipio(id_sus,municipio_nome,estado_sigla,estado_nome):
     }
     params = {coluna:parametro for coluna, parametro in params_full.items() if parametro!=None}
     if len(params)==0: 
-        return HTMLResponse(content=response_municipios(), status_code=200)
+        query = session.query(Municipios)
+        res = query.all()
+        return res
     elif params_full["estado_sigla"] != None or params_full["estado_nome_normalizado"] != None:
         query = session.query(Municipios).with_entities(
                     Municipios.id,
