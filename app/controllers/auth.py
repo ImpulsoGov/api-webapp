@@ -93,6 +93,7 @@ def autenticar(mail: str, senha: str):
     return usuario.mail
 
 def criar_token(data: dict, expires_delta: Optional[timedelta] = None):
+    print(data)
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta

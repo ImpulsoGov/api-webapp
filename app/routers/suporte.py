@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios
+from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios, chave_temp_data_studio
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuarios import Usuario
@@ -136,3 +136,23 @@ async def liberar_primeiro_acesso(perfil: int, id_cod: int,id_usuario: str,usern
 async def ativacao_inicial_usuario(codigo: str, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
     res = gerenciamento_usuarios.primeira_ativacao(id_cod,id_usuario,codigo,username["perfil"],2)
     return res
+
+class ChaveDS(BaseModel):
+    access_token: str
+    mensagem : Optional[str] = None
+    class Config:
+        orm_mode = True
+
+class ValChaveDS(BaseModel):
+    access_token: Optional[bool] 
+    mensagem : Optional[str] = None
+    class Config:
+        orm_mode = True
+
+@router.post("/suporte/ds/genchavetemp" , response_model=ChaveDS)
+async def gen_chave(form_data: OAuth2PasswordRequestForm = Depends()):
+    return chave_temp_data_studio.gen_chave_temp(form_data)
+
+@router.post("/suporte/ds/valchavetemp" , response_model=ValChaveDS)
+async def gen_chave(chave: str,form_data: OAuth2PasswordRequestForm = Depends() ):
+    return chave_temp_data_studio.val_chave_temp(chave)

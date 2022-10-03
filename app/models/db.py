@@ -69,7 +69,6 @@ except:
    ]
    }
    credencial = credencial_["prod"][0]
-
 engine = create_engine(
    'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
                      credencial['PASSWORD'],
