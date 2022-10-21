@@ -59,6 +59,7 @@ def enviar_mail(destinatario,texto):
     server.quit()
 
 def solicita_recuperacao(usuario_mail):
+    #if usuario_mail != username : return {"mensagem" : "Somente o proprio usuário tem privilegios para solicitar alteração de senha"}
     #gerar codigo de recuperação uuid
     codigo = str(uuid.uuid4())
     #inseir na tabela usuario_mail codigo de alteração/recuperação de senha

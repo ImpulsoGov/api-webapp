@@ -28,11 +28,11 @@ try:
       }],
       "prod":[
          {
-         "USERNAME":os.environ("USERNAME_PROD"),
-         "PASSWORD":os.environ("PASSWORD_PROD"),
-         "HOSTNAME":os.environ("HOSTNAME_PROD"),
-         "PORT":os.environ("PORT_PROD"),
-         "DATABASE":os.environ("DATABASE_PROD")
+         "USERNAME":os.environ("USERNAME_ANALITICO"),
+         "PASSWORD":os.environ("PASSWORD_ANALITICO"),
+         "HOSTNAME":os.environ("HOSTNAME_ANALITICO"),
+         "PORT":os.environ("PORT_ANALITICO"),
+         "DATABASE":os.environ("DATABASE_ANALITICO")
       }
    ]
    }
@@ -60,11 +60,11 @@ except:
       }],
       "prod":[
          {
-         "USERNAME":os.getenv("USERNAME_PROD"),
-         "PASSWORD":os.getenv("PASSWORD_PROD"),
-         "HOSTNAME":os.getenv("HOSTNAME_PROD"),
-         "PORT":os.getenv("PORT_PROD"),
-         "DATABASE":os.getenv("DATABASE_PROD")
+         "USERNAME":os.getenv("USERNAME_ANALITICO"),
+         "PASSWORD":os.getenv("PASSWORD_ANALITICO"),
+         "HOSTNAME":os.getenv("HOSTNAME_ANALITICO"),
+         "PORT":os.getenv("PORT_ANALITICO"),
+         "DATABASE":os.getenv("DATABASE_ANALITICO")
       }
    ]
    }
