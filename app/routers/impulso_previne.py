@@ -1,5 +1,5 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth
+from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes
 from fastapi import APIRouter, Depends
 from typing import Optional, List
 from pydantic import BaseModel
@@ -62,3 +62,8 @@ async def buscar_topicos(respostas: Optional[int] = None, topico_id: Optional[st
 @router.post("/impulsoprevine/forum/excluir-topico", response_model=Mensagem)
 async def excluir_topicos(topico_id: Optional[str] = None, username: Usuario = Depends(get_current_user)):
     return forum_ip.excluir_topico(topico_id)
+
+@router.get("/impulsoprevine/busca-ativa/gestantes")
+async def gestantes(username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes()
+    return res

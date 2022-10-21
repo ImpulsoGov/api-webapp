@@ -73,7 +73,17 @@ async def cadastro(
     senha: str = Form(...),
     cpf: str = Form(...)
     ):
-    return cadastro_usuarios.cadastrar(nome,mail,senha,cpf)
+    return cadastro_usuarios.cadastrar_usuario(nome,mail,senha,cpf)
+
+@router.post("/suporte/usuarios/cadastro-ip")
+async def cadastro(
+    municipio: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    whatsapp: str = Form(...),
+    mail: str = Form(...),
+    ):
+    return cadastro_usuarios.cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail)
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
 async def solicita_recuperacao(mail: str):
@@ -105,6 +115,13 @@ class Cadastro(BaseModel):
 @router.get("/suporte/ger_usuarios/cadastro", response_model=Cadastro)
 async def dados_cadastro(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
     res = gerenciamento_usuarios.dados_usuarios(id_cod,id,username["perfil"],2)
+    return res
+
+@router.get("/suporte/ger_usuarios/cargo-nome")
+async def nome_cargo(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
+    print('-----------------------')
+    print(username)
+    res = gerenciamento_usuarios.cargo_nome(id_cod,id,username["perfil"],6)
     return res
 
 @router.post("/suporte/ger_usuarios/add-perfil", response_model=Mensagem)

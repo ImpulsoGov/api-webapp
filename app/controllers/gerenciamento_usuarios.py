@@ -1,9 +1,10 @@
-from app.models import db,usuarios,perfil_acesso,perfil_usuario,ativar_usuario
+from app.models import db,usuarios,perfil_acesso,perfil_usuario,ativar_usuario,usuarios_ip
 from app.controllers import recuperação_senha,auth
 from datetime import datetime
 import uuid
 session = db.session
 Usuarios = usuarios.Usuario
+UsuariosIP = usuarios_ip.UsuarioIP
 Perfil = perfil_usuario.Perfil
 Perfil_lista = perfil_acesso.Perfil_lista 
 Ativar = ativar_usuario.Ativar
@@ -25,7 +26,6 @@ def lista_usuarios_sem_liberacao(username,acesso):
     except:
         return None
 
-
 def lista_usuarios(username,acesso):
     #controle de acesso
     controle = auth.controle_perfil(username,acesso)
@@ -46,6 +46,29 @@ def lista_usuarios(username,acesso):
         return {"usuarios" : res}
     except Exception as error:
         print({"error" : error})
+        return error
+
+def cargo_nome(id_cod,id,username,acesso):
+    #controle de acesso
+    controle = auth.controle_perfil(username,acesso)
+    if controle != True : return controle
+    #Informa dados cadastrais a partir do e-mail ou cpf do usuario
+    #id_cod 1 para e-mail e 2 para cpf
+    id_cod_ref = [1,2]
+    if id_cod not in id_cod_ref : return {"erros" : ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
+    id_db = {"mail":id} if int(id_cod) == 1 else {"cpf":id}
+    try:
+        nome_usuario = db.session.query(Usuarios).with_entities(
+                    Usuarios.nome_usuario,
+                    Usuarios.id,
+        ).filter_by(**id_db).all()
+        cargo_usuario = db.session.query(UsuariosIP).with_entities(
+                    UsuariosIP.cargo,
+        ).filter_by(id_usuario=nome_usuario[0].id).all()
+        print(cargo_usuario)
+        return {"cadastro" : [{"nome":nome_usuario[0].nome_usuario,"id":nome_usuario[0].id,"cargo":cargo_usuario[0].cargo}]}
+    except Exception as error:
+        print({"erros" : [error]})
         return error
 
 def dados_usuarios(id_cod,id,username,acesso):
@@ -161,7 +184,6 @@ def remove_perfil(id_cod,id,perfil,username,acesso):
     session.query(Perfil).filter_by(usuario_id=perfil_usuario_id,perfil_id=perfil_id).delete()
     session.commit()
     return {"mensagem" : "Perfil excluido com sucesso"}
-
 
 def desativar_usuario(id_cod,id,username,acesso):
     #controle de acesso

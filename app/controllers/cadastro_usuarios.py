@@ -1,4 +1,4 @@
-from app.models import db,usuarios
+from app.models import db,usuarios,usuarios_ip
 from passlib.context import CryptContext
 from datetime import datetime
 import uuid
@@ -26,6 +26,14 @@ def consulta_mail(email):
     except:
         return {"mensagem":"E-mail já cadastrado"}
 
+def obter_id(email):
+    try:
+        query = db.session.query(usuarios.Usuario).filter_by(mail=email)
+        res = query.all()
+        return res[0].id if len(res)!=0 else {"mensagem":"E-mail não cadastrado"}
+    except:
+        return {"mensagem":"Error"}
+
 def consulta_cpf(cpf):
     try:
         query = db.session.query(usuarios.Usuario).filter_by(cpf=cpf)
@@ -34,6 +42,13 @@ def consulta_cpf(cpf):
     except:
         return {"mensagem":"CPF já cadastrado"}
 
+def consulta_id_usuario(id):
+    try:
+        query = db.session.query(usuarios.Usuario).filter_by(id=id)
+        res = query.all()
+        return True if len(res)==0 else {"mensagem":"E-mail já cadastrado"}
+    except ValueError as e:
+        return {"mensagem":e}
 
 def verifica_mail(email):
     try:
@@ -42,7 +57,7 @@ def verifica_mail(email):
     except EmailNotValidError as e:
       return {"mensagem":str(e)}
 
-def cadastrar(nome,mail,senha,cpf):
+def cadastrar_usuario(nome,mail,senha,cpf):
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -69,3 +84,31 @@ def cadastrar(nome,mail,senha,cpf):
     except:
         session.rollback()
         return {"mensagem":"Cadastro não efetuado"}
+
+def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail):
+    criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if whatsapp == '1': wp = True
+    try:
+        id_usuario = obter_id(mail)
+        print(id_usuario)
+        #validar municipio
+        #validar cargo
+        #formato telefone
+    except :
+        return {"mensagem":"Validação dos dados enviados não efetuada"}
+    
+    usuario_dados = usuarios_ip.UsuarioIP(
+        id = str(uuid.uuid4()),
+        municipio=municipio,
+        cargo=cargo,
+        telefone=telefone,
+        whatsapp=wp,
+        id_usuario=id_usuario,
+        criacao_data=criacao_data,
+        atualizacao_data=atualizacao_data
+        )
+    session = db.session
+    session.add(usuario_dados)
+    session.commit()
+    return {"mensagem":"dados cadastrados com sucesso, apos a liberação do seu perfil de acesso você recebera no e-mail cadastro mensagem com o link para ativação do seu cadastro"}
