@@ -27,7 +27,7 @@ class Gestantes(Base):
     gestante_consulta_prenatal_total = Column(Integer,nullable=True)
     gestante_consulta_prenatal_ultima_data = Column(DateTime,nullable=True)
     gestante_consulta_prenatal_ultima_dias_desde = Column(Integer,nullable=True)
-    atendimento_odontologico_realizado = Column(BOOLEAN,nullable=True)
+    atendimento_odontologico_realizado = Column(String,nullable=True)
     exame_hiv_realizado  = Column(BOOLEAN,nullable=True)
     exame_sifilis_realizado  = Column(BOOLEAN,nullable=True)
     exame_sifilis_hiv_realizado  = Column(BOOLEAN,nullable=True)

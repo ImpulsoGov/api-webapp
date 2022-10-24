@@ -64,9 +64,14 @@ def cargo_nome(id_cod,id,username,acesso):
         ).filter_by(**id_db).all()
         cargo_usuario = db.session.query(UsuariosIP).with_entities(
                     UsuariosIP.cargo,
+                    UsuariosIP.municipio,
         ).filter_by(id_usuario=nome_usuario[0].id).all()
         print(cargo_usuario)
-        return {"cadastro" : [{"nome":nome_usuario[0].nome_usuario,"id":nome_usuario[0].id,"cargo":cargo_usuario[0].cargo}]}
+        return {
+                "cadastro" : [{"nome":nome_usuario[0].nome_usuario,
+                "id":nome_usuario[0].id,
+                "cargo":cargo_usuario[0].cargo,
+                "municipio":cargo_usuario[0].municipio}]}
     except Exception as error:
         print({"erros" : [error]})
         return error
