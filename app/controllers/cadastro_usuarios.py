@@ -88,7 +88,7 @@ def cadastrar_usuario(nome,mail,senha,cpf):
 def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail):
     criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if whatsapp == '1': wp = True
+    wp = True if whatsapp == '1' else False
     try:
         id_usuario = obter_id(mail)
         print(id_usuario)

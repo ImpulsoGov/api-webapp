@@ -273,7 +273,7 @@ def primeiro_acesso(id_cod,id,perfil,username,acesso):
     mail= db.session.query(Usuarios).filter_by(**id_db).all()[0].mail
     url = '/ger_usuarios/ativacao-primeiro-acesso'
     mensagem = 'Codigo de ativação (campo : "codigo") '+codigo+' envie o codigo no endpoint '+url+' junto com e-mail ou CPF cadastrado (campo : "id")'
-    enviar_mail(mail,mensagem)
+    #enviar_mail(mail,mensagem)
     return {"mensagem" : "Usuário recebeu perfil base informado com sucesso, para adicionar outros perfis utilize o recurso /ger_usuarios/add-perfil. O usuário ira receber e-mail com codigo de ativação, o usuário somente estará ativo após validação do codigo "}
 
 def primeira_ativacao(id_cod,id,codigo,username,acesso):

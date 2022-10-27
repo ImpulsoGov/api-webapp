@@ -76,7 +76,7 @@ async def cadastro(
     return cadastro_usuarios.cadastrar_usuario(nome,mail,senha,cpf)
 
 @router.post("/suporte/usuarios/cadastro-ip")
-async def cadastro(
+async def cadastroip(
     municipio: str = Form(...),
     cargo: str = Form(...),
     telefone: str = Form(...),
