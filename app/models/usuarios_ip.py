@@ -13,6 +13,7 @@ class UsuarioIP(Base):
     telefone = Column(String,nullable=False,comment='Telefone de contato')
     whatsapp = Column(Boolean,nullable=False, comment='Numero informado possui whatsapp')
     id_usuario = Column(UUID(as_uuid=True),ForeignKey("suporte.usuarios.id"),nullable=False, default=uuid.uuid4,comment='Perfil de Acesso ID')
+    equipe = Column(String,nullable=False,comment='equipe de atuação do usuario')
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualização')
     __table_args__ = {'schema': 'suporte'}
