@@ -85,7 +85,7 @@ def cadastrar_usuario(nome,mail,senha,cpf):
         session.rollback()
         return {"mensagem":"Cadastro não efetuado"}
 
-def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail):
+def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
     criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     wp = True if whatsapp == '1' else False
@@ -105,6 +105,7 @@ def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail):
         telefone=telefone,
         whatsapp=wp,
         id_usuario=id_usuario,
+        equipe=equipe,
         criacao_data=criacao_data,
         atualizacao_data=atualizacao_data
         )
