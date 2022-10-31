@@ -67,3 +67,8 @@ async def excluir_topicos(topico_id: Optional[str] = None, username: Usuario = D
 async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_gestantes.consulta_gestantes_equipe(municipio_uf,equipe)
     return res
+
+@router.get("/impulsoprevine/busca-ativa/gestantes-coordenacao")
+async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_uf)
+    return res
