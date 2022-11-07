@@ -13,11 +13,11 @@ def consulta_gestantes_equipe(municipio_uf,equipe):
         #res = []
         #for item in res_tupla:
             #res.append(dict(item))
-        #for item in res:
-            #for key, value in item.items(): 
-                #if type(value) == bool: item[key]=int(value)
-        
-        return res
+        for item in res[0:3]:
+            for key in item.__dict__:
+                if type(item.__dict__[key]) == bool: item.__dict__[key]=int(item.__dict__[key])
+            
+        return res[0]
     except Exception as error:
         session.rollback()
         print({"erros" : [error]})
@@ -37,6 +37,10 @@ def consulta_gestantes_coordenacao(municipio_uf):
         #for item in res:
             #for key, value in item.items(): 
                 #if type(value) == bool: item[key]=int(value)
+        for item in res[0:3]:
+            for key in item.__dict__:
+                if type(item.__dict__[key]) == bool: item.__dict__[key]=int(item.__dict__[key])
+        
         return res
     except Exception as error:
         session.rollback()
