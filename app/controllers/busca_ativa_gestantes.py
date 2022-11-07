@@ -17,7 +17,7 @@ def consulta_gestantes_equipe(municipio_uf,equipe):
             for key in item.__dict__:
                 if type(item.__dict__[key]) == bool: item.__dict__[key]=int(item.__dict__[key])
             
-        return res[0]
+        return res
     except Exception as error:
         session.rollback()
         print({"erros" : [error]})
