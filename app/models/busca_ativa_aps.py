@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Integer, String,DATE, BOOLEAN, DateTime
-from app.models import DB_ANALITICO
-Base = DB_ANALITICO.Base
+from app.models import DB_PRODUCAO
+Base = DB_PRODUCAO.Base
 
 class GestantesCoordenacao(Base):
     __tablename__ = 'painel_coordenadores_lista_nominal_gestantes'
-    municipio_uf = Column(String, primary_key=True)
     municipio_id_sus = Column(String,nullable=True)
+    municipio_uf = Column(String, primary_key=True)
     estabelecimento_cnes = Column(String,nullable=True)
     estabelecimento_nome = Column(String,nullable=True)
     equipe_ine = Column(String,nullable=True)
@@ -22,19 +22,23 @@ class GestantesCoordenacao(Base):
     gestante_idade_gestacional_atual = Column(Integer,nullable=True)
     gestante_idade_gestacional_primeiro_atendimento = Column(Integer,nullable=True)
     gestante_dpp  = Column(DateTime,nullable=True)
+    gestante_quadrimestre = Column(String,nullable=True)
     gestante_consulta_prenatal_data_limite = Column(DateTime,nullable=True)
     gestante_dpp_dias_para = Column(Integer,nullable=True)
     gestante_consulta_prenatal_total = Column(Integer,nullable=True)
+    gestantes_com_6_consultas = Column(String,nullable=True)
     gestante_consulta_prenatal_ultima_data = Column(DateTime,nullable=True)
     gestante_consulta_prenatal_ultima_dias_desde = Column(Integer,nullable=True)
     atendimento_odontologico_realizado = Column(String,nullable=True)
+    atendimento_odontologico_realizado_identificacao = Column(String,nullable=True)
     exame_hiv_realizado  = Column(BOOLEAN,nullable=True)
     exame_sifilis_realizado  = Column(BOOLEAN,nullable=True)
     exame_sifilis_hiv_realizado  = Column(BOOLEAN,nullable=True)
+    exame_sifilis_hiv_realizado_identificacao = Column(String,nullable=True)
     possui_registro_aborto  = Column(String,nullable=True)
     possui_registro_parto  = Column(String,nullable=True)
     criacao_data = Column(DateTime,nullable=True)
     atualizacao_data = Column(DateTime,nullable=True)
-    __table_args__ = {'schema': 'busca_ativa'}
+    __table_args__ = {'schema': 'impulso_previne_dados_nominais'}
 
 #Base.metadata.create_all(db.engine)
