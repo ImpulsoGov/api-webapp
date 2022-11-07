@@ -82,8 +82,9 @@ async def cadastroip(
     telefone: str = Form(...),
     whatsapp: str = Form(...),
     mail: str = Form(...),
+    equipe: str = Form(...),
     ):
-    return cadastro_usuarios.cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail)
+    return cadastro_usuarios.cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe)
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
 async def solicita_recuperacao(mail: str):
