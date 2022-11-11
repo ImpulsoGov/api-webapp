@@ -25,12 +25,11 @@ async def read_item(item_id: int, skip: int = 0, limit: int = 10):
     return df
 
 @router.get("/territorios/estabelecimentos")
-async def busca_estabelecimentos(cnes: Optional[str] = None):
-    res = territorios.buscar_topico(cnes)
+async def busca_estabelecimento(cnes: Optional[str] = None):
+    res = territorios.busca_estabelecimento(cnes)
     return res
 
-
 @router.put("/territorios/estabelecimentos/{cnes}")
-async def busca_estabelecimentos(cnes):
-    res = territorios.atualiza_estabelecimento(cnes)
+async def atualiza_estabelecimento(cnes, lat, long):
+    res = territorios.atualiza_estabelecimento(cnes, lat, long)
     return res

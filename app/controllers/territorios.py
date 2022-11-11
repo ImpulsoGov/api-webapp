@@ -4,15 +4,15 @@ import json
 session = db.session
 Estabelecimentos = ts_estabelecimentos.Estabelecimentos
 
-def buscar_estabelecimento(cnes = None):
+def busca_estabelecimento(cnes = None):
     if cnes:
         return session.query(Estabelecimentos).filter_by(cnes=cnes).all()
     else: 
         return session.query(Estabelecimentos).all()
 
-def atualiza_estabelecimento(cnes):
+def atualiza_estabelecimento(cnes, lat, long):
     try:
-        session.query(Estabelecimentos).filter_by(cnes=cnes)
+        session.query(Estabelecimentos).filter_by(cnes = cnes).update({Estabelecimentos.latitude:lat, Estabelecimentos.longitude: long}, synchronize_session = False)
         return {"mensagem" : "Estabelecimentos atualizado com Sucesso"}
     except Exception as error:
         print({"erros" : error})
