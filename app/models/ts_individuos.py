@@ -4,7 +4,7 @@ Base = db.Base
 
 class Individuos(Base):
     __tablename__ = 'tapirai_355350_fat_cadastro_individual'
-    id = Column(String)
+    id = Column(String, primary_key=True)
     familia_id = Column(String)
     domicilio_id = Column(String)
     id_origem = Column(String)
