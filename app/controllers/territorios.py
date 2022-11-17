@@ -12,7 +12,8 @@ def busca_estabelecimento(cnes = None):
 
 def atualiza_estabelecimento(cnes, lat, long):
     try:
-        session.query(Estabelecimentos).filter_by(cnes = cnes).update({Estabelecimentos.latitude:lat, Estabelecimentos.longitude: long}, synchronize_session = False)
+        session.query(Estabelecimentos).filter_by(cnes = cnes).update({Estabelecimentos.latitude: lat, Estabelecimentos.longitude: long})
+        session.commit()
         return {"mensagem" : "Estabelecimentos atualizado com Sucesso"}
     except Exception as error:
         print({"erros" : error})
