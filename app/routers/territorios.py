@@ -30,3 +30,8 @@ async def busca_domicilios(id: Optional[str] = None):
 async def busca_individuos(domicilio_id: Optional[str] = None):
     res = territorios.busca_individuos(domicilio_id)
     return res
+
+@router.put("/territorios/domicilios/{id}")
+async def atualiza_domicilio(id, lat, long):
+    res = territorios.atualiza_domicilio(id, lat, long)
+    return res
