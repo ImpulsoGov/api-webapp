@@ -1,6 +1,6 @@
 # API Impulso
 
-API estruturante para os projetos da IMPULSOGOV.
+API para os projetos web da [ImpulsoGov](https://www.impulsogov.org/). Tais qual [Impulso Previne](https://www.impulsoprevine.org/).
 
 ## Proposta
 
