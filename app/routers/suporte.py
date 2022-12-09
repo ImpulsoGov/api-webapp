@@ -86,6 +86,22 @@ async def cadastroip(
     ):
     return cadastro_usuarios.cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe)
 
+@router.post("/suporte/usuarios/cadastro-lote")
+async def cadastro_lotes(
+    nome: str = Form(...),
+    mail: str = Form(...),
+    senha: str = Form(...),
+    cpf: str = Form(...),
+    municipio_uf: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    whatsapp: str = Form(...),
+    equipe: str = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+    ):
+    return cadastro_usuarios.cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
+
+
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
 async def solicita_recuperacao(mail: str):
     return recuperação_senha.solicita_recuperacao(mail)
@@ -120,8 +136,6 @@ async def dados_cadastro(id: str, id_cod: int,username: Usuario = Depends(auth.g
 
 @router.get("/suporte/ger_usuarios/cargo-nome")
 async def nome_cargo(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
-    print('-----------------------')
-    print(username)
     res = gerenciamento_usuarios.cargo_nome(id_cod,id,username["perfil"],6)
     return res
 
