@@ -72,3 +72,13 @@ async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_
 async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_uf)
     return res
+
+@router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-equipe")
+async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_equipe(municipio_uf,equipe)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-municipio")
+async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
+    return res
