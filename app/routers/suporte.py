@@ -86,22 +86,6 @@ async def cadastroip(
     ):
     return cadastro_usuarios.cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe)
 
-@router.post("/suporte/usuarios/cadastro-lote")
-async def cadastro_lotes(
-    nome: str = Form(...),
-    mail: str = Form(...),
-    senha: str = Form(...),
-    cpf: str = Form(...),
-    municipio_uf: str = Form(...),
-    cargo: str = Form(...),
-    telefone: str = Form(...),
-    whatsapp: str = Form(...),
-    equipe: str = Form(...),
-    username: Usuario = Depends(auth.get_current_user)
-    ):
-    return cadastro_usuarios.cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
-
-
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
 async def solicita_recuperacao(mail: str):
     return recuperação_senha.solicita_recuperacao(mail)
@@ -136,6 +120,8 @@ async def dados_cadastro(id: str, id_cod: int,username: Usuario = Depends(auth.g
 
 @router.get("/suporte/ger_usuarios/cargo-nome")
 async def nome_cargo(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
+    print('-----------------------')
+    print(username)
     res = gerenciamento_usuarios.cargo_nome(id_cod,id,username["perfil"],6)
     return res
 
@@ -169,17 +155,6 @@ async def ativacao_inicial_usuario(codigo: str, id_cod: int,id_usuario: str,user
     res = gerenciamento_usuarios.primeira_ativacao(id_cod,id_usuario,codigo,username["perfil"],2)
     return res
 
-@router.post("/suporte/ger_usuarios/ativacao-primeiro-acesso-em-lote", response_model=Mensagem)
-async def ativacao_inicial_usuario_em_lote(id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
-    res = gerenciamento_usuarios.primeira_ativacao_em_lote(id_cod,id_usuario,username["perfil"],2)
-    return res
-
-@router.get("/suporte/ger_usuarios/obter-perfil")
-async def ativacao_inicial_usuario_em_lote(id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
-    res = gerenciamento_usuarios.get_perfil_usuarios(id_cod,id_usuario,username["perfil"],2)
-    return res
-
-
 class ChaveDS(BaseModel):
     access_token: str
     mensagem : Optional[str] = None
@@ -199,11 +174,3 @@ async def gen_chave(form_data: OAuth2PasswordRequestForm = Depends()):
 @router.post("/suporte/ds/valchavetemp" , response_model=ValChaveDS)
 async def gen_chave(chave: str,form_data: OAuth2PasswordRequestForm = Depends() ):
     return chave_temp_data_studio.val_chave_temp(chave)
-
-@router.get("/suporte/validar-cpf")
-async def gen_chave(cpf: str):
-    return cadastro_usuarios.validador_de_cpf(cpf)
-
-@router.get("/suporte/validate-token",)
-async def validate_token(username: Usuario = Depends(auth.get_current_user)):
-    return True

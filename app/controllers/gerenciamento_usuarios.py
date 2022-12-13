@@ -157,32 +157,6 @@ def add_perfil(id_cod,id,perfil,username,acesso):
         session.rollback()
         return {"mensagem":"Adição de perfil não efetuada"}
 
-def get_perfil_usuarios(id_cod,id,username,acesso):
-    #controle de acesso
-    controle = auth.controle_perfil(username,acesso)
-    if controle != True : return controle
-    #consultar perfis que o usuario já tem
-    id_cod_ref = [1,2]
-    if id_cod not in id_cod_ref : return {"erros" : ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
-    id_db = {"mail":id} if id_cod == 1 else {"cpf":id}
-    try:
-        res = db.session.query(
-            Perfil
-        ).join(Perfil_lista
-        ).join(Usuarios
-        ).with_entities(
-            Usuarios.mail,
-            Usuarios.nome_usuario,
-            Perfil_lista.perfil,
-            Perfil_lista.descricao
-        ).filter_by(**id_db
-        ).all()
-        if len(res)==0 :return {"mensagem" : "Sem perfil de acesso atribuido"}
-        return res
-    except Exception as error:
-        print({"error" : error})
-        return error
-
 def remove_perfil(id_cod,id,perfil,username,acesso):
     #controle de acesso
     controle = auth.controle_perfil(username,acesso)
@@ -332,25 +306,3 @@ def primeira_ativacao(id_cod,id,codigo,username,acesso):
     session.query(Ativar).filter_by(usuario_id=usuario_id).delete()
     session.commit()
     return {"mensagem" : "Usuário ativado com sucesso"}
-
-def primeira_ativacao_em_lote(id_cod,id,username,acesso):
-    #controle de acesso
-    controle = auth.controle_perfil(username,acesso)
-    if controle != True : return controle
-    #verificar se usuario nunca foi ativado
-    id_db = {"mail":id} if id_cod == 1 else {"cpf":id}
-    try:
-        usuario_id= db.session.query(Usuarios).filter_by(**id_db).all()[0].perfil_ativo
-        print(usuario_id)
-        if usuario_id != None : return {"mensagem": "Usuário já realizou primeira ativação"}
-    except Exception as error:
-        print({"error" : [error]})
-        return {"erros" : [error]}
-    #ativar perfil
-    try:
-        session.query(Usuarios).filter_by(**id_db).update({"perfil_ativo" : True})
-        session.commit()
-        return {"mensagem" : "Usuário ativado com sucesso"}
-    except Exception as error:
-        print({"error" : [error]})
-        return {"erros" : [error]}
