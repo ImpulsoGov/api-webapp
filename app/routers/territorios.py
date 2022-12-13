@@ -7,8 +7,8 @@ import pandas as pd
 router = APIRouter()
 
 @router.get("/territorios/estabelecimentos")
-async def busca_estabelecimento(cnes: Optional[str] = None):
-    res = territorios.busca_estabelecimento(cnes)
+async def busca_estabelecimentos(ibge: Optional[str] = None, cnes: Optional[str] = None):
+    res = territorios.busca_estabelecimentos(ibge, cnes)
     return res
 
 @router.put("/territorios/estabelecimentos/{cnes}")
@@ -17,18 +17,18 @@ async def atualiza_estabelecimento(cnes, lat, long):
     return res
 
 @router.get("/territorios/profissionais")
-async def busca_profissionais(cns: Optional[str] = None):
-    res = territorios.busca_profissionais(cns)
+async def busca_profissionais(ibge: Optional[str] = None, cnes: Optional[str] = None, cns: Optional[str] = None):
+    res = territorios.busca_profissionais(ibge, cns)
     return res
 
 @router.get("/territorios/domicilios")
-async def busca_domicilios(id: Optional[str] = None):
-    res = territorios.busca_domicilios(id)
+async def busca_domicilios(ibge: Optional[str] = None, id: Optional[str] = None):
+    res = territorios.busca_domicilios(ibge, id)
     return res
 
 @router.get("/territorios/individuos")
-async def busca_individuos(domicilio_id: Optional[str] = None):
-    res = territorios.busca_individuos(domicilio_id)
+async def busca_individuos(ibge: Optional[str] = None, domicilio_id: Optional[str] = None):
+    res = territorios.busca_individuos(ibge, domicilio_id)
     return res
 
 @router.put("/territorios/domicilios/{id}")

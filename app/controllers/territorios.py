@@ -7,26 +7,42 @@ Profissionais = ts_profissionais.Profissionais
 Domicilios = ts_domicilios.Domicilios
 Individuos = ts_individuos.Individuos
 
-def busca_estabelecimento(cnes = None):
-    if cnes:
+def busca_estabelecimentos(ibge = None, cnes = None):
+    if ibge and cnes:
+        return session.query(Estabelecimentos).filter_by(ibge=ibge, cnes=cnes).all()
+    elif ibge:
+        return session.query(Estabelecimentos).filter_by(ibge=ibge).all()
+    elif cnes:
         return session.query(Estabelecimentos).filter_by(cnes=cnes).all()
     else: 
         return session.query(Estabelecimentos).all()
 
-def busca_profissionais(cns = None):
-    if cns:
+def busca_profissionais(ibge = None, cnes = None, cns = None):
+    if ibge and cns:
+        return session.query(Profissionais).filter_by(ibge=ibge, cns=cns).all()
+    elif ibge:
+        return session.query(Profissionais).filter_by(ibge=ibge).all()
+    elif cns:
         return session.query(Profissionais).filter_by(cns=cns).all()
     else: 
         return session.query(Profissionais).all()
 
-def busca_domicilios(id = None):
-    if id:
+def busca_domicilios(ibge = None, id = None):
+    if ibge and id:
+        return session.query(Domicilios).filter_by(ibge=ibge, id=id).all()
+    elif ibge:
+        return session.query(Domicilios).filter_by(ibge=ibge).all()
+    elif id:
         return session.query(Domicilios).filter_by(id=id).all()
     else: 
         return session.query(Domicilios).all()
         
-def busca_individuos(domicilio_id = None):
-    if domicilio_id:
+def busca_individuos(ibge = None, domicilio_id = None):
+    if ibge and domicilio_id:
+        return session.query(Individuos).filter_by(ibge=ibge, domicilio_id=domicilio_id).all()
+    elif ibge:
+        return session.query(Individuos).filter_by(ibge=ibge).all()
+    elif domicilio_id:
         return session.query(Individuos).filter_by(domicilio_id=domicilio_id).all()
     else: 
         return session.query(Individuos).all()

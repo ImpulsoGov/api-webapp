@@ -3,7 +3,7 @@ from app.models import db
 Base = db.Base
 
 class Domicilios(Base):
-    __tablename__ = 'tapirai_355350_fat_domicilio'
+    __tablename__ = 'domicilios'
     id = Column(String, primary_key=True) 
     id_origem = Column(String)
     ibge = Column(String)

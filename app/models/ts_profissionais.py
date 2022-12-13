@@ -3,7 +3,8 @@ from app.models import db
 Base = db.Base
 
 class Profissionais(Base):
-    __tablename__ = 'tapirai_355350_profissionais'
+    __tablename__ = 'profissionais'
+    ibge = Column(String)
     cnes = Column(String)
     estabelecimento = Column(String)
     ine = Column(String)
