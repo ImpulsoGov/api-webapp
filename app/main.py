@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import suporte,impulso_previne,territorios
+from app.routers import suporte,impulso_previne
 from pydantic import BaseModel
 app = FastAPI()
 
@@ -21,7 +21,6 @@ app.add_middleware(
 
 app.include_router(suporte.router)
 app.include_router(impulso_previne.router)
-app.include_router(territorios.router)
 
 class Welcome(BaseModel):
     mensagem : str
