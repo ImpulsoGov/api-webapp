@@ -379,9 +379,6 @@ def verificar_mail(mail):
 
 def criar_codigo_recuperacao(mail): 
     res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
-    print('----------------------------------------')
-    print(len(res))
-    print(res)
     def gravar_codigo():
             codigo_recuperacao = math.floor(random.random() * 1000000)
             novo_codigo = recuperacao_senha.Recuperar(
@@ -401,15 +398,10 @@ def criar_codigo_recuperacao(mail):
         if time_diff.total_seconds() < 15*60 : 
             return res[0].codigo_recuperacao
         else:
-            print('-------------------------------1')
-            print(mail)
             apagar_codigo_recuperacao(mail)
-            print('-----------------------1.1')
             codigo = gravar_codigo()
-            print(codigo)
             return codigo  
     else:
-        print('---------------------------------2')
         return gravar_codigo()
 
 def apagar_codigo_recuperacao(mail):
@@ -420,7 +412,6 @@ def apagar_codigo_recuperacao(mail):
         print({"erros" : error})
 
 def apagar_codigo_recuperacao_tempo(mail):
-    print("--------------apagar")
     time.sleep(15*60)
     apagar_codigo_recuperacao(mail)
 
@@ -476,8 +467,6 @@ def validar_codigo(codigo,mail):
         if len(res)<1 : return {"mensagem": "E-mail não cadastrado"}
         mail_db = res[0].mail
         codigo_db = str(res[0].codigo_recuperacao)
-        print(codigo_db,codigo)
-        print(type(codigo_db),type(codigo))
         if mail_db == None or mail != mail_db : return {"mensagem": "E-mail não cadastrado"}
         if codigo_db == None or codigo != codigo_db : return {"mensagem": "Codigo invalido"}
         return True
