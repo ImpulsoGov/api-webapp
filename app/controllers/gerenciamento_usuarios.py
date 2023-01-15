@@ -1,6 +1,7 @@
-from app.models import db,usuarios,perfil_acesso,perfil_usuario,ativar_usuario,usuarios_ip
-from app.controllers import recuperação_senha,auth
+from app.models import db,usuarios,perfil_acesso,perfil_usuario,ativar_usuario,usuarios_ip,recuperacao_senha
+from app.controllers import recuperação_senha,auth,cadastro_usuarios
 from datetime import datetime
+import random,math
 import uuid
 session = db.session
 Usuarios = usuarios.Usuario
@@ -9,6 +10,16 @@ Perfil = perfil_usuario.Perfil
 Perfil_lista = perfil_acesso.Perfil_lista 
 Ativar = ativar_usuario.Ativar
 enviar_mail = recuperação_senha.enviar_mail
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import os
+import time
+
+from dotenv import load_dotenv
+
+env_path = os.path.dirname(os.path.realpath(__file__))+'/.env'
+load_dotenv(dotenv_path=env_path)
 
 
 def lista_usuarios_sem_liberacao(username,acesso):
@@ -351,6 +362,138 @@ def primeira_ativacao_em_lote(id_cod,id,username,acesso):
         session.query(Usuarios).filter_by(**id_db).update({"perfil_ativo" : True})
         session.commit()
         return {"mensagem" : "Usuário ativado com sucesso"}
+    except Exception as error:
+        print({"error" : [error]})
+        return {"erros" : [error]}
+
+def verificar_mail(mail):
+    try:
+        res = db.session.query(Usuarios).filter_by(mail=mail).all()
+        if len(res)<1 : return {"mensagem": "E-mail não cadastrado"}
+        mail_db = res[0].mail
+        if mail_db == None or mail != mail_db : return {"mensagem": "E-mail não cadastrado"}
+        return True
+    except Exception as error:
+        print({"error" : [error]})
+        return {"erros" : [error]}
+
+def criar_codigo_recuperacao(mail): 
+    res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
+    print('----------------------------------------')
+    print(len(res))
+    print(res)
+    def gravar_codigo():
+            codigo_recuperacao = math.floor(random.random() * 1000000)
+            novo_codigo = recuperacao_senha.Recuperar(
+                mail = mail,
+                codigo_recuperacao = codigo_recuperacao,
+                criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            )
+            try:
+                session.add(novo_codigo)
+                session.commit()
+                return codigo_recuperacao
+            except Exception as error:
+                print({"erros" : error})
+                return error
+    if len(res)>0 :
+        time_diff = datetime.now() - res[0].criacao_data
+        if time_diff.total_seconds() < 15*60 : 
+            return res[0].codigo_recuperacao
+        else:
+            print('-------------------------------1')
+            print(mail)
+            apagar_codigo_recuperacao(mail)
+            print('-----------------------1.1')
+            codigo = gravar_codigo()
+            print(codigo)
+            return codigo  
+    else:
+        print('---------------------------------2')
+        return gravar_codigo()
+
+def apagar_codigo_recuperacao(mail):
+    try:
+        session.query(recuperacao_senha.Recuperar).filter(recuperacao_senha.Recuperar.mail == mail).delete()
+        session.commit()
+    except Exception as error:
+        print({"erros" : error})
+
+def apagar_codigo_recuperacao_tempo(mail):
+    print("--------------apagar")
+    time.sleep(15*60)
+    apagar_codigo_recuperacao(mail)
+
+def enviar_mail(destinatario,assunto,texto):
+    #enviar e-mail
+    
+    # Configuração
+    host = 'smtp.gmail.com'
+    port = 587
+    user = os.getenv("MAIL")
+    password = os.getenv("PASSWORD")
+
+    # Criando objeto
+    print('Criando objeto servidor...')
+    server = smtplib.SMTP(host, port)
+
+    # Login com servidor
+    print('Login...')
+    server.ehlo()
+    server.starttls()
+    server.login(user, password)
+
+    # Criando mensagem
+    message = texto
+    print('Criando mensagem...')
+    email_msg = MIMEMultipart()
+    email_msg['From'] = user
+    email_msg['To'] = destinatario
+    email_msg['Subject'] = assunto
+    print('Adicionando texto...')
+    email_msg.attach(MIMEText(message, 'plain'))
+
+    # Enviando mensagem
+    print('Enviando mensagem...')
+    server.sendmail(email_msg['From'], email_msg['To'], email_msg.as_string())
+    print('Mensagem enviada!')
+    server.quit()
+
+def solicitar_nova_senha(mail):
+    mail_check = verificar_mail(mail)
+    if mail_check:
+        codigo = criar_codigo_recuperacao(mail)
+        assunto = 'Código de Recuperação - Plataforma Impulso Previne'
+        mensagem = 'Seu código de recuperação de senha é ' + str(codigo)
+        enviar_mail(mail,assunto,mensagem)
+        return {"msg": "solicitação realizada com sucesso", "success": True}
+    else:
+        return mail_check
+
+def validar_codigo(codigo,mail):
+    try:
+        res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
+        if len(res)<1 : return {"mensagem": "E-mail não cadastrado"}
+        mail_db = res[0].mail
+        codigo_db = str(res[0].codigo_recuperacao)
+        print(codigo_db,codigo)
+        print(type(codigo_db),type(codigo))
+        if mail_db == None or mail != mail_db : return {"mensagem": "E-mail não cadastrado"}
+        if codigo_db == None or codigo != codigo_db : return {"mensagem": "Codigo invalido"}
+        return True
+    except Exception as error:
+        print({"error" : [error]})
+        return {"erros" : [error]}
+
+def alterar_senha(mail,codigo,senha):
+    try:
+        codigo_valido = validar_codigo(codigo,mail)
+        if codigo_valido != True: return codigo_valido
+        validacao_senha = cadastro_usuarios.validar_senha(senha)
+        if validacao_senha[1] != True : return validacao_senha[0]
+        hash = auth.senha_hash(senha)
+        session.query(Usuarios).filter(Usuarios.mail == mail).update({"hash_senha" : hash})
+        return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
         print({"error" : [error]})
         return {"erros" : [error]}
