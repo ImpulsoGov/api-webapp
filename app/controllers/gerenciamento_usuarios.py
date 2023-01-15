@@ -452,7 +452,7 @@ def enviar_mail(destinatario,assunto,texto):
 
 def solicitar_nova_senha(mail):
     mail_check = verificar_mail(mail)
-    if mail_check:
+    if mail_check == True:
         codigo = criar_codigo_recuperacao(mail)
         assunto = 'Código de Recuperação - Plataforma Impulso Previne'
         mensagem = 'Seu código de recuperação de senha é ' + str(codigo)

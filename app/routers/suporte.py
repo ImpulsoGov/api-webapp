@@ -209,7 +209,7 @@ async def validate_token(username: Usuario = Depends(auth.get_current_user)):
     return True
 
 @router.post("/suporte/ger_usuarios/solicitar-nova-senha")
-async def solicitar_nova_senha(mail: str,background_tasks: BackgroundTasks):
+async def solicitar_nova_senha(background_tasks: BackgroundTasks,mail: str = Form(...)):
     background_tasks.add_task(gerenciamento_usuarios.apagar_codigo_recuperacao_tempo,mail)
     return gerenciamento_usuarios.solicitar_nova_senha(mail)
 
