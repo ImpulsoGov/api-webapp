@@ -209,10 +209,10 @@ async def validate_token(username: Usuario = Depends(auth.get_current_user)):
     return True
 
 @router.post("/suporte/ger_usuarios/solicitar-nova-senha")
-async def solicitar_nova_senha(mail: str,background_tasks: BackgroundTasks,username: Usuario = Depends(auth.get_current_user)):
+async def solicitar_nova_senha(mail: str,background_tasks: BackgroundTasks):
     background_tasks.add_task(gerenciamento_usuarios.apagar_codigo_recuperacao_tempo,mail)
     return gerenciamento_usuarios.solicitar_nova_senha(mail)
 
 @router.post("/suporte/ger_usuarios/alterar-senha")
-async def solicitar_nova_senha(mail: str,codigo: str,nova_senha: str,username: Usuario = Depends(auth.get_current_user)):
+async def solicitar_nova_senha(mail: str,codigo: str,nova_senha: str):
     return gerenciamento_usuarios.alterar_senha(mail,codigo,nova_senha)
