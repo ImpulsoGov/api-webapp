@@ -23,7 +23,7 @@ def consulta_mail(email):
         print(error)
         return {"mensagem":"Operação não efetuada"}
 
-def enviar_mail(destinatario,texto):
+def enviar_mail(destinatario,assunto,texto):
     #enviar e-mail
     
     # Configuração
@@ -48,7 +48,7 @@ def enviar_mail(destinatario,texto):
     email_msg = MIMEMultipart()
     email_msg['From'] = user
     email_msg['To'] = destinatario
-    email_msg['Subject'] = 'Alterar Senha de Acesso - API Impulso'
+    email_msg['Subject'] = assunto
     print('Adicionando texto...')
     email_msg.attach(MIMEText(message, 'plain'))
 
