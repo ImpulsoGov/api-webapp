@@ -459,7 +459,7 @@ def solicitar_nova_senha(mail):
         enviar_mail(mail,assunto,mensagem)
         return {"msg": "solicitação realizada com sucesso", "success": True}
     else:
-        return mail_check
+        return {"msg": mail_check, "success": False}
 
 def validar_codigo(codigo,mail):
     try:
