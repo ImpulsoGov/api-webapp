@@ -482,6 +482,8 @@ def alterar_senha(mail,codigo,senha):
         if validacao_senha[1] != True : return validacao_senha[0]
         hash = auth.senha_hash(senha)
         session.query(Usuarios).filter(Usuarios.mail == mail).update({"hash_senha" : hash})
+        session.commit()
+        apagar_codigo_recuperacao(mail)
         return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
         print({"error" : [error]})
