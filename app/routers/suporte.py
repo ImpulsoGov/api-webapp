@@ -219,5 +219,5 @@ async def solicitar_nova_senha(mail: str= Form(...),codigo: str= Form(...)):
 
 
 @router.post("/suporte/ger_usuarios/alterar-senha")
-async def solicitar_nova_senha(mail: str,codigo: str,nova_senha: str):
+async def solicitar_nova_senha(mail: str = Form(...),codigo: str = Form(...),nova_senha: str = Form(...)):
     return gerenciamento_usuarios.alterar_senha(mail,codigo,nova_senha)
