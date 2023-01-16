@@ -213,6 +213,11 @@ async def solicitar_nova_senha(background_tasks: BackgroundTasks,mail: str = For
     background_tasks.add_task(gerenciamento_usuarios.apagar_codigo_recuperacao_tempo,mail)
     return gerenciamento_usuarios.solicitar_nova_senha(mail)
 
+@router.get("/suporte/ger_usuarios/validar-codigo")
+async def solicitar_nova_senha(mail: str= Form(...),codigo: str= Form(...)):
+    return gerenciamento_usuarios.validar_codigo(codigo,mail)
+
+
 @router.post("/suporte/ger_usuarios/alterar-senha")
 async def solicitar_nova_senha(mail: str,codigo: str,nova_senha: str):
     return gerenciamento_usuarios.alterar_senha(mail,codigo,nova_senha)
