@@ -221,6 +221,10 @@ async def validacao_codigo(mail: str= Form(...),codigo: str= Form(...)):
 async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_senha: str = Form(...)):
     return gerenciamento_usuarios.alterar_senha(mail,codigo,nova_senha)
 
+@router.post("/suporte/ger_usuarios/criar-senha")
+async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_senha: str = Form(...)):
+    return gerenciamento_usuarios.senha_primeiro_acesso(mail,codigo,nova_senha)
+
 @router.post("/suporte/ger_usuarios/primeiro-acesso")
 async def primeiro_acesso(mail: str = Form(...)):
     return gerenciamento_usuarios.consulta_primeiro_acesso(mail)

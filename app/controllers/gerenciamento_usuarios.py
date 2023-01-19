@@ -515,3 +515,20 @@ def alterar_senha(mail,codigo,senha):
     except Exception as error:
         print({"error" : [error]})
         return {"erros" : [error]}
+
+def senha_primeiro_acesso(mail,codigo,senha):
+    try:
+        alterarSenha = alterar_senha(mail,codigo,senha)
+        try:
+            if alterarSenha['success'] != True : return alterarSenha
+        except:
+            return alterarSenha
+        ativarPerfil = cadastro_usuarios.ativar_perfil(1,mail)
+        try:
+            if ativarPerfil['error'] != None : return ativarPerfil
+        except:
+            return ativarPerfil
+        return {"msg": "alteração realizada com sucesso", "success": True}
+    except Exception as error:
+        print({"error" : [error]})
+        return {"erros" : [error]}
