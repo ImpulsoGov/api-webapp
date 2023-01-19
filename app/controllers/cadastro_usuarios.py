@@ -120,11 +120,6 @@ def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
     session.commit()
     return {"mensagem":"dados cadastrados com sucesso, apos a liberação do seu perfil de acesso você recebera no e-mail cadastro mensagem com o link para ativação do seu cadastro"}
 
-
-
-
-
-
 #cadastrar usuario impulso
 def cadastro_impulso(nome,mail,senha,cpf):
     try:
