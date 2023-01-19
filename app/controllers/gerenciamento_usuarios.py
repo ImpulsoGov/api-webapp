@@ -389,7 +389,7 @@ def consulta_primeiro_acesso(mail):
             "mensagem": "E-mail não cadastrado",
             "success" : False
             }
-        if res[0].hash_senha != None or res[0].perfil_ativo != None : return {
+        if res[0].hash_senha != None and res[0].perfil_ativo != None : return {
             "mensagem": "Usuário já realizou primeiro acesso",
             "success" : False
             }
