@@ -377,6 +377,33 @@ def verificar_mail(mail):
         print({"error" : [error]})
         return {"erros" : [error]}
 
+def consulta_primeiro_acesso(mail):
+    try:
+        res = db.session.query(Usuarios).filter_by(mail=mail).all()
+        if len(res)<1 : return {
+            "mensagem": "E-mail não cadastrado",
+            "success" : False
+            }
+        mail_db = res[0].mail
+        if mail_db == None or mail != mail_db : return {
+            "mensagem": "E-mail não cadastrado",
+            "success" : False
+            }
+        if res[0].hash_senha != None or res[0].perfil_ativo != None : return {
+            "mensagem": "Usuário já realizou primeiro acesso",
+            "success" : False
+            }
+        criar_codigo_recuperacao(mail)
+        codigo = criar_codigo_recuperacao(mail)
+        assunto = 'Código Criação de senha - Plataforma Impulso Previne'
+        mensagem = 'Seu código de criação de senha é ' + str(codigo)
+        enviar_mail(mail,assunto,mensagem)
+
+        return {"success" : True}
+    except Exception as error:
+        print({"error" : [error]})
+        return {"erros" : [error]}
+
 def criar_codigo_recuperacao(mail): 
     res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
     def gravar_codigo():
