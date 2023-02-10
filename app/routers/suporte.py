@@ -101,6 +101,20 @@ async def cadastro_lotes(
     ):
     return cadastro_usuarios.cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
 
+@router.post("/suporte/usuarios/cadastro-lote-sem-ativacao")
+async def cadastro_lotes(
+    nome: str = Form(...),
+    mail: str = Form(...),
+    cpf: str = Form(...),
+    municipio_uf: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    whatsapp: str = Form(...),
+    equipe: str = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+    ):
+    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
+
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
 async def solicita_recuperacao(mail: str):

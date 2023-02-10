@@ -9,7 +9,7 @@ class Usuario(Base):
     __tablename__ = 'usuarios'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,comment='Chave de Identificação Unica')   
     nome_usuario = Column(String,nullable=False,comment='Nome Completo do Usuario')
-    hash_senha = Column(String,nullable=False,comment='Hash da senha de acesso')
+    hash_senha = Column(String,nullable=True,comment='Hash da senha de acesso')
     mail = Column(String,nullable=False,comment='e-mail do usuario')
     cpf = Column(String,nullable=False,comment='ID Cadastro de Pessoa Fisica')
     perfil_ativo = Column(Boolean,comment='Perfil Ativo')
