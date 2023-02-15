@@ -93,7 +93,7 @@ async def avaliacao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...
     res = TrilhaCapacitacao.avaliacao_conteudo(usuario_id,codigo_conteudo,avaliacao)
     return res
 
-@router.get("/impulsoprevine/capacitacao/consulta-avaliacao-conclusao")
+@router.post("/impulsoprevine/capacitacao/consulta-avaliacao-conclusao")
 async def consulta_avaliacao_conclusao_conteudo(
     usuario_id: str = Form(...),
     codigo_conteudo: str = Form(...),
