@@ -4,7 +4,7 @@ Municipios = municipios.Municipios
 from .response_pages.municipios import html as response_municipios
 from fastapi.responses import HTMLResponse
 
-def consulta_municipio(id_sus,municipio_nome_normalizado,municipio_nome,estado_sigla,estado_nome,estado_nome_normalizado):
+def consulta_municipio(id_sus,municipio_nome,estado_sigla,estado_nome):
     if estado_sigla != None : estado_sigla=estado_sigla.upper()
     params_full = {
         # Aqui eu estou mantendo o municipio e estado normalizado aceitando o nome para não quebrar aplicações, mas deve ser substituido
