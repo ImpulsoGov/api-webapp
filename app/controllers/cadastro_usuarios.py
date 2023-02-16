@@ -25,9 +25,9 @@ def consulta_mail(email):
     try:
         query = db.session.query(usuarios.Usuario).filter_by(mail=email)
         res = query.all()
-        return True if len(res)==0 else {"mensagem":"E-mail já cadastrado"}
+        return True if len(res)==0 else {"mensagem":"E-mail já cadastrado","error":True}
     except:
-        return {"mensagem":"E-mail já cadastrado"}
+        return {"mensagem":"E-mail já cadastrado","error":True}
 
 def obter_id(email):
     try:
@@ -120,11 +120,6 @@ def cadastrar_usuario_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
     session.commit()
     return {"mensagem":"dados cadastrados com sucesso, apos a liberação do seu perfil de acesso você recebera no e-mail cadastro mensagem com o link para ativação do seu cadastro"}
 
-
-
-
-
-
 #cadastrar usuario impulso
 def cadastro_impulso(nome,mail,senha,cpf):
     try:
@@ -142,6 +137,45 @@ def cadastro_impulso(nome,mail,senha,cpf):
             )
         if not cpf_verificador.validate(cpf): return {"mensagem":"CPF Invalido","error":True}
         if not validar_senha(senha)[1] : return validar_senha(senha)[0] 
+        if verifica_mail(mail) != True: return verifica_mail(mail)
+        if consulta_mail(mail) != True : return consulta_mail(mail)
+        print(consulta_cpf(cpf) != True)
+        print(consulta_cpf(cpf))
+        if consulta_cpf(cpf) != True : return {"mensagem":"CPF invalido","error": True}
+
+    except Exception as error:
+        session.rollback()
+        return {
+            "mensagem": error,
+            "error": True
+        }
+    try:
+        session.add(usuario)
+        return {
+                "mensagem":"Usuário Impulso cadastrado com sucesso",
+                "error":None
+                }
+    except Exception as error:
+        session.rollback()
+        return {
+            "mensagem": error,
+            "error": True
+        }
+
+def cadastro_impulso_sem_ativacao(nome,mail,cpf):
+    try:
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        usuario = usuarios.Usuario(
+            id = str(uuid.uuid4()),
+            nome_usuario=nome,
+            mail=mail,
+            cpf=cpf,
+            criacao_data=criacao_data,
+            atualizacao_data=atualizacao_data
+            )
+        if not cpf_verificador.validate(cpf): return {"mensagem":"CPF Invalido","error":True}
         if verifica_mail(mail) != True: return verifica_mail(mail)
         if consulta_mail(mail) != True : return consulta_mail(mail)
         print(consulta_cpf(cpf) != True)
@@ -238,8 +272,10 @@ def ativar_perfil(id_cod,id):
     #ativar perfil
     try:
         session.query(usuarios.Usuario).filter_by(**id_db).update({"perfil_ativo" : True})
+        session.commit()
         return {"mensagem" : "Usuário ativado com sucesso","error":None}
     except Exception as error:
+        session.rollback()
         print({"error" : [error]})
         return {"erros" : [error]}
 
@@ -248,6 +284,7 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
     controle = controle_perfil(username,acesso)
     if controle != True : return controle
     cad_impulso = cadastro_impulso(nome,mail,senha,cpf)
+    print(cad_impulso)
     etapas = []
     if (cad_impulso['error'] == None): 
         cad_ip = cadastro_ip(municipio_uf,cargo,telefone,whatsapp,mail,equipe)
@@ -276,3 +313,30 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
         return etapas
     else:
         return ativar_user
+
+def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso):
+    #controle de acesso
+    controle = controle_perfil(username,acesso)
+    if controle != True : return controle
+    cad_impulso = cadastro_impulso_sem_ativacao(nome,mail,cpf)
+    print(cad_impulso)
+    etapas = []
+    if (cad_impulso['error'] == None): 
+        cad_ip = cadastro_ip(municipio_uf,cargo,telefone,whatsapp,mail,equipe)
+        etapas.append("Cadastro Impulso realizado com sucesso")
+    else:
+        return cad_impulso
+
+    if (cad_ip['error'] == None): 
+        etapas.append("Cadastro IP realizado com sucesso")
+        lib_acess = liberar_acesso(1,mail)
+    else:
+        return cad_ip
+    if lib_acess['error'] == None:
+        etapas.append("Liberação de perfil realizada com sucesso")
+        if len(etapas) == 3:
+            session.commit()
+            print("commit realizado com sucesso")
+            return etapas
+    else:
+        return lib_acess

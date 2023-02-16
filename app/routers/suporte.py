@@ -4,7 +4,7 @@ from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senh
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuarios import Usuario
-
+from fastapi import BackgroundTasks
 router = APIRouter()
 
 class Municipio(BaseModel):
@@ -100,6 +100,20 @@ async def cadastro_lotes(
     username: Usuario = Depends(auth.get_current_user)
     ):
     return cadastro_usuarios.cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
+
+@router.post("/suporte/usuarios/cadastro-lote-sem-ativacao")
+async def cadastro_lotes(
+    nome: str = Form(...),
+    mail: str = Form(...),
+    cpf: str = Form(...),
+    municipio_uf: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    whatsapp: str = Form(...),
+    equipe: str = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+    ):
+    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
 
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
@@ -207,3 +221,24 @@ async def gen_chave(cpf: str):
 @router.get("/suporte/validate-token",)
 async def validate_token(username: Usuario = Depends(auth.get_current_user)):
     return True
+
+@router.post("/suporte/ger_usuarios/solicitar-nova-senha")
+async def solicitar_nova_senha(background_tasks: BackgroundTasks,mail: str = Form(...)):
+    background_tasks.add_task(gerenciamento_usuarios.apagar_codigo_recuperacao_tempo,mail)
+    return gerenciamento_usuarios.solicitar_nova_senha(mail)
+
+@router.post("/suporte/ger_usuarios/validar-codigo")
+async def validacao_codigo(mail: str= Form(...),codigo: str= Form(...)):
+    return gerenciamento_usuarios.validar_codigo(codigo,mail)
+
+@router.post("/suporte/ger_usuarios/alterar-senha")
+async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_senha: str = Form(...)):
+    return gerenciamento_usuarios.alterar_senha(mail,codigo,nova_senha)
+
+@router.post("/suporte/ger_usuarios/criar-senha")
+async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_senha: str = Form(...)):
+    return gerenciamento_usuarios.senha_primeiro_acesso(mail,codigo,nova_senha)
+
+@router.post("/suporte/ger_usuarios/primeiro-acesso")
+async def primeiro_acesso(mail: str = Form(...)):
+    return gerenciamento_usuarios.consulta_primeiro_acesso(mail)

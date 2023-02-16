@@ -1,6 +1,6 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes
-from fastapi import APIRouter, Depends
+from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,TrilhaCapacitacao
+from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
 from app.controllers.auth import get_current_user,Usuario
@@ -81,4 +81,23 @@ async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-municipio")
 async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
+    return res
+
+@router.post("/impulsoprevine/capacitacao/conclusao-conteudo")
+async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(auth.get_current_user)):
+    res = TrilhaCapacitacao.conclusao_conteudo(usuario_id,codigo_conteudo,conclusao)
+    return res
+
+@router.post("/impulsoprevine/capacitacao/avaliacao-conteudo")
+async def avaliacao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(auth.get_current_user)):
+    res = TrilhaCapacitacao.avaliacao_conteudo(usuario_id,codigo_conteudo,avaliacao)
+    return res
+
+@router.post("/impulsoprevine/capacitacao/consulta-avaliacao-conclusao")
+async def consulta_avaliacao_conclusao_conteudo(
+    usuario_id: str = Form(...),
+    codigo_conteudo: str = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+    ):
+    res = TrilhaCapacitacao.consulta_avaliacao_conclusao(usuario_id,codigo_conteudo)
     return res

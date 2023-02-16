@@ -25,16 +25,13 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-
 class TokenData(BaseModel):
     username: Optional[str] = None
-
 
 class Usuario(BaseModel):
     id: str
     mail: str
     perfil: str
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -88,6 +85,7 @@ def get_perfil(mail:str):
 
 def autenticar(mail: str, senha: str):
     usuario = get_user(mail)
+    if usuario.perfil_ativo == False or usuario.perfil_ativo == None : return 3
     if usuario==None or usuario.mail != mail:return 1
     if not verificar_senha(senha, usuario.hash_senha):return 2
     return usuario.mail
@@ -132,11 +130,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 def controle_perfil(perfil_usuario,perfil_rota):
     return True if perfil_rota in perfil_usuario else {"mensagem" : "Perfil de usuário com Privilégio insuficiente para essa rota"}
 
-
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     mail = autenticar(form_data.username, form_data.password)
     if mail != form_data.username:
-        erro = "E-mail Incorreto" if mail == 1 else "Senha Invalida"
+        if mail == 1:
+            erro = "E-mail Incorreto"
+        elif mail == 2:
+            erro = "Senha Inválida"
+        elif mail == 3:
+            erro = "Usuário Inativo"
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail= erro,
