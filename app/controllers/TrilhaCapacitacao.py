@@ -15,6 +15,17 @@ def consulta_avaliacao_conclusao(usuario_id,codigo_conteudo):
         print(error)
         return {"mensagem":"Operação não efetuada","error":error}
 
+def consulta_avaliacao_conclusao_por_usuario(usuario_id):
+    try:
+        query = db.session.query(trilha_conteudo_avaliacao_conclusao.AvaliacaoConclusaoConteudo).filter_by(usuario_id=usuario_id)
+        res = query.all()
+        return {"data":res,"error":None}
+    except Exception as error: 
+        session.rollback()
+        print(error)
+        return {"mensagem":"Operação não efetuada","error":error}
+
+
 def avaliacao_conteudo(usuario_id : str,codigo_conteudo : str,avaliacao : int):
     if len(re.findall('[A-Z][A-Z]-MOD[0-99]-C[0-99]', codigo_conteudo))==0: return {"msg": "Código de conteudo invalido", "error": True}
     res = consulta_avaliacao_conclusao(usuario_id,codigo_conteudo)
