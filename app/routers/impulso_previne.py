@@ -101,3 +101,11 @@ async def consulta_avaliacao_conclusao_conteudo(
     ):
     res = TrilhaCapacitacao.consulta_avaliacao_conclusao(usuario_id,codigo_conteudo)
     return res
+
+@router.post("/impulsoprevine/capacitacao/consulta-avaliacao-conclusao-por-usuario")
+async def consulta_avaliacao_conclusao_conteudo(
+    usuario_id: str = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+    ):
+    res = TrilhaCapacitacao.consulta_avaliacao_conclusao_por_usuario(usuario_id)
+    return res
