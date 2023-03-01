@@ -85,8 +85,9 @@ def get_perfil(mail:str):
 
 def autenticar(mail: str, senha: str):
     usuario = get_user(mail)
-    if usuario.perfil_ativo == False or usuario.perfil_ativo == None : return 3
+    print(mail,usuario)
     if usuario==None or usuario.mail != mail:return 1
+    if usuario.perfil_ativo == False or usuario.perfil_ativo == None : return 3
     if not verificar_senha(senha, usuario.hash_senha):return 2
     return usuario.mail
 
