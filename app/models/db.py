@@ -26,7 +26,6 @@ credencial_ = {
       }
 }
 credencial = credencial_[os.getenv("AMBIENTE")]
-print(type(credencial['PORT']))
 engine = create_engine(
    'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
                      credencial['PASSWORD'],
