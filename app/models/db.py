@@ -30,7 +30,7 @@ engine = create_engine(
    'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
                      credencial['PASSWORD'],
                      credencial['HOSTNAME'],
-                     int(credencial['PORT']),
+                     credencial['PORT'],
                      credencial['DATABASE']), connect_args={"options": "-c statement_timeout=100000000",
                                                             },
     echo=True
