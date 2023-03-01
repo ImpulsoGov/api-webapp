@@ -26,11 +26,12 @@ credencial_ = {
       }
 }
 credencial = credencial_[os.getenv("AMBIENTE")]
+print(type(credencial['PORT']))
 engine = create_engine(
    'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
                      credencial['PASSWORD'],
                      credencial['HOSTNAME'],
-                     credencial['PORT'],
+                     int(credencial['PORT']),
                      credencial['DATABASE']), connect_args={"options": "-c statement_timeout=100000000",
                                                             },
     echo=True
