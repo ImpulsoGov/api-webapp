@@ -232,7 +232,7 @@ def cadastro_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
         session.rollback()
         return {"mensagem":"Inserção dos dados falhou","error":True}
 #liberar primeiro acesso
-def liberar_acesso(id_cod,id):
+def liberar_acesso(id_cod,id,perfil):
     #libera primeiro perfil apos cadastro
     #informar perfil liberado
     try:
@@ -243,7 +243,7 @@ def liberar_acesso(id_cod,id):
         return error
     if res[0].perfil_ativo != None : return {"mensagem" : "Usuário já passou pela primeira liberação de perfil"}
     usuario_id= session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
-    perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=6).all()[0].id #perfil 6 - IP
+    perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id #perfil 6 - IP
     novo_perfil = perfil_usuario.Perfil(
         id = str(uuid.uuid4()),
         usuario_id=usuario_id,
@@ -314,8 +314,9 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
     else:
         return ativar_user
 
-def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso):
+def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso,perfil):
     #controle de acesso
+    print("=============")
     controle = controle_perfil(username,acesso)
     if controle != True : return controle
     cad_impulso = cadastro_impulso_sem_ativacao(nome,mail,cpf)
@@ -329,7 +330,7 @@ def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,wha
 
     if (cad_ip['error'] == None): 
         etapas.append("Cadastro IP realizado com sucesso")
-        lib_acess = liberar_acesso(1,mail)
+        lib_acess = liberar_acesso(1,mail,perfil)
     else:
         return cad_ip
     if lib_acess['error'] == None:

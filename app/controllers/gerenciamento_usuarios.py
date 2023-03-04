@@ -1,6 +1,7 @@
 from app.models import db,usuarios,perfil_acesso,perfil_usuario,ativar_usuario,usuarios_ip,recuperacao_senha
 from app.controllers import recuperação_senha,auth,cadastro_usuarios
 from datetime import datetime
+from sqlalchemy import func
 import random,math
 import uuid
 session = db.session
@@ -59,36 +60,37 @@ def lista_usuarios(username,acesso):
         print({"error" : error})
         return error
 
-def cargo_nome(id_cod,id,username,acesso):
-    #controle de acesso
-    controle = auth.controle_perfil(username,acesso)
-    if controle != True : return controle
+def cargo_nome(id_cod,id):
     #Informa dados cadastrais a partir do e-mail ou cpf do usuario
     #id_cod 1 para e-mail e 2 para cpf
     id_cod_ref = [1,2]
     if id_cod not in id_cod_ref : return {"erros" : ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
     id_db = {"mail":id} if int(id_cod) == 1 else {"cpf":id}
     try:
-        nome_usuario = db.session.query(Usuarios).with_entities(
-                    Usuarios.nome_usuario,
-                    Usuarios.id,
-        ).filter_by(**id_db).all()
-        cargo_usuario = db.session.query(UsuariosIP).with_entities(
-                    UsuariosIP.cargo,
-                    UsuariosIP.municipio,
-                    UsuariosIP.equipe
-        ).filter_by(id_usuario=nome_usuario[0].id).all()
-        print(cargo_usuario)
-        return {
-                "cadastro" : [
-                    {
-                        "nome":nome_usuario[0].nome_usuario,
-                        "id":nome_usuario[0].id,
-                        "cargo":cargo_usuario[0].cargo,
-                        "municipio":cargo_usuario[0].municipio,
-                        "equipe":cargo_usuario[0].equipe
-                    }
-                ]}
+        perfil = db.session.query(
+            Perfil
+        ).join(
+            Perfil_lista
+        ).join(
+            Usuarios
+        ).filter_by(**id_db
+        ).join(
+            UsuariosIP
+        ).with_entities(
+            func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
+            Usuarios.nome_usuario.label("nome"),
+            Usuarios.id,
+            UsuariosIP.cargo,
+            UsuariosIP.municipio,
+            UsuariosIP.equipe
+        ).group_by(
+            Usuarios.nome_usuario,
+            Usuarios.id,
+            UsuariosIP.cargo,
+            UsuariosIP.municipio,
+            UsuariosIP.equipe
+        ).all()
+        return { "cadastro" : perfil}
     except Exception as error:
         print({"erros" : [error]})
         return error
