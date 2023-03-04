@@ -114,9 +114,10 @@ async def cadastro_lotes(
     telefone: str = Form(...),
     whatsapp: str = Form(...),
     equipe: str = Form(...),
+    perfil: str = Form(...),
     username: Usuario = Depends(auth.get_current_user)
     ):
-    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2)
+    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2,perfil)
 
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)
@@ -153,7 +154,7 @@ async def dados_cadastro(id: str, id_cod: int,username: Usuario = Depends(auth.g
 
 @router.get("/suporte/ger_usuarios/cargo-nome")
 async def nome_cargo(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
-    res = gerenciamento_usuarios.cargo_nome(id_cod,id,username["perfil"],6)
+    res = gerenciamento_usuarios.cargo_nome(id_cod,id)
     return res
 
 @router.post("/suporte/ger_usuarios/add-perfil", response_model=Mensagem)
