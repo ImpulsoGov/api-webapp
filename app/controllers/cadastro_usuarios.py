@@ -231,6 +231,39 @@ def cadastro_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
     except:
         session.rollback()
         return {"mensagem":"Inserção dos dados falhou","error":True}
+    
+#cadastrar usuario SM
+def cadastro_sm(municipio,cargo,telefone,whatsapp,mail,equipe):
+    try:
+        criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        wp = True if whatsapp == '1' else False
+        id_usuario = obter_id(mail)
+        #validar municipio
+        #validar cargo
+        #formato telefone
+    except :
+        session.rollback()
+        return {"mensagem":"Validação dos dados enviados não efetuada","error":True}
+    try:
+        usuario_dados = usuarios_ip.UsuarioIP(
+            id = str(uuid.uuid4()),
+            municipio=municipio,
+            cargo=cargo,
+            telefone=telefone,
+            whatsapp=wp,
+            id_usuario=id_usuario,
+            equipe=equipe,
+            criacao_data=criacao_data,
+            atualizacao_data=atualizacao_data
+            )
+        session.add(usuario_dados)
+        return {"mensagem":"dados cadastrados com sucesso","error":None}
+
+    except:
+        session.rollback()
+        return {"mensagem":"Inserção dos dados falhou","error":True}
+
 #liberar primeiro acesso
 def liberar_acesso(id_cod,id,perfil):
     #libera primeiro perfil apos cadastro
@@ -316,7 +349,6 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
 
 def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso,perfil):
     #controle de acesso
-    print("=============")
     controle = controle_perfil(username,acesso)
     if controle != True : return controle
     cad_impulso = cadastro_impulso_sem_ativacao(nome,mail,cpf)
