@@ -1,4 +1,4 @@
-from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario
+from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario,usuarios_sm
 from .auth import controle_perfil
 from passlib.context import CryptContext
 from datetime import datetime
@@ -233,7 +233,7 @@ def cadastro_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
         return {"mensagem":"Inserção dos dados falhou","error":True}
     
 #cadastrar usuario SM
-def cadastro_sm(municipio,cargo,telefone,whatsapp,mail,equipe):
+def cadastro_sm(municipio_id_ibge,cargo,telefone,whatsapp,mail,unidade_saude):
     try:
         criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -243,17 +243,16 @@ def cadastro_sm(municipio,cargo,telefone,whatsapp,mail,equipe):
         #validar cargo
         #formato telefone
     except :
-        session.rollback()
         return {"mensagem":"Validação dos dados enviados não efetuada","error":True}
     try:
-        usuario_dados = usuarios_ip.UsuarioIP(
+        usuario_dados = usuarios_sm.UsuarioSM(
             id = str(uuid.uuid4()),
-            municipio=municipio,
+            municipio_id_ibge=municipio_id_ibge,
             cargo=cargo,
             telefone=telefone,
             whatsapp=wp,
             id_usuario=id_usuario,
-            equipe=equipe,
+            unidade_saude=unidade_saude,
             criacao_data=criacao_data,
             atualizacao_data=atualizacao_data
             )
