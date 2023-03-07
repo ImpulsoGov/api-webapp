@@ -77,7 +77,7 @@ def obter_cargo_id(cargo):
         query = db.session.query(cargos.Cargo).filter_by(nome=cargo)
         res = query.first()
 
-        return res.id if res != None else return {"mensagem":"Cargo inválido", "error":True}
+        return res.id if res != None else {"mensagem":"Cargo inválido", "error":True}
     except:
         return {"mensagem":"Internal server error", "error": True}
 
@@ -376,24 +376,60 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
     else:
         return ativar_user
 
-def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso,perfil):
+def cadastrar_em_lote_sem_ativacao(
+        nome,
+        mail,
+        cpf,
+        municipio_uf,
+        cargo,
+        telefone,
+        whatsapp,
+        equipe,
+        username,
+        acesso,
+        perfil,
+        projeto = "IP",
+        unidade_saude = None ,
+        municipio_id_ibge = None
+    ):
     #controle de acesso
     controle = controle_perfil(username,acesso)
     if controle != True : return controle
     cad_impulso = cadastro_impulso_sem_ativacao(nome,mail,cpf)
-    print(cad_impulso)
     etapas = []
+    cadastros_projetos = {
+        "IP" : cadastro_ip,
+        "SM" : cadastro_sm
+    }
+    proj_args = {
+        "IP" : {
+            "municipio_uf" : municipio_uf,
+            "cargo" : cargo,
+            "telefone" : telefone,
+            "whatsapp": whatsapp,
+            "mail": mail,
+            "equipe" : equipe,
+        },
+        "SM" : {
+            "municipio_id_ibge" : municipio_id_ibge,
+            "cargo" : cargo,
+            "telefone" : telefone,
+            whatsapp : whatsapp,
+            mail : mail,
+            unidade_saude : unidade_saude,
+        }
+    }
     if (cad_impulso['error'] == None): 
-        cad_ip = cadastro_ip(municipio_uf,cargo,telefone,whatsapp,mail,equipe)
+        cad_proj = cadastros_projetos[projeto](**proj_args[projeto])
         etapas.append("Cadastro Impulso realizado com sucesso")
     else:
         return cad_impulso
 
-    if (cad_ip['error'] == None): 
+    if (cad_proj['error'] == None): 
         etapas.append("Cadastro IP realizado com sucesso")
         lib_acess = liberar_acesso(1,mail,perfil)
     else:
-        return cad_ip
+        return cad_proj
     if lib_acess['error'] == None:
         etapas.append("Liberação de perfil realizada com sucesso")
         if len(etapas) == 3:
