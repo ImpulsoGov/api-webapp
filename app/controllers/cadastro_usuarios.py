@@ -1,4 +1,4 @@
-from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario,usuarios_sm
+from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario,usuarios_sm, municipios, cargos
 from .auth import controle_perfil
 from passlib.context import CryptContext
 from datetime import datetime
@@ -62,6 +62,33 @@ def verifica_mail(email):
       return True
     except EmailNotValidError as e:
       return {"mensagem":str(e)}
+
+def validar_municipio_id_ibge(municipio_id_ibge):
+    try:
+        query = db.session.query(municipios.Municipios).filter_by(municipio_id_ibge=municipio_id_ibge)
+        res = query.all()
+
+        return True if len(res) != 0 else {"mensagem":"Id IBGE do município inválido", "error":True}
+    except:
+        return {"mensagem":"Internal server error", "error":True}
+
+def obter_cargo_id(cargo):
+    try:
+        query = db.session.query(cargos.Cargo).filter_by(nome=cargo)
+        res = query.first()
+
+        return res.id if res != None else return {"mensagem":"Cargo inválido", "error":True}
+    except:
+        return {"mensagem":"Internal server error", "error": True}
+
+def validar_telefone(telefone):
+    try:
+        telefone_regex = "^\d{10,11}$"
+        res = re.search(telefone_regex, telefone)
+
+        return True if res != None else {"mensagem":"Formato de telefone inválido", "error":True}
+    except:
+        raise {"mensagem":"Internal server error", "error": True}
 
 def cadastrar_usuario(nome,mail,senha,cpf):
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -240,8 +267,11 @@ def cadastro_sm(municipio_id_ibge,cargo,telefone,whatsapp,mail,unidade_saude):
         wp = True if whatsapp == '1' else False
         id_usuario = obter_id(mail)
         #validar municipio
+        if validar_municipio_id_ibge(municipio_id_ibge) != True: return validar_municipio_id_ibge(municipio_id_ibge)
         #validar cargo
+        cargo_id = obter_cargo_id(cargo=cargo)
         #formato telefone
+        if validar_telefone(telefone=telefone) != True: return validar_telefone(telefone=telefone)
     except :
         return {"mensagem":"Validação dos dados enviados não efetuada","error":True}
     try:
