@@ -414,9 +414,9 @@ def cadastrar_em_lote_sem_ativacao(
             "municipio_id_ibge" : municipio_id_ibge,
             "cargo" : cargo,
             "telefone" : telefone,
-            whatsapp : whatsapp,
-            mail : mail,
-            unidade_saude : unidade_saude,
+            "whatsapp" : whatsapp,
+            "mail" : mail,
+            "unidade_saude" : unidade_saude,
         }
     }
     if (cad_impulso['error'] == None): 
