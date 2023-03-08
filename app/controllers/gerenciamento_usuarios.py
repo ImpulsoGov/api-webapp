@@ -97,8 +97,6 @@ def cargo_nome(id_cod,id):
         return error
 
 def obter_dados_usuarioSM(id_cod,id):
-    print("-----------------")
-    print(id_cod,id)
     #Informa dados cadastrais a partir do e-mail ou cpf do usuario
     #id_cod 1 para e-mail e 2 para cpf
     id_cod_ref = [1,2]
