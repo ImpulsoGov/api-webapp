@@ -109,15 +109,33 @@ async def cadastro_lotes(
     nome: str = Form(...),
     mail: str = Form(...),
     cpf: str = Form(...),
-    municipio_uf: str = Form(...),
+    municipio_uf: Optional[str] = Form(None),
     cargo: str = Form(...),
     telefone: str = Form(...),
     whatsapp: str = Form(...),
-    equipe: str = Form(...),
+    equipe: Optional[str] = Form(None),
     perfil: str = Form(...),
+    projeto: Optional[str] = Form("IP"),
+    unidade_saude: Optional[str] = Form(None),
+    municipio_id_ibge: Optional[str] = Form(None),
     username: Usuario = Depends(auth.get_current_user)
     ):
-    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username["perfil"],2,perfil)
+    return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(
+        nome=nome,
+        mail=mail,
+        cpf=cpf,
+        municipio_uf=municipio_uf,
+        cargo=cargo,
+        telefone=telefone,
+        whatsapp=whatsapp,
+        equipe=equipe,
+        username=username["perfil"],
+        acesso=2,
+        perfil=perfil,
+        projeto = projeto,
+        unidade_saude = unidade_saude ,
+        municipio_id_ibge = municipio_id_ibge
+)
 
 
 @router.post("/suporte/usuarios/solicitar-recuperacao", response_model=Mensagem)

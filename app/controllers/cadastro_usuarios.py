@@ -51,6 +51,8 @@ def consulta_cpf(cpf):
 def consulta_id_usuario(id):
     try:
         query = db.session.query(usuarios.Usuario).filter_by(id=id)
+        print("---------------------")
+        print(id)
         res = query.all()
         return True if len(res)==0 else {"mensagem":"E-mail já cadastrado"}
     except ValueError as e:
@@ -67,17 +69,16 @@ def validar_municipio_id_ibge(municipio_id_ibge):
     try:
         query = db.session.query(municipios.Municipios).filter_by(municipio_id_ibge=municipio_id_ibge)
         res = query.all()
-
         return True if len(res) != 0 else {"mensagem":"Id IBGE do município inválido", "error":True}
     except:
         return {"mensagem":"Internal server error", "error":True}
 
-def obter_cargo_id(cargo):
+def validar_cargo(cargo):
     try:
-        query = db.session.query(cargos.Cargo).filter_by(nome=cargo)
+        query = db.session.query(cargos.Cargo).filter_by(id=cargo)
         res = query.first()
 
-        return res.id if res != None else {"mensagem":"Cargo inválido", "error":True}
+        return {"id":res.id, "error":False} if res != None else {"mensagem":"Cargo inválido", "error":True}
     except:
         return {"mensagem":"Internal server error", "error": True}
 
@@ -267,18 +268,21 @@ def cadastro_sm(municipio_id_ibge,cargo,telefone,whatsapp,mail,unidade_saude):
         wp = True if whatsapp == '1' else False
         id_usuario = obter_id(mail)
         #validar municipio
-        if validar_municipio_id_ibge(municipio_id_ibge) != True: return validar_municipio_id_ibge(municipio_id_ibge)
+        validar_municipio = validar_municipio_id_ibge(municipio_id_ibge)
+        if validar_municipio != True: return validar_municipio
         #validar cargo
-        cargo_id = obter_cargo_id(cargo=cargo)
+        validacao_cargo = validar_cargo(cargo)
+        if validacao_cargo["error"] : return validacao_cargo
         #formato telefone
-        if validar_telefone(telefone=telefone) != True: return validar_telefone(telefone=telefone)
+        validacao_telefone = validar_telefone(telefone=telefone)
+        if validacao_telefone != True: return validacao_telefone
     except :
         return {"mensagem":"Validação dos dados enviados não efetuada","error":True}
     try:
         usuario_dados = usuarios_sm.UsuarioSM(
             id = str(uuid.uuid4()),
             municipio_id_ibge=municipio_id_ibge,
-            cargo=cargo,
+            cargo_id=cargo,
             telefone=telefone,
             whatsapp=wp,
             id_usuario=id_usuario,
@@ -299,20 +303,31 @@ def liberar_acesso(id_cod,id,perfil):
     #informar perfil liberado
     try:
         id_db = {"mail":id} if id_cod == 1 else {"cpf":id}
+        print("-----------------00000000000000000000000")
+        print(id_cod,id,perfil)
         res= session.query(usuarios.Usuario).filter_by(**id_db).all()
+        print("-------------------------")
+        print(res)
+    except Exception as error:
+        session.rollback()
+        print({"error" : error})
+        return error
+    try:
+        print("---------------------------------------------------------")
+        if res[0].perfil_ativo != None : return {"mensagem" : "Usuário já passou pela primeira liberação de perfil"}
+        usuario_id= session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
+        perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id #perfil 6 - IP
+        novo_perfil = perfil_usuario.Perfil(
+            id = str(uuid.uuid4()),
+            usuario_id=usuario_id,
+            perfil_id=perfil_id,
+            criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
     except Exception as error:
         print({"error" : error})
         return error
-    if res[0].perfil_ativo != None : return {"mensagem" : "Usuário já passou pela primeira liberação de perfil"}
-    usuario_id= session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
-    perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id #perfil 6 - IP
-    novo_perfil = perfil_usuario.Perfil(
-        id = str(uuid.uuid4()),
-        usuario_id=usuario_id,
-        perfil_id=perfil_id,
-        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        )
+
     try:
         session.add(novo_perfil)
         return {"error": None }
@@ -380,7 +395,6 @@ def cadastrar_em_lote_sem_ativacao(
         nome,
         mail,
         cpf,
-        municipio_uf,
         cargo,
         telefone,
         whatsapp,
@@ -390,7 +404,8 @@ def cadastrar_em_lote_sem_ativacao(
         perfil,
         projeto = "IP",
         unidade_saude = None ,
-        municipio_id_ibge = None
+        municipio_id_ibge = None,
+        municipio_uf = None,
     ):
     #controle de acesso
     controle = controle_perfil(username,acesso)
@@ -420,7 +435,8 @@ def cadastrar_em_lote_sem_ativacao(
         }
     }
     if (cad_impulso['error'] == None): 
-        cad_proj = cadastros_projetos[projeto](**proj_args[projeto])
+        cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
+        print(cad_proj)
         etapas.append("Cadastro Impulso realizado com sucesso")
     else:
         return cad_impulso
