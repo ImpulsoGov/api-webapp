@@ -175,6 +175,12 @@ async def nome_cargo(id: str, id_cod: int,username: Usuario = Depends(auth.get_c
     res = gerenciamento_usuarios.cargo_nome(id_cod,id)
     return res
 
+@router.get("/suporte/ger_usuarios/dados-usuario-sm")
+async def dados_usuarioSM(id: str, id_cod: int,username: Usuario = Depends(auth.get_current_user)):
+    res = gerenciamento_usuarios.obter_dados_usuarioSM(id_cod,id)
+    return res
+
+
 @router.post("/suporte/ger_usuarios/add-perfil", response_model=Mensagem)
 async def adicionar_perfil(perfil: int, id_cod: int,id_usuario: str,username: Usuario = Depends(auth.get_current_user)):
     res = gerenciamento_usuarios.add_perfil(id_cod,id_usuario,perfil,username["perfil"],2)

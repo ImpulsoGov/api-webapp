@@ -51,8 +51,6 @@ def consulta_cpf(cpf):
 def consulta_id_usuario(id):
     try:
         query = db.session.query(usuarios.Usuario).filter_by(id=id)
-        print("---------------------")
-        print(id)
         res = query.all()
         return True if len(res)==0 else {"mensagem":"E-mail já cadastrado"}
     except ValueError as e:
