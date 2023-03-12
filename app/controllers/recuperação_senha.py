@@ -1,14 +1,18 @@
-from app.models import db,recuperacao_senha,usuarios
 import uuid
+
+from app.models import db, recuperacao_senha, usuarios
+
 Recuperar = recuperacao_senha.Recuperar
 Usuario = usuarios.Usuario
 from app.controllers.auth import senha_hash
 from app.controllers.cadastro_usuarios import validar_senha
+
 session = db.session
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
+
 from dotenv import load_dotenv
 
 env_path = os.path.dirname(os.path.realpath(__file__))+'/.env'

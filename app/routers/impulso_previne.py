@@ -1,9 +1,13 @@
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, Form
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,TrilhaCapacitacao
-from fastapi import APIRouter, Depends,Form
-from typing import Optional, List
 from pydantic import BaseModel
-from app.controllers.auth import get_current_user,Usuario
+
+from app.controllers import (TrilhaCapacitacao, auth, busca_ativa_gestantes,
+                             forum_ip, indicadores)
+from app.controllers.auth import Usuario, get_current_user
+
 router = APIRouter()
 
 class Indicador(BaseModel):

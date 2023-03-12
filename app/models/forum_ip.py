@@ -1,8 +1,11 @@
-from sqlalchemy import Column, Integer, String,DATE,ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB,UUID
-from sqlalchemy.orm import relation
-from app.models import db,usuarios
 import uuid
+
+from sqlalchemy import DATE, Column, ForeignKey, Integer, String
+from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.orm import relation
+
+from app.models import db, usuarios
+
 Base = db.Base
 
 class Forum_ip(Base):

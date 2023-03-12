@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import suporte,impulso_previne,territorios
 from pydantic import BaseModel
+
+from app.routers import impulso_previne, suporte, territorios
+
 app = FastAPI()
 
 origins = [

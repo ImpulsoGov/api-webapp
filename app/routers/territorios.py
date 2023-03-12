@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends,Form
-from typing import Optional,List
-from app.controllers import territorios
-from fastapi.security import OAuth2PasswordRequestForm
+from typing import List, Optional
+
 import pandas as pd
+from fastapi import APIRouter, Depends, Form
+from fastapi.security import OAuth2PasswordRequestForm
+
+from app.controllers import territorios
 
 router = APIRouter()
 

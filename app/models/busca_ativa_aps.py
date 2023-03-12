@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String,DATE, BOOLEAN, DateTime
+from sqlalchemy import BOOLEAN, DATE, Column, DateTime, Integer, String
+
 from app.models import DB_PRODUCAO
+
 Base = DB_PRODUCAO.Base
 
 class GestantesCoordenacao(Base):

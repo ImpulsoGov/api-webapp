@@ -1,9 +1,12 @@
-from app.models import db,indicadores
+from app.models import db, indicadores
+
 session = db.session
 Indicadores = indicadores.Indicadores
 
-from .response_pages.indicadores import html as response_indicadores
 from fastapi.responses import HTMLResponse
+
+from .response_pages.indicadores import html as response_indicadores
+
 
 def consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id):
     if estado_sigla != None : estado_sigla=estado_sigla.upper()

@@ -1,4 +1,4 @@
-from app.models import DB_PRODUCAO  
+from app.models import DB_PRODUCAO
 from app.models.busca_ativa_aps import GestantesCoordenacao
 from app.models.busca_ativa_equipe import Gestantes
 

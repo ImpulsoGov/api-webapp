@@ -1,12 +1,18 @@
-from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario
-from .auth import controle_perfil
-from passlib.context import CryptContext
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from passlib.context import CryptContext
 from validate_docbr import CPF
+
+from app.models import db, perfil_acesso, perfil_usuario, usuarios, usuarios_ip
+
+from .auth import controle_perfil
+
 cpf_verificador = CPF()
 import re
-from email_validator import validate_email, EmailNotValidError
+
+from email_validator import EmailNotValidError, validate_email
+
 session = db.session
 
 

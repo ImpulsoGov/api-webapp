@@ -1,8 +1,11 @@
-from app.models import db,municipios
+from app.models import db, municipios
+
 session = db.session
 Municipios = municipios.Municipios
-from .response_pages.municipios import html as response_municipios
 from fastapi.responses import HTMLResponse
+
+from .response_pages.municipios import html as response_municipios
+
 
 def consulta_municipio(id_sus,municipio_nome,estado_sigla,estado_nome):
     if estado_sigla != None : estado_sigla=estado_sigla.upper()
