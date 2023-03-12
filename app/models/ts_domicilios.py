@@ -4,9 +4,10 @@ from app.models import db
 
 Base = db.Base
 
+
 class Domicilios(Base):
-    __tablename__ = 'domicilios'
-    id = Column(String, primary_key=True) 
+    __tablename__ = "domicilios"
+    id = Column(String, primary_key=True)
     id_origem = Column(String)
     ibge = Column(String)
     data_registro = Column(String)
@@ -49,4 +50,4 @@ class Domicilios(Base):
     telefone_residencia = Column(String)
     telefone_contato = Column(String)
     instituicao_telefone = Column(String)
-    __table_args__ = {'schema': 'territorios'}
+    __table_args__ = {"schema": "territorios"}

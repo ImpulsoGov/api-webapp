@@ -4,9 +4,10 @@ from app.models import db
 
 Base = db.Base
 
+
 class Indicadores(Base):
-    __tablename__ = 'indicadores_resumo'
-    id = Column(Integer,primary_key=True)
+    __tablename__ = "indicadores_resumo"
+    id = Column(Integer, primary_key=True)
     estado_sigla = Column(String)
     estado_nome = Column(String)
     estado_nome_normalizado = Column(String)
@@ -21,4 +22,4 @@ class Indicadores(Base):
     indicadores_parametros_peso = Column(Float)
     indicadores_resultados_porcentagem = Column(Float)
     diff_numerador_para_meta = Column(Integer)
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = {"schema": "impulso_previne"}
