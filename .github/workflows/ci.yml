@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  CI:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Copia arquivos do repositório
+        uses: actions/checkout@v3
+      - name: Seta versão do python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.10"
+      - name: Instala dependências
+        run: pip install -r dev-requirements.txt
+
+      - name: Roda verificador de formatação (black)
+        run: black -l 80 --check .
+      - name: Roda linter (flake8)
+        run: flake8 app tests
+      - name: Roda verificador de ordem dos imports (isort)
+        run: isort --check app
+      - name: Roda verificador de tipagem (mypy)
+        run: mypy app
+        continue-on-error: true
+      - name: Roda testes (pytest)
+        run: pytest
