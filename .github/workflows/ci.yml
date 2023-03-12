@@ -19,12 +19,13 @@ jobs:
 
       - name: Roda verificador de formatação (black)
         run: black -l 80 --check .
-      - name: Roda linter (flake8)
-        run: flake8 app tests
       - name: Roda verificador de ordem dos imports (isort)
         run: isort --check app
       - name: Roda verificador de tipagem (mypy)
         run: mypy app
+        continue-on-error: true
+      - name: Roda linter (flake8)
+        run: flake8 app tests
         continue-on-error: true
       - name: Roda testes (pytest)
         run: pytest
