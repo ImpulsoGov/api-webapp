@@ -1,5 +1,5 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,TrilhaCapacitacao
+from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
@@ -82,6 +82,26 @@ async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_
 async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
     return res
+
+@router.get("/impulsoprevine/busca-ativa/diabeticos-por-equipe")
+async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_diabeticos.diabeticos_equipe(municipio_uf,equipe)
+
+@router.get("/impulsoprevine/busca-ativa/diabeticos-por-municipio")
+async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_diabeticos.diabeticos_coordenacao(municipio_uf)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensos-por-equipe")
+async def gestantes(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensos_equipe(municipio_uf,equipe)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensos-por-municipio")
+async def gestantes(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensos_coordenacao(municipio_uf)
+    return res
+
 
 @router.post("/impulsoprevine/capacitacao/conclusao-conteudo")
 async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(auth.get_current_user)):
