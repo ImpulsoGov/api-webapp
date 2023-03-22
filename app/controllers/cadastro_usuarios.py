@@ -416,7 +416,7 @@ def cadastrar_em_lote_sem_ativacao(
     }
     proj_args = {
         "IP" : {
-            "municipio_uf" : municipio_uf,
+            "municipio" : municipio_uf,
             "cargo" : cargo,
             "telefone" : telefone,
             "whatsapp": whatsapp,
@@ -434,7 +434,6 @@ def cadastrar_em_lote_sem_ativacao(
     }
     if (cad_impulso['error'] == None): 
         cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
-        print(cad_proj)
         etapas.append("Cadastro Impulso realizado com sucesso")
     else:
         return cad_impulso
