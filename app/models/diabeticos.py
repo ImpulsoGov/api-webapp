@@ -24,6 +24,7 @@ class Diabeticos(Base):
     cidadao_nome_social = Column(String,nullable=True)
     cidadao_sexo = Column(String,nullable=True)
     dt_nascimento = Column(DATE,nullable=True)
+    cidadao_faixa_etaria = Column(String,nullable=True)
     estabelecimento_cnes_atendimento = Column(String,nullable=True)
     estabelecimento_cnes_cadastro = Column(String,nullable=True)
     estabelecimento_nome_atendimento = Column(String,nullable=True)
