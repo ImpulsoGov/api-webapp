@@ -1,4 +1,4 @@
-from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario
+from app.models import db,usuarios,usuarios_ip,perfil_acesso,perfil_usuario,usuarios_sm, municipios, cargos
 from .auth import controle_perfil
 from passlib.context import CryptContext
 from datetime import datetime
@@ -62,6 +62,32 @@ def verifica_mail(email):
       return True
     except EmailNotValidError as e:
       return {"mensagem":str(e)}
+
+def validar_municipio_id_ibge(municipio_id_ibge):
+    try:
+        query = db.session.query(municipios.Municipios).filter_by(municipio_id_ibge=municipio_id_ibge)
+        res = query.all()
+        return True if len(res) != 0 else {"mensagem":"Id IBGE do município inválido", "error":True}
+    except:
+        return {"mensagem":"Internal server error", "error":True}
+
+def validar_cargo(cargo):
+    try:
+        query = db.session.query(cargos.Cargo).filter_by(id=cargo)
+        res = query.first()
+
+        return {"id":res.id, "error":False} if res != None else {"mensagem":"Cargo inválido", "error":True}
+    except:
+        return {"mensagem":"Internal server error", "error": True}
+
+def validar_telefone(telefone):
+    try:
+        telefone_regex = "^\d{10,11}$"
+        res = re.search(telefone_regex, telefone)
+
+        return True if res != None else {"mensagem":"Formato de telefone inválido", "error":True}
+    except:
+        raise {"mensagem":"Internal server error", "error": True}
 
 def cadastrar_usuario(nome,mail,senha,cpf):
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -231,26 +257,75 @@ def cadastro_ip(municipio,cargo,telefone,whatsapp,mail,equipe):
     except:
         session.rollback()
         return {"mensagem":"Inserção dos dados falhou","error":True}
+    
+#cadastrar usuario SM
+def cadastro_sm(municipio_id_ibge,cargo,telefone,whatsapp,mail,unidade_saude):
+    try:
+        criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        wp = True if whatsapp == '1' else False
+        id_usuario = obter_id(mail)
+        #validar municipio
+        validar_municipio = validar_municipio_id_ibge(municipio_id_ibge)
+        if validar_municipio != True: return validar_municipio
+        #validar cargo
+        validacao_cargo = validar_cargo(cargo)
+        if validacao_cargo["error"] : return validacao_cargo
+        #formato telefone
+        validacao_telefone = validar_telefone(telefone=telefone)
+        if validacao_telefone != True: return validacao_telefone
+    except :
+        return {"mensagem":"Validação dos dados enviados não efetuada","error":True}
+    try:
+        usuario_dados = usuarios_sm.UsuarioSM(
+            id = str(uuid.uuid4()),
+            municipio_id_ibge=municipio_id_ibge,
+            cargo_id=cargo,
+            telefone=telefone,
+            whatsapp=wp,
+            id_usuario=id_usuario,
+            unidade_saude=unidade_saude,
+            criacao_data=criacao_data,
+            atualizacao_data=atualizacao_data
+            )
+        session.add(usuario_dados)
+        return {"mensagem":"dados cadastrados com sucesso","error":None}
+
+    except:
+        session.rollback()
+        return {"mensagem":"Inserção dos dados falhou","error":True}
+
 #liberar primeiro acesso
 def liberar_acesso(id_cod,id,perfil):
     #libera primeiro perfil apos cadastro
     #informar perfil liberado
     try:
         id_db = {"mail":id} if id_cod == 1 else {"cpf":id}
+        print("-----------------00000000000000000000000")
+        print(id_cod,id,perfil)
         res= session.query(usuarios.Usuario).filter_by(**id_db).all()
+        print("-------------------------")
+        print(res)
+    except Exception as error:
+        session.rollback()
+        print({"error" : error})
+        return error
+    try:
+        print("---------------------------------------------------------")
+        if res[0].perfil_ativo != None : return {"mensagem" : "Usuário já passou pela primeira liberação de perfil"}
+        usuario_id= session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
+        perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id #perfil 6 - IP
+        novo_perfil = perfil_usuario.Perfil(
+            id = str(uuid.uuid4()),
+            usuario_id=usuario_id,
+            perfil_id=perfil_id,
+            criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
     except Exception as error:
         print({"error" : error})
         return error
-    if res[0].perfil_ativo != None : return {"mensagem" : "Usuário já passou pela primeira liberação de perfil"}
-    usuario_id= session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
-    perfil_id= session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id #perfil 6 - IP
-    novo_perfil = perfil_usuario.Perfil(
-        id = str(uuid.uuid4()),
-        usuario_id=usuario_id,
-        perfil_id=perfil_id,
-        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        )
+
     try:
         session.add(novo_perfil)
         return {"error": None }
@@ -314,25 +389,60 @@ def cadastrar_em_lote(nome,mail,senha,cpf,municipio_uf,cargo,telefone,whatsapp,e
     else:
         return ativar_user
 
-def cadastrar_em_lote_sem_ativacao(nome,mail,cpf,municipio_uf,cargo,telefone,whatsapp,equipe,username,acesso,perfil):
+def cadastrar_em_lote_sem_ativacao(
+        nome,
+        mail,
+        cpf,
+        cargo,
+        telefone,
+        whatsapp,
+        equipe,
+        username,
+        acesso,
+        perfil,
+        projeto = "IP",
+        unidade_saude = None ,
+        municipio_id_ibge = None,
+        municipio_uf = None,
+    ):
     #controle de acesso
-    print("=============")
     controle = controle_perfil(username,acesso)
     if controle != True : return controle
     cad_impulso = cadastro_impulso_sem_ativacao(nome,mail,cpf)
-    print(cad_impulso)
     etapas = []
+    cadastros_projetos = {
+        "IP" : cadastro_ip,
+        "SM" : cadastro_sm
+    }
+    proj_args = {
+        "IP" : {
+            "municipio" : municipio_uf,
+            "cargo" : cargo,
+            "telefone" : telefone,
+            "whatsapp": whatsapp,
+            "mail": mail,
+            "equipe" : equipe,
+        },
+        "SM" : {
+            "municipio_id_ibge" : municipio_id_ibge,
+            "cargo" : cargo,
+            "telefone" : telefone,
+            "whatsapp" : whatsapp,
+            "mail" : mail,
+            "unidade_saude" : unidade_saude,
+        }
+    }
     if (cad_impulso['error'] == None): 
-        cad_ip = cadastro_ip(municipio_uf,cargo,telefone,whatsapp,mail,equipe)
+        cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
         etapas.append("Cadastro Impulso realizado com sucesso")
     else:
         return cad_impulso
 
-    if (cad_ip['error'] == None): 
+    if (cad_proj['error'] == None): 
         etapas.append("Cadastro IP realizado com sucesso")
         lib_acess = liberar_acesso(1,mail,perfil)
     else:
-        return cad_ip
+        return cad_proj
     if lib_acess['error'] == None:
         etapas.append("Liberação de perfil realizada com sucesso")
         if len(etapas) == 3:
