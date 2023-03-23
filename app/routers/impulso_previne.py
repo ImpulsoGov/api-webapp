@@ -92,6 +92,11 @@ async def diabeticos_municipio(municipio_uf,faixa_etaria,username: Usuario = Dep
     res = busca_ativa_diabeticos.diabeticos_coordenacao(municipio_uf,faixa_etaria)
     return res
 
+@router.get("/impulsoprevine/busca-ativa/diabeticos-graficos")
+async def diabeticos_graficos_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_diabeticos.diabeticos_graficos(municipio_uf)
+    return res
+
 @router.get("/impulsoprevine/busca-ativa/hipertensos-por-equipe")
 async def hipertensos_equipe(municipio_uf,faixa_etaria,equipe,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_hipertensos.hipertensos_equipe(municipio_uf,equipe,faixa_etaria)
@@ -100,7 +105,11 @@ async def hipertensos_equipe(municipio_uf,faixa_etaria,equipe,username: Usuario 
 @router.get("/impulsoprevine/busca-ativa/hipertensos-por-municipio")
 async def hipertensos_municipio(municipio_uf,faixa_etaria,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_hipertensos.hipertensos_coordenacao(municipio_uf,faixa_etaria)
-    print(len(res))
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensos-graficos")
+async def hipertensos_graficos_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensos_graficos(municipio_uf)
     return res
 
 

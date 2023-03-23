@@ -35,3 +35,11 @@ def hipertensos_coordenacao(municipio_uf,faixa_etaria):
         print({"erros" : [error]})
         return error
 
+def hipertensos_graficos(municipio_uf):
+    try:
+        return session.execute("SELECT identificacao_condicao_hipertensao,acs_nome_cadastro,apenas_autorreferida,cidadao_cpf_dt_nascimento,cidadao_nome,consulta_e_afericao_em_dia,criacao_data,diagnostico_clinico,dt_consulta_mais_recente,dt_afericao_pressao_mais_recente,equipe_ine_cadastro,equipe_nome_atendimento,equipe_nome_cadastro,municipio_uf,prazo_proxima_consulta,prazo_proxima_afericao_pa,quadrimestre_atual,realizou_consulta_ultimos_6_meses,realizou_afericao_ultimos_6_meses,se_faleceu,se_mudou,status_em_dia,status_usuario,cidadao_faixa_etaria FROM impulso_previne_dados_nominais.painel_enfermeiras_lista_nominal_hipertensos where municipio_uf='"+municipio_uf+"';").fetchall()
+    except Exception as error:
+        session.rollback()
+        print({"erros" : [error]})
+        return error
+
