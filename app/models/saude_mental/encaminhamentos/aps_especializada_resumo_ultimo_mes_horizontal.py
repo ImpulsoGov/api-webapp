@@ -10,15 +10,14 @@ class EncaminhamentosApsEspecializadaResumoUltimoMesHorizontal(Base):
     __tablename__ = (
         "encaminhamentos_aps_especializada_resumo_ultimo_mes_horizontal"
     )
-    unidade_geografica_id = Column(
-        UUID(as_uuid=True), primary_key=True, nullable=True
-    )
-    unidade_geografica_id_sus = Column(VARCHAR(length=15), nullable=True)
-    competencia = Column(Date, nullable=True)
-    periodo_id = Column(UUID(as_uuid=True), nullable=True)
-    encaminhamentos_especializada = Column(Numeric, nullable=True)
-    atendimentos_sm_aps = Column(Numeric, nullable=True)
-    perc_encaminhamentos_especializada = Column(Numeric, nullable=True)
-    dif_encaminhamentos_especializada_anterior = Column(Numeric, nullable=True)
-    nome_mes = Column(Text, nullable=True)
+    id = Column(Text, primary_key=True)
+    unidade_geografica_id = Column(UUID(as_uuid=True))
+    unidade_geografica_id_sus = Column(VARCHAR(length=15))
+    competencia = Column(Date)
+    periodo_id = Column(UUID(as_uuid=True))
+    encaminhamentos_especializada = Column(Numeric)
+    atendimentos_sm_aps = Column(Numeric)
+    perc_encaminhamentos_especializada = Column(Numeric)
+    dif_encaminhamentos_especializada_anterior = Column(Numeric)
+    nome_mes = Column(Text)
     __table_args__ = {"schema": "saude_mental"}
