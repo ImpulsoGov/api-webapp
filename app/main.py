@@ -22,6 +22,7 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+
 app.include_router(suporte.router)
 app.include_router(impulso_previne.router)
 app.include_router(territorios.router)
