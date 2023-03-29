@@ -3,7 +3,9 @@ from fastapi import HTTPException
 from app.models import db
 from app.models.saude_mental.encaminhamentos import (
     EncaminhamentoApsCaps,
+    EncaminhamentoApsCapsResumoUltimoMesVertical,
     EncaminhamentoApsEspecializada,
+    EncaminhamentoApsEspecializadaResumoUltimoMesVertical,
     EncaminhamentosApsCapsResumoUltimoMesHorizontal,
     EncaminhamentosApsEspecializadaResumoUltimoMesHorizontal,
 )
@@ -48,6 +50,27 @@ def obter_dados_aps_especializada_resumo_ultimo_mes_horizontal_por_id_sus(
     return dados_aps_especializada_resumo
 
 
+def obter_dados_aps_especializada_resumo_ultimo_mes_vertical_por_id_sus(
+    municipio_id_sus: str,
+):
+    dados_aps_especializada_resumo = (
+        session.query(EncaminhamentoApsEspecializadaResumoUltimoMesVertical)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .first()
+    )
+
+    if not dados_aps_especializada_resumo:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Resumo vertical da APS especializada no último mês ",
+                "do município não encontrado",
+            ),
+        )
+
+    return dados_aps_especializada_resumo
+
+
 def obter_dados_aps_caps_por_id_sus(municipio_id_sus: str):
     dados_aps_caps = (
         session.query(EncaminhamentoApsCaps)
@@ -78,6 +101,27 @@ def obter_dados_aps_caps_resumo_ultimo_mes_horizontal_por_id_sus(
             status_code=404,
             detail=(
                 "Resumo horizontal da APS CAPS no último mês ",
+                "do município não encontrado",
+            ),
+        )
+
+    return dados_aps_caps_resumo
+
+
+def obter_dados_aps_caps_resumo_ultimo_mes_vertical_por_id_sus(
+    municipio_id_sus: str,
+):
+    dados_aps_caps_resumo = (
+        session.query(EncaminhamentoApsCapsResumoUltimoMesVertical)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .first()
+    )
+
+    if not dados_aps_caps_resumo:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Resumo vertical da APS CAPS no último mês ",
                 "do município não encontrado",
             ),
         )
