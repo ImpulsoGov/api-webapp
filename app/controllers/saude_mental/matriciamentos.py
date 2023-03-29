@@ -2,8 +2,8 @@ from fastapi import HTTPException
 
 from app.models import db
 from app.models.saude_mental.matriciamentos import (
-    MatriciamentosPorCapsUltimoAno,
-    MatriciamentosPorMunicipioUltimoAno,
+    MatriciamentoPorCapsUltimoAno,
+    MatriciamentoPorMunicipioUltimoAno,
 )
 
 session = db.session
@@ -11,7 +11,7 @@ session = db.session
 
 def obter_matriciamentos_caps_ultimo_ano_por_id_sus(municipio_id_sus: str):
     matriciamentos_caps = (
-        session.query(MatriciamentosPorCapsUltimoAno)
+        session.query(MatriciamentoPorCapsUltimoAno)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
         .first()
     )
@@ -30,7 +30,7 @@ def obter_matriciamentos_caps_ultimo_ano_por_id_sus(municipio_id_sus: str):
 
 def obter_matriciamentos_municipio_ultimo_ano_por_id_sus(municipio_id_sus: str):
     matriciamentos_municipio = (
-        session.query(MatriciamentosPorMunicipioUltimoAno)
+        session.query(MatriciamentoPorMunicipioUltimoAno)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
         .first()
     )

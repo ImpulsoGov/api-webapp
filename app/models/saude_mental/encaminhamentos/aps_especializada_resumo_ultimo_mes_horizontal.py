@@ -6,7 +6,7 @@ from app.models import db
 Base = db.Base
 
 
-class EncaminhamentosApsEspecializadaResumoUltimoMesHorizontal(Base):
+class EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal(Base):
     __tablename__ = (
         "encaminhamentos_aps_especializada_resumo_ultimo_mes_horizontal"
     )

@@ -6,7 +6,7 @@ from app.models import db
 Base = db.Base
 
 
-class EncaminhamentosApsCapsResumoUltimoMesHorizontal(Base):
+class EncaminhamentoApsCapsResumoUltimoMesHorizontal(Base):
     __tablename__ = "encaminhamentos_aps_caps_resumo_ultimo_mes_horizontal"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))

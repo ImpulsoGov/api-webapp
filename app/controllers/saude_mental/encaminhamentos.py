@@ -3,11 +3,11 @@ from fastapi import HTTPException
 from app.models import db
 from app.models.saude_mental.encaminhamentos import (
     EncaminhamentoApsCaps,
+    EncaminhamentoApsCapsResumoUltimoMesHorizontal,
     EncaminhamentoApsCapsResumoUltimoMesVertical,
     EncaminhamentoApsEspecializada,
+    EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal,
     EncaminhamentoApsEspecializadaResumoUltimoMesVertical,
-    EncaminhamentosApsCapsResumoUltimoMesHorizontal,
-    EncaminhamentosApsEspecializadaResumoUltimoMesHorizontal,
 )
 
 session = db.session
@@ -33,7 +33,7 @@ def obter_dados_aps_especializada_resumo_ultimo_mes_horizontal_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_especializada_resumo = (
-        session.query(EncaminhamentosApsEspecializadaResumoUltimoMesHorizontal)
+        session.query(EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
         .first()
     )
@@ -91,7 +91,7 @@ def obter_dados_aps_caps_resumo_ultimo_mes_horizontal_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_caps_resumo = (
-        session.query(EncaminhamentosApsCapsResumoUltimoMesHorizontal)
+        session.query(EncaminhamentoApsCapsResumoUltimoMesHorizontal)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
         .first()
     )
