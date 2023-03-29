@@ -35,10 +35,10 @@ def obter_dados_aps_especializada_resumo_ultimo_mes_horizontal_por_id_sus(
     dados_aps_especializada_resumo = (
         session.query(EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not dados_aps_especializada_resumo:
+    if len(dados_aps_especializada_resumo) == 0:
         raise HTTPException(
             status_code=404,
             detail=(
@@ -56,10 +56,10 @@ def obter_dados_aps_especializada_resumo_ultimo_mes_vertical_por_id_sus(
     dados_aps_especializada_resumo = (
         session.query(EncaminhamentoApsEspecializadaResumoUltimoMesVertical)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not dados_aps_especializada_resumo:
+    if len(dados_aps_especializada_resumo) == 0:
         raise HTTPException(
             status_code=404,
             detail=(
@@ -93,10 +93,10 @@ def obter_dados_aps_caps_resumo_ultimo_mes_horizontal_por_id_sus(
     dados_aps_caps_resumo = (
         session.query(EncaminhamentoApsCapsResumoUltimoMesHorizontal)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not dados_aps_caps_resumo:
+    if len(dados_aps_caps_resumo) == 0:
         raise HTTPException(
             status_code=404,
             detail=(
@@ -114,10 +114,10 @@ def obter_dados_aps_caps_resumo_ultimo_mes_vertical_por_id_sus(
     dados_aps_caps_resumo = (
         session.query(EncaminhamentoApsCapsResumoUltimoMesVertical)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not dados_aps_caps_resumo:
+    if len(dados_aps_caps_resumo) == 0:
         raise HTTPException(
             status_code=404,
             detail=(

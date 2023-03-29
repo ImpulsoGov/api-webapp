@@ -13,10 +13,10 @@ def obter_matriciamentos_caps_ultimo_ano_por_id_sus(municipio_id_sus: str):
     matriciamentos_caps = (
         session.query(MatriciamentoPorCapsUltimoAno)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not matriciamentos_caps:
+    if len(matriciamentos_caps) == 0:
         raise HTTPException(
             status_code=404,
             detail=(
@@ -32,10 +32,10 @@ def obter_matriciamentos_municipio_ultimo_ano_por_id_sus(municipio_id_sus: str):
     matriciamentos_municipio = (
         session.query(MatriciamentoPorMunicipioUltimoAno)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .first()
+        .all()
     )
 
-    if not matriciamentos_municipio:
+    if len(matriciamentos_municipio) == 0:
         raise HTTPException(
             status_code=404,
             detail="Matriciamentos no último ano do município não encontrados",
