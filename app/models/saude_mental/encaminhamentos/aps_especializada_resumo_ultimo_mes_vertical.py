@@ -6,18 +6,16 @@ from app.models import db
 Base = db.Base
 
 
-class EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal(Base):
+class EncaminhamentoApsEspecializadaResumoUltimoMesVertical(Base):
     __tablename__ = (
-        "encaminhamentos_aps_especializada_resumo_ultimo_mes_horizontal"
+        "encaminhamentos_aps_especializada_resumo_ultimo_mes_vertical"
     )
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
-    competencia = Column(Date)
     periodo_id = Column(UUID(as_uuid=True))
-    encaminhamentos_especializada = Column(Numeric)
-    atendimentos_sm_aps = Column(Numeric)
-    perc_encaminhamentos_especializada = Column(Numeric)
-    dif_encaminhamentos_especializada_anterior = Column(Numeric)
+    competencia = Column(Date)
     nome_mes = Column(Text)
+    encaminhamento = Column(Text)
+    prop_atendimentos = Column(Numeric)
     __table_args__ = {"schema": "saude_mental"}

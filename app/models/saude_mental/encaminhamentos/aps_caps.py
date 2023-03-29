@@ -6,8 +6,8 @@ from app.models import db
 Base = db.Base
 
 
-class EncaminhamentoApsEspecializada(Base):
-    __tablename__ = "encaminhamentos_aps_especializada"
+class EncaminhamentoApsCaps(Base):
+    __tablename__ = "encaminhamentos_aps_caps"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
