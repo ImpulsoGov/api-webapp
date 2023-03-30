@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter
 
 from app.controllers.saude_mental.matriciamentos import (
@@ -12,7 +10,7 @@ router = APIRouter()
 
 @router.get("/saude-mental/matriciamentos/caps")
 async def obter_matriciamentos_caps(
-    municipio_id_sus: Optional[str] = None,
+    municipio_id_sus: str,
 ):
     return obter_matriciamentos_caps_ultimo_ano_por_id_sus(
         municipio_id_sus=municipio_id_sus
@@ -21,7 +19,7 @@ async def obter_matriciamentos_caps(
 
 @router.get("/saude-mental/matriciamentos/municipio")
 async def obter_matriciamentos_municipio(
-    municipio_id_sus: Optional[str] = None,
+    municipio_id_sus: str,
 ):
     return obter_matriciamentos_municipio_ultimo_ano_por_id_sus(
         municipio_id_sus=municipio_id_sus
