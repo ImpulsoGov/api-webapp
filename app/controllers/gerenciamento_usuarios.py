@@ -45,15 +45,28 @@ def lista_usuarios(username,acesso):
     #Retorna lista com todos os usuarios ativos e respectivo perfil dados:(Nome,e-mail, perfil)
     try:
         res = db.session.query(
-            Perfil
-        ).join(Perfil_lista
-        ).join(Usuarios
+            Usuarios
+        ).join(UsuariosIP, UsuariosIP.id_usuario == Usuarios.id, isouter=True
+        ).join(Perfil, Perfil.usuario_id == UsuariosIP.id_usuario, isouter=True
+        ).join(Perfil_lista, Perfil_lista.id == Perfil.perfil_id, isouter=True
         ).with_entities(
             Usuarios.mail,
             Usuarios.cpf,
             Usuarios.nome_usuario,
-            Perfil_lista.perfil
+            UsuariosIP.municipio,
+            UsuariosIP.cargo,
+            UsuariosIP.telefone,
+            UsuariosIP.equipe,
+            func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
         ).filter_by(perfil_ativo=True
+        ).group_by(
+            Usuarios.mail,
+            Usuarios.cpf,
+            Usuarios.nome_usuario,
+            UsuariosIP.municipio,
+            UsuariosIP.cargo,
+            UsuariosIP.telefone,
+            UsuariosIP.equipe,
         ).all()
         return {"usuarios" : res}
     except Exception as error:

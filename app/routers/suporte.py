@@ -138,7 +138,7 @@ async def lista_usuarios_sem_liberacao(username: Usuario = Depends(auth.get_curr
     res = gerenciamento_usuarios.lista_usuarios_sem_liberacao(username["perfil"],2)
     return res
 
-@router.get("/suporte/ger_usuarios/lista-usuarios", response_model=Usuarios_lista)
+@router.get("/suporte/ger_usuarios/lista-usuarios")
 async def lista_usuarios(username: Usuario = Depends(auth.get_current_user)):
     res = gerenciamento_usuarios.lista_usuarios(username["perfil"],2)
     return res
