@@ -8,8 +8,9 @@ Base = db.Base
 
 class InternacaoRelacaoRapsResumoAltas12mVertical(Base):
     __tablename__ = "internacoes_relacao_raps_resumo_altas_12m_vertical"
+    id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
-    unidade_geografica_id_sus = Column(VARCHAR(length=15), primary_key=True)
+    unidade_geografica_id_sus = Column(VARCHAR(length=15))
     a_partir_de_ano = Column(Text)
     a_partir_de_mes = Column(Text)
     ate_ano = Column(Text)
