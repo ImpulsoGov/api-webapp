@@ -8,7 +8,8 @@ Base = db.Base
 
 class MatriciamentoPorCapsUltimoAno(Base):
     __tablename__ = "matriciamentos_por_caps_ultimo_ano"
-    unidade_geografica_id = Column(UUID(as_uuid=True), primary_key=True)
+    id = Column(Text, primary_key=True)
+    unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(CHAR(length=6))
     competencia = Column(Date)
     ano = Column(Text)
