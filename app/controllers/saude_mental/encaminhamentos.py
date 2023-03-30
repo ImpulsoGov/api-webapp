@@ -29,7 +29,7 @@ def obter_dados_aps_especializada_por_id_sus(municipio_id_sus: str):
     return dados_aps_especializada
 
 
-def obter_dados_aps_especializada_resumo_ultimo_mes_horizontal_por_id_sus(
+def obter_dados_aps_especializada_resumo_horizontal_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_especializada_resumo = (
@@ -50,7 +50,7 @@ def obter_dados_aps_especializada_resumo_ultimo_mes_horizontal_por_id_sus(
     return dados_aps_especializada_resumo
 
 
-def obter_dados_aps_especializada_resumo_ultimo_mes_vertical_por_id_sus(
+def obter_dados_aps_especializada_resumo_vertical_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_especializada_resumo = (
@@ -87,7 +87,7 @@ def obter_dados_aps_caps_por_id_sus(municipio_id_sus: str):
     return dados_aps_caps
 
 
-def obter_dados_aps_caps_resumo_ultimo_mes_horizontal_por_id_sus(
+def obter_dados_aps_caps_resumo_horizontal_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_caps_resumo = (
@@ -108,7 +108,7 @@ def obter_dados_aps_caps_resumo_ultimo_mes_horizontal_por_id_sus(
     return dados_aps_caps_resumo
 
 
-def obter_dados_aps_caps_resumo_ultimo_mes_vertical_por_id_sus(
+def obter_dados_aps_caps_resumo_vertical_por_id_sus(
     municipio_id_sus: str,
 ):
     dados_aps_caps_resumo = (
@@ -127,3 +127,38 @@ def obter_dados_aps_caps_resumo_ultimo_mes_vertical_por_id_sus(
         )
 
     return dados_aps_caps_resumo
+
+
+def selecionar_resumo_aps_especializada_por_sentido(
+    municipio_id_sus: str, sentido: str
+):
+    if sentido == "vertical":
+        return obter_dados_aps_especializada_resumo_vertical_por_id_sus(
+            municipio_id_sus=municipio_id_sus
+        )
+
+    if sentido == "horizontal" or sentido is None:
+        dados = obter_dados_aps_especializada_resumo_horizontal_por_id_sus(
+            municipio_id_sus=municipio_id_sus
+        )
+        return dados
+
+    raise HTTPException(
+        status_code=400, detail="O resumo deve ser horizontal ou vertical"
+    )
+
+
+def selecionar_resumo_aps_caps_por_sentido(municipio_id_sus: str, sentido: str):
+    if sentido == "vertical":
+        return obter_dados_aps_caps_resumo_vertical_por_id_sus(
+            municipio_id_sus=municipio_id_sus
+        )
+
+    if sentido == "horizontal" or sentido is None:
+        return obter_dados_aps_caps_resumo_horizontal_por_id_sus(
+            municipio_id_sus=municipio_id_sus
+        )
+
+    raise HTTPException(
+        status_code=400, detail="O resumo deve ser horizontal ou vertical"
+    )
