@@ -4,7 +4,8 @@ from pydantic import BaseModel
 
 from app.routers import impulso_previne, suporte, territorios
 from app.routers.saude_mental import (
-    internacoes,  # encaminhamentos,
+    encaminhamentos,
+    internacoes,
     matriciamentos,
 )
 
@@ -29,7 +30,7 @@ app.add_middleware(
 app.include_router(suporte.router)
 app.include_router(impulso_previne.router)
 app.include_router(territorios.router)
-# app.include_router(encaminhamentos.router)
+app.include_router(encaminhamentos.router)
 app.include_router(matriciamentos.router)
 app.include_router(internacoes.router)
 
