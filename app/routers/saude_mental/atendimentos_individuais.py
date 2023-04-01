@@ -9,7 +9,7 @@ from app.controllers.saude_mental.atendimentos_individuais import (
 router = APIRouter()
 
 
-@router.get("/saude-mental/atendimentos/porcaps")
+@router.get("/saude-mental/atendimentosindividuais/porcaps")
 async def obter_atendimentos_caps(
     municipio_id_sus: str,
 ):
@@ -18,7 +18,7 @@ async def obter_atendimentos_caps(
     )
 
 
-@router.get("/saude-mental/atendimentos/caps/perfil")
+@router.get("/saude-mental/atendimentosindividuais/caps/perfil")
 async def obter_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
@@ -27,7 +27,7 @@ async def obter_perfil_usuarios_caps(
     )
 
 
-@router.get("/saude-mental/atendimentos/caps/perfil/resumo")
+@router.get("/saude-mental/atendimentosindividuais/caps/perfil/resumo")
 async def obter_resumo_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
