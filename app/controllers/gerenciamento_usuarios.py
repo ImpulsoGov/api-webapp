@@ -58,7 +58,7 @@ def lista_usuarios(username,acesso):
             UsuariosIP.telefone,
             UsuariosIP.equipe,
             func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
-        ).filter_by(perfil_ativo=True
+        ).filter(Usuarios.perfil_ativo==True,UsuariosIP.municipio.isnot(None)
         ).group_by(
             Usuarios.mail,
             Usuarios.cpf,
