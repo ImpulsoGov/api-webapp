@@ -1,4 +1,3 @@
-
 from sqlalchemy import Column, Date, Float, Integer, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
 
@@ -18,7 +17,7 @@ class ConsultorionaruaAtendimentos(Base):
     periodo_id = Column(UUID(as_uuid=True))
     periodo_ordem = Column(Float)
     periodo = Column(Text)
-    tipo_producao = Column(Text)
+    tipo_producao = Column(Text, primary_key=True)
     competencia = Column(Text)
     nome_mes = Column(Text)
     atualizacao_data = Column(TIMESTAMP(timezone=True))
