@@ -1,0 +1,3 @@
+# flake8: noqa: F401
+from .caps_usuarios_ativos_perfil import UsuariosPerfil
+from .caps_usuarios_ativos_por_estabelecimento_resumo import UsuariosPerfilEstabelecimento
