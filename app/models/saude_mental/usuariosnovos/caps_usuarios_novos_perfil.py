@@ -25,7 +25,6 @@ class UsuariosNovosPerfil(Base):
     usuario_situacao_rua = Column(Text)
     usuario_condicao_saude = Column(Text)
     usuario_faixa_etaria = Column(Text)
-    usuario_tempo_servico = Column(Text)
     usuario_faixa_etaria_ordem = Column(Integer)
     usuario_idade = Column(Float)
     usuario_abuso_substancias = Column(Text)

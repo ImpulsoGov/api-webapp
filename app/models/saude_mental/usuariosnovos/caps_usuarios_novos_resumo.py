@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Date, Float, Integer, Text
-from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
+from sqlalchemy.dialects.postgresql import UUID, VARCHAR
 
 from app.models import db
 
@@ -12,7 +12,6 @@ class UsuariosNovosResumo(Base):
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
     competencia = Column(Date)
-    atualizacao_data = Column(TIMESTAMP(timezone=True))
     periodo_id = Column(UUID(as_uuid=True))
     periodo_ordem = Column(Float)
     periodo = Column(Text)
