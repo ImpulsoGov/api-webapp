@@ -12,7 +12,9 @@ from app.routers.saude_mental import (
     reducaodedanos,
     usuarios,
     abandono,
-    procedimentos
+    procedimentos,
+    ambulatorio,
+    atencao_hospitalar
 )
 
 app = FastAPI()
@@ -45,6 +47,8 @@ app.include_router(reducaodedanos.router)
 app.include_router(usuarios.router)
 app.include_router(abandono.router)
 app.include_router(procedimentos.router)
+app.include_router(atencao_hospitalar.router)
+app.include_router(ambulatorio.router)
 
 
 class Welcome(BaseModel):
