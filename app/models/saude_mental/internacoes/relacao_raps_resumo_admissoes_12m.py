@@ -18,6 +18,7 @@ class InternacaoRelacaoRapsResumoAdmissoes12m(Base):
     internacoes_atendimento_raps_antes = Column(Numeric)
     internacoes_alcool_drogas = Column(Numeric)
     internacoes_total = Column(Numeric)
+    internacoes_transtornos = Column(Numeric)
     atualizacao_data = Column(TIMESTAMP(timezone=True))
     perc_internacoes_atendimento_raps_antes = Column(Numeric)
     __table_args__ = {"schema": "saude_mental"}
