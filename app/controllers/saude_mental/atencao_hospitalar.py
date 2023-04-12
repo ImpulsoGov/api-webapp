@@ -3,9 +3,9 @@ from fastapi import HTTPException
 from app.models import db
 from app.models.saude_mental.atencao_hospitalar import (
     AcolhimentoNoturno,
-    # InternacoesResumoAdmissoes,
+    InternacoesResumoAdmissoes,
     # InternacoesResumoAdmissoes12m,
-    # InternacoesResumoAltas,
+    InternacoesResumoAltas,
     # InternacoesResumoAltas12m
 )
 
@@ -31,24 +31,23 @@ def obter_acolhimento_noturno(
 
     return acolhimento_noturno
 
-# def obter_internacoes_resumo_admissoes(
-#     municipio_id_sus: str,
-# ):
-#     internacoes_resumo_admissoes = (
-#         session.query(InternacoesResumoAdmissoes)
-#         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-#         .all()
-#     )
+def obter_internacoes_resumo_admissoes(
+    municipio_id_sus: str,
+):
+    internacoes_resumo_admissoes = (
+        session.query(InternacoesResumoAdmissoes)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .all()
+    )
 
-#     if len(internacoes_resumo_admissoes) == 0:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=(
-#                 "Dados não encontrados",
-#             ),
-#         )
-
-#     return internacoes_resumo_admissoes
+    if len(internacoes_resumo_admissoes) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Dados não encontrados",
+            ),
+        )
+    return internacoes_resumo_admissoes
 
 # def obter_internacoes_resumo_admissoes_12m(
 #     municipio_id_sus: str,
@@ -69,24 +68,24 @@ def obter_acolhimento_noturno(
 
 #     return internacoes_resumo_admissoes_12m
 
-# def obter_internacoes_resumo_altas(
-#     municipio_id_sus: str,
-# ):
-#     internacoes_resumo_altas = (
-#         session.query(InternacoesResumoAltas)
-#         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-#         .all()
-#     )
+def obter_internacoes_resumo_altas(
+    municipio_id_sus: str,
+):
+    internacoes_resumo_altas = (
+        session.query(InternacoesResumoAltas)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .all()
+    )
 
-#     if len(internacoes_resumo_altas) == 0:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=(
-#                 "Dados não encontrados",
-#             ),
-#         )
+    if len(internacoes_resumo_altas) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Dados não encontrados",
+            ),
+        )
 
-#     return internacoes_resumo_altas
+    return internacoes_resumo_altas
 
 # def obter_internacoes_resumo_altas_12m(
 #     municipio_id_sus: str,
