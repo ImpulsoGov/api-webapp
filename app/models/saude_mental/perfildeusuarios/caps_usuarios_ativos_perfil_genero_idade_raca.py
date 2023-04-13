@@ -20,6 +20,6 @@ class UsuariosPerfilIdadeRaca(Base):
     usuario_sexo = Column(Text)
     usuario_faixa_etaria = Column(Text)
     usuario_faixa_etaria_ordem = Column(Integer)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": "saude_mental", 'extend_existing': True}
     
  
