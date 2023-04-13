@@ -25,13 +25,13 @@ credencial_ = {
          "DATABASE":os.getenv("DATABASE_PROD")
       }
 }
-credencial = credencial_[os.getenv("AMBIENTE")]
+credencial = credencial_[os.getenv("AMBIENTE").strip()]
 engine = create_engine(
-   'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'],
-                     credencial['PASSWORD'],
-                     credencial['HOSTNAME'],
-                     int(credencial['PORT']),
-                     credencial['DATABASE']), connect_args={"options": "-c statement_timeout=100000000",
+   'postgresql://{}:{}@{}:{}/{}?'.format(credencial['USERNAME'].strip(),
+                     credencial['PASSWORD'].strip(),
+                     credencial['HOSTNAME'].strip(),
+                     int(credencial['PORT'].strip()),
+                     credencial['DATABASE'].strip()), connect_args={"options": "-c statement_timeout=100000000",
                                                             },
     echo=True
         
