@@ -8,6 +8,7 @@ Base = db.Base
 class InternacoesResumoAltas(Base):
     __tablename__ = "internacoes_relacao_raps_resumo_altas"
     id = Column(Text, primary_key=True)
+    periodo = Column(Text)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
     atualizacao_data = Column(TIMESTAMP(timezone=True))
