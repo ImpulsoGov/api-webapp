@@ -9,10 +9,8 @@ Base = db.Base
 class ProcedimentosPorTipo(Base):
     __tablename__ = "caps_procedimentos_por_tipo"
     id = Column(Text, primary_key=True)
-    unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
     competencia = Column(Date)
-    periodo_id = Column(UUID(as_uuid=True))
     periodo_ordem = Column(Float)
     periodo = Column(Text)
     nome_mes = Column(Text)
