@@ -14,7 +14,7 @@ class ProcedimentoPorUsuarioTempoServiço(Base):
     tempo_servico_descricao = Column(Text)
     procedimentos_por_usuario = Column(Numeric)
     estabelecimento_linha_perfil = Column(Text)
-    estabelecimento_linha_idade = Column(Text)
+    # estabelecimento_linha_idade = Column(Text)
     estabelecimento = Column(Text)
     periodo = Column(Text)
     nome_mes = Column(Text)
