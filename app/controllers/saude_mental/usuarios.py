@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from app.models import db
-from app.models.saude_mental.perfildeusuarios import ( UsuariosPerfil, UsuariosPerfilEstabelecimento)
+from app.models.saude_mental.perfildeusuarios import ( UsuariosPerfil, UsuariosPerfilEstabelecimento, UsuariosPerfilCondicao, UsuariosPerfilIdadeRaca)
 from app.models.saude_mental.usuariosnovos import ( UsuariosNovosPerfil, UsuariosNovosResumo)
 
 session = db.session
@@ -45,6 +45,46 @@ def obter_usuarios_perfil_estabelecimento(
         )
 
     return obter_usuarios_perfil_estabelecimento
+
+
+def obter_usuarios_perfil_condicao(
+    municipio_id_sus: str,
+):
+    obter_usuarios_perfil_condicao = (
+        session.query(UsuariosPerfilCondicao)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .all()
+    )
+
+    if len(obter_usuarios_perfil_condicao) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Dado perfil do usuario não encontrado."
+            ),
+        )
+
+    return obter_usuarios_perfil_condicao
+
+
+def obter_usuarios_perfil_idade_raca(
+    municipio_id_sus: str,
+):
+    obter_usuarios_perfil_idade_raca = (
+        session.query(UsuariosPerfilIdadeRaca)
+        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+        .all()
+    )
+
+    if len(obter_usuarios_perfil_idade_raca) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Dado perfil estabelecimento não encontrado."
+            ),
+        )
+
+    return obter_usuarios_perfil_idade_raca
 
 
 def obter_usuarios_novos(
