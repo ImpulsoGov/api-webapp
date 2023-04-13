@@ -10,21 +10,21 @@ session = db.session
 def obter_usuarios_perfil(
     municipio_id_sus: str,
 ):
-    usuarios_perfil = (
+    obter_usuarios_perfil = (
         session.query(UsuariosPerfil)
         .filter_by(unidade_geografica_id_sus=municipio_id_sus)
         .all()
     )
 
-    if len(usuarios_perfil) == 0:
+    if len(obter_usuarios_perfil) == 0:
         raise HTTPException(
             status_code=404,
             detail=(
-                "Dado perfil estabelecimento não encontrado."
+                "Dado perfil do usuario não encontrado."
             ),
         )
 
-    return usuarios_perfil
+    return obter_usuarios_perfil
 
 
 def obter_usuarios_perfil_estabelecimento(
