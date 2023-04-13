@@ -19,15 +19,15 @@ class UsuariosPerfil(Base):
     ativos_mes = Column(Integer)
     ativos_3meses = Column(Integer)
     tornandose_inativos = Column(Integer)
-    # usuario_raca_cor = Column(Text)
-    # usuario_sexo = Column(Text)
-    # usuario_abuso_substancias = Column(Text)
-    # usuario_situacao_rua = Column(Text)
+    usuario_raca_cor = Column(Text)
+    usuario_sexo = Column(Text)
+    usuario_abuso_substancias = Column(Text)
+    usuario_situacao_rua = Column(Text)
     usuario_condicao_saude = Column(Text)
-    # usuario_faixa_etaria = Column(Text)
-    # usuario_tempo_servico = Column(Text)
-    # usuario_tempo_servico_ordem = Column(Integer)
-    # usuario_faixa_etaria_ordem = Column(Integer)
+    usuario_faixa_etaria = Column(Text)
+    usuario_tempo_servico = Column(Text)
+    usuario_tempo_servico_ordem = Column(Integer)
+    usuario_faixa_etaria_ordem = Column(Integer)
     __table_args__ = {"schema": "saude_mental"}
     
  
