@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+import pandas as pd
+from fastapi import HTTPException, Response
 
 from app.models import db
 from app.models.saude_mental.perfildeusuarios import ( UsuariosPerfil, UsuariosPerfilEstabelecimento, UsuariosPerfilCondicao, UsuariosPerfilIdadeRaca)
@@ -10,11 +11,14 @@ session = db.session
 def obter_usuarios_perfil(
     municipio_id_sus: str,
 ):
-    usuarios_perfil = (
-        session.query(UsuariosPerfil)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
+    # usuarios_perfil = (
+    #     session.query(UsuariosPerfil)
+    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+    #     .all()
+    # )
+    usuarios_perfil = pd.read_parquet(
+        f"data/caps_usuarios_ativos_perfil_{municipio_id_sus}.parquet",
+    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
 
     if len(usuarios_perfil) == 0:
         raise HTTPException(
@@ -24,7 +28,10 @@ def obter_usuarios_perfil(
             ),
         )
 
-    return usuarios_perfil
+    return Response(
+        usuarios_perfil.to_json(orient="records"),
+        media_type="application/json",
+    )
 
 
 def obter_usuarios_perfil_estabelecimento(
@@ -90,11 +97,15 @@ def obter_usuarios_perfil_idade_raca(
 def obter_usuarios_novos(
     municipio_id_sus: str,
 ):
-    usuarios_novos = (
-        session.query(UsuariosNovosPerfil)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
+    # usuarios_novos = (
+    #     session.query(UsuariosNovosPerfil)
+    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+    #     .all()
+    # )
+
+    usuarios_novos = pd.read_parquet(
+        f"data/caps_usuarios_novos_perfil_{municipio_id_sus}.parquet",
+    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
 
     if len(usuarios_novos) == 0:
         raise HTTPException(
@@ -104,7 +115,10 @@ def obter_usuarios_novos(
             ),
         )
 
-    return usuarios_novos
+    return Response(
+        usuarios_novos.to_json(orient="records"),
+        media_type="application/json",
+    )
 
 
 def obter_usuarios_novos_resumo(

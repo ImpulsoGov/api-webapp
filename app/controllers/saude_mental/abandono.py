@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+import pandas as pd
+from fastapi import HTTPException, Response
 
 from app.models import db
 from app.models.saude_mental.abandono import (
@@ -8,10 +9,14 @@ from app.models.saude_mental.abandono import (
 session = db.session
 
 def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
-    dados_caps_adesao_usuarios_perfil = (
-        session.query(AbandonoPerfil)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
+    # dados_caps_adesao_usuarios_perfil = (
+    #     session.query(AbandonoPerfil)
+    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+    #     .all()
+    # )
+
+    dados_caps_adesao_usuarios_perfil = pd.read_parquet(
+        f"data/caps_adesao_usuarios_perfil_{municipio_id_sus}.parquet",
     )
 
     if len(dados_caps_adesao_usuarios_perfil) == 0:
@@ -20,7 +25,10 @@ def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
             detail="Dados de Caps Adesão usuarios perfil não encontrado",
         )
 
-    return dados_caps_adesao_usuarios_perfil
+    return Response(
+        dados_caps_adesao_usuarios_perfil.to_json(orient="records"),
+        media_type="application/json",
+    )
 
 def dados_caps_adesao_evasao_coortes_resumo(municipio_id_sus: str):
     dados_caps_adesao_evasao_coortes_resumo = (

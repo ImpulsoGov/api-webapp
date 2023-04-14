@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+import pandas as pd
+from fastapi import HTTPException, Response
 
 from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
@@ -28,11 +29,15 @@ def obter_atendimentos_individuais_por_caps_de_municipio(municipio_id_sus: str):
 
 
 def obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
-    perfil_usuarios_caps = (
-        session.query(PerfilUsuariosAtendimentosIndividuaisCaps)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
+    # perfil_usuarios_caps = (
+    #     session.query(PerfilUsuariosAtendimentosIndividuaisCaps)
+    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+    #     .all()
+    # )
+
+    perfil_usuarios_caps = pd.read_parquet(
+        f"data/caps_usuarios_atendimentos_individuais_perfil_{municipio_id_sus}.parquet",
+    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
 
     if len(perfil_usuarios_caps) == 0:
         raise HTTPException(
@@ -41,7 +46,10 @@ def obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
             "do município não encontrados",
         )
 
-    return perfil_usuarios_caps
+    return Response(
+        perfil_usuarios_caps.to_json(orient="records"),
+        media_type="application/json",
+    )
 
 
 def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
