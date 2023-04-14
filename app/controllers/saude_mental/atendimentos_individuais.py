@@ -37,7 +37,7 @@ def obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
 
     perfil_usuarios_caps = pd.read_parquet(
         f"data/caps_usuarios_atendimentos_individuais_perfil_{municipio_id_sus}.parquet",
-    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos'")
 
     if len(perfil_usuarios_caps) == 0:
         raise HTTPException(

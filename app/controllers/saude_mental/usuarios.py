@@ -18,7 +18,7 @@ def obter_usuarios_perfil(
     # )
     usuarios_perfil = pd.read_parquet(
         f"data/caps_usuarios_ativos_perfil_{municipio_id_sus}.parquet",
-    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos'")
 
     if len(usuarios_perfil) == 0:
         raise HTTPException(
@@ -105,7 +105,7 @@ def obter_usuarios_novos(
 
     usuarios_novos = pd.read_parquet(
         f"data/caps_usuarios_novos_perfil_{municipio_id_sus}.parquet",
-    ).query("estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos'")
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos'")
 
     if len(usuarios_novos) == 0:
         raise HTTPException(
