@@ -56,7 +56,7 @@ def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
 
     procedimentos_por_usuario_por_tempo_servico = pd.read_parquet(
         f"data/caps_procedimentos_por_usuario_por_tempo_servico_{municipio_id_sus}.parquet",
-    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento == 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
 
     if len(procedimentos_por_usuario_por_tempo_servico) == 0:
         raise HTTPException(
@@ -78,7 +78,11 @@ def dados_procedimentos_por_hora(municipio_id_sus: str):
     # )
     procedimentos_por_hora = pd.read_parquet(
         f"data/caps_procedimentos_por_hora_resumo_{municipio_id_sus}.parquet",
+<<<<<<< HEAD
     ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
+=======
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento == 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
+>>>>>>> 2e00325 (Retorna com totalizações de estabelecimentos)
 
     if len(procedimentos_por_hora) == 0:
         raise HTTPException(
@@ -100,7 +104,11 @@ def dados_procedimentos_por_tipo(municipio_id_sus: str):
     # )
     procedimentos_por_tipo = pd.read_parquet(
         f"data/caps_procedimentos_por_tipo_{municipio_id_sus}.parquet",
+<<<<<<< HEAD
     ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
+=======
+    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento == 'Todos' & competencia > @pd.Timestamp(2022, 11, 1)")
+>>>>>>> 2e00325 (Retorna com totalizações de estabelecimentos)
 
     if len(procedimentos_por_tipo) == 0:
         raise HTTPException(
