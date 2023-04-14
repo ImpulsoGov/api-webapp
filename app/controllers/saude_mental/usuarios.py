@@ -105,11 +105,7 @@ def obter_usuarios_novos(
 
     usuarios_novos = pd.read_parquet(
         f"data/caps_usuarios_novos_perfil_{municipio_id_sus}.parquet",
-<<<<<<< HEAD
-    ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento = 'Todos'")
-=======
     ).query("(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento == 'Todos'")
->>>>>>> 2e00325 (Retorna com totalizações de estabelecimentos)
 
     if len(usuarios_novos) == 0:
         raise HTTPException(
