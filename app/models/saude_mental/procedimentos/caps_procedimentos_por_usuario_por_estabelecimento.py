@@ -5,6 +5,7 @@ from app.models import db
 
 Base = db.Base
 
+
 class ProcedimentoPorUsuarioEstabelecimento(Base):
     __tablename__ = "caps_procedimentos_por_usuario_por_estabelecimento"
     id = Column(Text, primary_key=True)
@@ -14,7 +15,7 @@ class ProcedimentoPorUsuarioEstabelecimento(Base):
     nome_mes = Column(Text)
     estabelecimento = Column(Text)
     estabelecimento_linha_perfil = Column(Text)
-    # estabelecimento_linha_idade = Column(Text)
+    estabelecimento_linha_idade = Column(Text)
     # procedimentos_exceto_acolhimento = Column(Float)
     # procedimentos_exceto_acolhimento_anterior = Column(Float)
     # ativos_mes = Column(Float)
