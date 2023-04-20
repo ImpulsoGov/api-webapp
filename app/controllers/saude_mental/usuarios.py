@@ -27,7 +27,7 @@ def obter_usuarios_perfil(
     usuarios_perfil = pd.read_parquet(
         f"data/caps_usuarios_ativos_perfil_{municipio_id_sus}.parquet",
     ).query(
-        "(estabelecimento_linha_perfil != 'Todos' & estabelecimento_linha_idade != 'Todos') | estabelecimento == 'Todos'"
+        "(estabelecimento_linha_perfil == 'Todos' & estabelecimento_linha_idade == 'Todos')"
     )
 
     if len(usuarios_perfil) == 0:
