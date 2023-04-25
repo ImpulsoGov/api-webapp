@@ -65,7 +65,7 @@ def verifica_mail(email):
 
 def validar_municipio_id_ibge(municipio_id_ibge):
     try:
-        query = db.session.query(municipios.Municipios).filter_by(municipio_id_ibge=municipio_id_ibge)
+        query = db.session.query(municipios.Municipios).filter_by(municipio_id_sus=municipio_id_ibge)
         res = query.all()
         return True if len(res) != 0 else {"mensagem":"Id IBGE do município inválido", "error":True}
     except:
