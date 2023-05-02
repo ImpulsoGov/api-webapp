@@ -144,9 +144,11 @@ def obter_usuarios_novos_resumo(
     except exc.SQLAlchemyError as e:
         session.rollback()
 
-        error = str(e.orig)
+        error = str(e)
+
+        print({"error": error})
 
         raise HTTPException(
             status_code=500,
-            detail=(error),
+            detail=("Internal Server Error"),
         )
