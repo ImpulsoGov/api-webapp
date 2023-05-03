@@ -1,5 +1,6 @@
 import pandas as pd
 from fastapi import HTTPException, Response
+from sqlalchemy import exc
 
 from app.models import db
 from app.models.saude_mental.perfildeusuarios import (
@@ -126,16 +127,28 @@ def obter_usuarios_novos(
 def obter_usuarios_novos_resumo(
     municipio_id_sus: str,
 ):
-    usuarios_novos_resumo = (
-        session.query(UsuariosNovosResumo)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(usuarios_novos_resumo) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados usuarios resumo novos não encontrados."),
+    try:
+        usuarios_novos_resumo = (
+            session.query(UsuariosNovosResumo)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .all()
         )
 
-    return usuarios_novos_resumo
+        if len(usuarios_novos_resumo) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados usuarios resumo novos não encontrados."),
+            )
+
+        return usuarios_novos_resumo
+    except exc.SQLAlchemyError as e:
+        session.rollback()
+
+        error = str(e)
+
+        print({"error": error})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
