@@ -433,7 +433,7 @@ def consulta_primeiro_acesso(mail):
             }
         criar_codigo_recuperacao(mail)
         codigo = criar_codigo_recuperacao(mail)
-        assunto = 'Código Criação de senha - Plataforma Impulso Previne'
+        assunto = 'Código Criação de senha - Login Integrado ImpulsoGov'
         mensagem = 'Seu código de criação de senha é ' + str(codigo)
         enviar_mail(mail,assunto,mensagem)
 
@@ -519,7 +519,7 @@ def solicitar_nova_senha(mail):
     mail_check = verificar_mail(mail)
     if mail_check == True:
         codigo = criar_codigo_recuperacao(mail)
-        assunto = 'Código de Recuperação - Plataforma Impulso Previne'
+        assunto = 'Código de Recuperação - Login Integrado ImpulsoGov'
         mensagem = 'Seu código de recuperação de senha é ' + str(codigo)
         enviar_mail(mail,assunto,mensagem)
         return {"msg": "solicitação realizada com sucesso", "success": True}
