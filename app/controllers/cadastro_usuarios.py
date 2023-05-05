@@ -271,7 +271,14 @@ def ativar_perfil(id_cod,id):
         return {"erros" : [error]}
     #ativar perfil
     try:
-        session.query(usuarios.Usuario).filter_by(**id_db).update({"perfil_ativo" : True})
+        session.query(usuarios.Usuario).filter_by(**id_db).update(
+            {
+                "perfil_ativo": True,
+                "atualizacao_data": datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            }
+        )
         session.commit()
         return {"mensagem" : "Usuário ativado com sucesso","error":None}
     except Exception as error:
