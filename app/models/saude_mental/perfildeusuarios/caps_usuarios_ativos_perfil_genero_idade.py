@@ -25,3 +25,4 @@ class UsuarioAtivoGeneroIdade(Base):
     periodo = Column(Text)
     nome_mes = Column(Text)
     periodo_ordem = Column(Float)
+    __table_args__ = {"schema": "saude_mental"}
