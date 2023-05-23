@@ -590,7 +590,6 @@ def row_to_dict(row):
 def listar_usuarios_cadastrados_ip():
     try:
         usuarios_cadastrados = session.query(GestaoUsuariosIP).all()
-        # perfis_de_acesso = session.query(Perfil_lista).all()
         usuarios_formatados = []
 
         for usuario in usuarios_cadastrados:
@@ -598,11 +597,7 @@ def listar_usuarios_cadastrados_ip():
                 autorizacao.strip()
                 for autorizacao in usuario.autorizacoes.split(",")
             ]
-            # perfis = [
-            #     perfil
-            #     for perfil in perfis_de_acesso
-            #     if perfil.descricao in autorizacoes
-            # ]
+
             usuarios_formatados.append(
                 {
                     **row_to_dict(usuario),
