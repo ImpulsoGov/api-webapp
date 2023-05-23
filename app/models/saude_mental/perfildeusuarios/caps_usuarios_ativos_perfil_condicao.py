@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, Float, Integer, Text
+from sqlalchemy import Column, Date, Float, Text, Numeric
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
 
 from app.models import db
@@ -6,17 +6,23 @@ from app.models import db
 Base = db.Base
 
 
-class UsuariosPerfilCondicao(Base):
-    __tablename__ = "caps_usuarios_ativos_perfil"
+class UsuarioAtivoCondicao(Base):
+    __tablename__ = "caps_usuarios_ativos_perfil_condicao"
     id = Column(Text, primary_key=True)
-    unidade_geografica_id_sus = Column(VARCHAR(length=15))
+    unidade_geografica_id = Column(UUID(as_uuid=True))
+    unidade_geografica_id_sus = Column(VARCHAR)
+    periodo_id = Column(UUID(as_uuid=True))
     competencia = Column(Date)
-    periodo = Column(Text)
-    nome_mes = Column(Text)
-    estabelecimento = Column(Text)
     estabelecimento_linha_perfil = Column(Text)
     estabelecimento_linha_idade = Column(Text)
-    usuario_abuso_substancias = Column(Text)
     usuario_situacao_rua = Column(Text)
-    __table_args__ = {"schema": "saude_mental", 'extend_existing': True}
- 
+    usuario_abuso_substancias = Column(Text)
+    ativos_mes = Column(Numeric)
+    ativos_3meses = Column(Numeric)
+    tornandose_inativos = Column(Numeric)
+    atualizacao_data = Column(TIMESTAMP(timezone=True))
+    estabelecimento = Column(VARCHAR)
+    periodo = Column(Text)
+    nome_mes = Column(Text)
+    periodo_ordem = Column(Float)
+    __table_args__ = {"schema": "saude_mental"}
