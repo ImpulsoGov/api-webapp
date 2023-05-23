@@ -10,7 +10,7 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuariosPerfilIdadeRaca,
     # UsuarioAtivoGeneroIdade,
     # UsuarioAtivoCID,
-    UsuarioAtivoCondicao,
+    UsuarioAtivoPorCondicao,
 )
 from app.models.saude_mental.usuariosnovos import (
     UsuariosNovosPerfil,
@@ -164,7 +164,7 @@ def obter_perfil_usuarios_ativos_por_condicao(
 ):
     try:
         usuarios_ativos_por_condicao = (
-            session.query(UsuarioAtivoCondicao)
+            session.query(UsuarioAtivoPorCondicao)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .filter_by(estabelecimento_linha_perfil=linha_perfil)
             .filter_by(estabelecimento_linha_idade=linha_idade)

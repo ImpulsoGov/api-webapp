@@ -6,7 +6,7 @@ from app.models import db
 Base = db.Base
 
 
-class UsuarioAtivoCondicao(Base):
+class UsuarioAtivoPorCondicao(Base):
     __tablename__ = "caps_usuarios_ativos_perfil_condicao"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
