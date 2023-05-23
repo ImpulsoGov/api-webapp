@@ -9,5 +9,7 @@ from .caps_usuarios_ativos_perfil_genero_idade_raca import (
 )
 
 # from .caps_usuarios_ativos_perfil_cid import UsuarioAtivoCID
-# from .caps_usuarios_ativos_perfil_genero_idade import UsuarioAtivoGeneroIdade
+from .caps_usuarios_ativos_perfil_genero_idade import (
+    UsuarioAtivoPorGeneroEIdade,
+)
 from .caps_usuarios_ativos_perfil_condicao import UsuarioAtivoPorCondicao
