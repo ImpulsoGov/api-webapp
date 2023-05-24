@@ -73,4 +73,3 @@ uvicorn==0.15.0
 validate-docbr==1.10.0
 watchgod==0.7
 wcwidth==0.2.5
-websockets==10.1
