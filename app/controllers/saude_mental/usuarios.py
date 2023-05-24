@@ -181,6 +181,20 @@ def obter_perfil_usuarios_ativos_por_condicao(
 
         return usuarios_ativos_por_condicao
     except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
