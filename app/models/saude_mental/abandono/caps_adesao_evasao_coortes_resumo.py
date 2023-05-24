@@ -7,7 +7,7 @@ Base = db.Base
 
 
 class AbandonoCoortes(Base):
-    __tablename__ = "caps_adesao_evasao_coortes_resumo"
+    __tablename__ = "_caps_adesao_evasao_coortes_resumo_1"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))
