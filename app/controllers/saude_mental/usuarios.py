@@ -213,7 +213,7 @@ def obter_perfil_usuarios_ativos_por_genero_e_idade(
             raise HTTPException(
                 status_code=404,
                 detail=(
-                    "Dados de gênero e idade de usuários ativos não encontrados."
+                    "Dados de gênero/idade de usuários ativos não encontrados."
                 ),
             )
 
