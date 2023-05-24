@@ -10,6 +10,7 @@ from app.controllers.saude_mental.usuarios import (
     obter_usuarios_perfil_condicao,
     obter_usuarios_perfil_idade_raca,
     obter_perfil_usuarios_ativos_por_condicao,
+    obter_perfil_usuarios_ativos_por_genero_e_idade,
 )
 from app.models.db import session
 
@@ -53,6 +54,19 @@ async def obter_condicao_usuarios_ativos(
     linha_idade: str,
 ):
     return obter_perfil_usuarios_ativos_por_condicao(
+        municipio_id_sus,
+        linha_perfil,
+        linha_idade,
+    )
+
+
+@router.get("/saude-mental/usuarios/perfil/genero-e-idade")
+async def obter_genero_e_idade_usuarios_ativos(
+    municipio_id_sus: str,
+    linha_perfil: str,
+    linha_idade: str,
+):
+    return obter_perfil_usuarios_ativos_por_genero_e_idade(
         municipio_id_sus,
         linha_perfil,
         linha_idade,
