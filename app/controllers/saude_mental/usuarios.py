@@ -9,7 +9,7 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuariosPerfilEstabelecimento,
     UsuariosPerfilIdadeRaca,
     UsuarioAtivoPorGeneroEIdade,
-    # UsuarioAtivoCID,
+    UsuarioAtivoPorCID,
     UsuarioAtivoPorCondicao,
     UsuarioAtivoPorRaca,
 )
@@ -257,6 +257,42 @@ def obter_perfil_usuarios_ativos_por_raca(
             )
 
         return usuarios_ativos_por_raca
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_usuarios_ativos_por_cid(
+    municipio_id_sus: str,
+    linha_perfil: str,
+    linha_idade: str,
+):
+    try:
+        usuarios_ativos_por_cid = (
+            session.query(UsuarioAtivoPorCID)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento_linha_perfil=linha_perfil)
+            .filter_by(estabelecimento_linha_idade=linha_idade)
+            .all()
+        )
+
+        if len(usuarios_ativos_por_cid) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de cid de usuários ativos não encontrados."),
+            )
+
+        return usuarios_ativos_por_cid
     except HTTPException as error:
         session.rollback()
 
