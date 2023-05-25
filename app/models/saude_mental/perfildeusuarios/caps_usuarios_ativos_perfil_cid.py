@@ -6,7 +6,7 @@ from app.models import db
 Base = db.Base
 
 
-class UsuarioAtivoCID(Base):
+class UsuarioAtivoPorCID(Base):
     __tablename__ = "caps_usuarios_ativos_perfil_cid"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
@@ -17,7 +17,7 @@ class UsuarioAtivoCID(Base):
     estabelecimento_linha_idade = Column(Text)
     usuario_condicao_saude = Column(Text)
     ativos_mes = Column(Numeric)
-    ativo_3meses = Column(Numeric)
+    ativos_3meses = Column(Numeric)
     tornandose_inativos = Column(Numeric)
     atualizacao_data = Column(TIMESTAMP(timezone=True))
     estabelecimento = Column(VARCHAR)
