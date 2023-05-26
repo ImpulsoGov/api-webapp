@@ -259,16 +259,14 @@ def obter_perfil_usuarios_ativos_por_raca(
 
 
 def obter_perfil_usuarios_ativos_por_cid(
-    municipio_id_sus: str,
-    linha_perfil: str,
-    linha_idade: str,
+    municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     try:
         usuarios_ativos_por_cid = (
             session.query(UsuarioAtivoPorCID)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .filter_by(estabelecimento_linha_perfil=linha_perfil)
-            .filter_by(estabelecimento_linha_idade=linha_idade)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
             .all()
         )
 

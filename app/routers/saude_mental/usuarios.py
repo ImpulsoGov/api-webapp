@@ -73,12 +73,10 @@ async def obter_raca_usuarios_ativos(
 
 @router.get("/saude-mental/usuarios/perfil/cid")
 async def obter_cid_usuarios_ativos(
-    municipio_id_sus: str,
-    linha_perfil: str,
-    linha_idade: str,
+    municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     return obter_perfil_usuarios_ativos_por_cid(
         municipio_id_sus,
-        linha_perfil,
-        linha_idade,
+        estabelecimento,
+        periodo,
     )
