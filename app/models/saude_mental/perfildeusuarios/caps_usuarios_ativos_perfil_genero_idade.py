@@ -7,7 +7,7 @@ Base = db.Base
 
 
 class UsuarioAtivoPorGeneroEIdade(Base):
-    __tablename__ = "caps_usuarios_ativos_perfil_genero_idade"
+    __tablename__ = "caps_usuarios_ativos_perfil_genero_idade_semsubtotais"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR)
