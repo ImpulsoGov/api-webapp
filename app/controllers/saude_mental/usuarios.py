@@ -4,6 +4,7 @@ from sqlalchemy import exc
 
 from app.models import db
 from app.models.saude_mental.perfildeusuarios import (
+    UsuariosPerfil,
     UsuariosPerfilCondicao,
     UsuariosPerfilEstabelecimento,
     UsuariosPerfilIdadeRaca,
@@ -13,6 +14,7 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuarioAtivoPorRaca,
 )
 from app.models.saude_mental.usuariosnovos import (
+    UsuariosNovosPerfil,
     UsuariosNovosResumo,
 )
 
