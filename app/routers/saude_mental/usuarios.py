@@ -1,20 +1,15 @@
 from fastapi import APIRouter
-import pymysql, pandas as pd
-from sqlalchemy import create_engine
 
 from app.controllers.saude_mental.usuarios import (
     obter_usuarios_novos,
     obter_usuarios_novos_resumo,
     obter_usuarios_perfil,
     obter_usuarios_perfil_estabelecimento,
-    obter_usuarios_perfil_condicao,
-    obter_usuarios_perfil_idade_raca,
     obter_perfil_usuarios_ativos_por_condicao,
     obter_perfil_usuarios_ativos_por_genero_e_idade,
     obter_perfil_usuarios_ativos_por_raca,
     obter_perfil_usuarios_ativos_por_cid,
 )
-from app.models.db import session
 
 router = APIRouter()
 
