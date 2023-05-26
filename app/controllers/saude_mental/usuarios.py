@@ -157,12 +157,14 @@ def obter_usuarios_novos_resumo(
 
 
 def obter_perfil_usuarios_ativos_por_condicao(
-    municipio_id_sus: str,
+    municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     try:
         usuarios_ativos_por_condicao = (
             session.query(UsuarioAtivoPorCondicao)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
             .all()
         )
 
@@ -191,12 +193,14 @@ def obter_perfil_usuarios_ativos_por_condicao(
 
 
 def obter_perfil_usuarios_ativos_por_genero_e_idade(
-    municipio_id_sus: str,
+    municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     try:
         usuarios_ativos_por_genero_e_idade = (
             session.query(UsuarioAtivoPorGeneroEIdade)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
             .all()
         )
 
@@ -225,12 +229,14 @@ def obter_perfil_usuarios_ativos_por_genero_e_idade(
 
 
 def obter_perfil_usuarios_ativos_por_raca(
-    municipio_id_sus: str,
+    municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     try:
         usuarios_ativos_por_raca = (
             session.query(UsuarioAtivoPorRaca)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
             .all()
         )
 
@@ -295,7 +301,7 @@ def obter_perfil_usuarios_ativos_por_cid(
 def obter_estabelecimentos_por_id_sus(municipio_id_sus: str):
     try:
         estabelecimentos = (
-            session.query(UsuarioAtivoPorCID.estabelecimento)
+            session.query(UsuarioAtivoPorCondicao.estabelecimento)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .distinct()
             .all()
@@ -327,8 +333,8 @@ def obter_periodos_por_id_sus(municipio_id_sus: str):
     try:
         estabelecimentos = (
             session.query(
-                UsuarioAtivoPorCID.periodo,
-                UsuarioAtivoPorCID.competencia,
+                UsuarioAtivoPorCondicao.periodo,
+                UsuarioAtivoPorCondicao.competencia,
             )
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .distinct()
