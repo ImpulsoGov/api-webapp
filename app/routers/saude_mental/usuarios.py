@@ -9,6 +9,8 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_ativos_por_genero_e_idade,
     obter_perfil_usuarios_ativos_por_raca,
     obter_perfil_usuarios_ativos_por_cid,
+    obter_estabelecimentos_por_id_sus,
+    obter_periodos_por_id_sus,
 )
 
 router = APIRouter()
@@ -79,4 +81,18 @@ async def obter_cid_usuarios_ativos(
         municipio_id_sus,
         estabelecimento,
         periodo,
+    )
+
+
+@router.get("/saude-mental/usuarios/perfil/estabelecimentos")
+async def obter_estabelecimentos(municipio_id_sus: str):
+    return obter_estabelecimentos_por_id_sus(
+        municipio_id_sus,
+    )
+
+
+@router.get("/saude-mental/usuarios/perfil/periodos")
+async def obter_periodos(municipio_id_sus: str):
+    return obter_periodos_por_id_sus(
+        municipio_id_sus,
     )

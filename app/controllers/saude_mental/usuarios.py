@@ -290,3 +290,68 @@ def obter_perfil_usuarios_ativos_por_cid(
             status_code=500,
             detail=("Internal Server Error"),
         )
+
+
+def obter_estabelecimentos_por_id_sus(municipio_id_sus: str):
+    try:
+        estabelecimentos = (
+            session.query(UsuarioAtivoPorCID.estabelecimento)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .distinct()
+            .all()
+        )
+
+        if len(estabelecimentos) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Estabelecimentos de município não encontrados."),
+            )
+
+        return estabelecimentos
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_periodos_por_id_sus(municipio_id_sus: str):
+    try:
+        estabelecimentos = (
+            session.query(
+                UsuarioAtivoPorCID.periodo,
+                UsuarioAtivoPorCID.competencia,
+            )
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .distinct()
+            .all()
+        )
+
+        if len(estabelecimentos) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Estabelecimentos de município não encontrados."),
+            )
+
+        return estabelecimentos
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
