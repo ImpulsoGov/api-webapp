@@ -158,15 +158,11 @@ def obter_usuarios_novos_resumo(
 
 def obter_perfil_usuarios_ativos_por_condicao(
     municipio_id_sus: str,
-    linha_perfil: str,
-    linha_idade: str,
 ):
     try:
         usuarios_ativos_por_condicao = (
             session.query(UsuarioAtivoPorCondicao)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .filter_by(estabelecimento_linha_perfil=linha_perfil)
-            .filter_by(estabelecimento_linha_idade=linha_idade)
             .all()
         )
 
@@ -196,15 +192,11 @@ def obter_perfil_usuarios_ativos_por_condicao(
 
 def obter_perfil_usuarios_ativos_por_genero_e_idade(
     municipio_id_sus: str,
-    linha_perfil: str,
-    linha_idade: str,
 ):
     try:
         usuarios_ativos_por_genero_e_idade = (
             session.query(UsuarioAtivoPorGeneroEIdade)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .filter_by(estabelecimento_linha_perfil=linha_perfil)
-            .filter_by(estabelecimento_linha_idade=linha_idade)
             .all()
         )
 
@@ -234,15 +226,11 @@ def obter_perfil_usuarios_ativos_por_genero_e_idade(
 
 def obter_perfil_usuarios_ativos_por_raca(
     municipio_id_sus: str,
-    linha_perfil: str,
-    linha_idade: str,
 ):
     try:
         usuarios_ativos_por_raca = (
             session.query(UsuarioAtivoPorRaca)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .filter_by(estabelecimento_linha_perfil=linha_perfil)
-            .filter_by(estabelecimento_linha_idade=linha_idade)
             .all()
         )
 
