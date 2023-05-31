@@ -107,6 +107,27 @@ async def hipertensos_municipio(municipio_uf,faixa_etaria,username: Usuario = De
     res = busca_ativa_hipertensos.hipertensos_coordenacao(municipio_uf,faixa_etaria)
     return res
 
+@router.get("/impulsoprevine/busca-ativa/score-cards-hipertensos-por-municipio")
+async def hipertensos_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_score_cards_aps(municipio_id_sus)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensao-por-municipio")
+async def hipertensao_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_aps(municipio_id_sus)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensao-por-equipe")
+async def hipertensao_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_equipe(municipio_id_sus,equipe)
+    return res
+
+@router.get("/impulsoprevine/busca-ativa/hipertensao-grafico")
+async def hipertensao_grafico_aps(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_grafico(municipio_id_sus)
+    return res
+
+
 @router.get("/impulsoprevine/busca-ativa/hipertensos-graficos")
 async def hipertensos_graficos_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
     res = busca_ativa_hipertensos.hipertensos_graficos(municipio_uf)
