@@ -719,7 +719,7 @@ def atualizar_cadastro_ip(
 
 def atualizar_cadastro_geral_e_ip(
     dados_usuario: UsuarioIPAtualizado,
-) -> Union[UsuarioIPAtualizado, NoReturn]:
+):
     try:
         usuario_atualizado = atualizar_cadastro_geral(
             id=dados_usuario["id"],
