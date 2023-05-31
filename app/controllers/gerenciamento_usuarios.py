@@ -43,7 +43,7 @@ load_dotenv(dotenv_path=env_path)
 
 class UsuarioIPAtualizado(BaseModel):
     id: str
-    nome: str
+    nome_usuario: str
     cpf: str
     mail: str
     municipio: str
@@ -718,7 +718,7 @@ def atualizar_cadastro_geral_e_ip(
     try:
         usuario_atualizado = atualizar_cadastro_geral(
             id=dados_usuario["id"],
-            nome=dados_usuario["nome"],
+            nome=dados_usuario["nome_usuario"],
             cpf=dados_usuario["cpf"],
             mail=dados_usuario["mail"],
         )
@@ -733,8 +733,8 @@ def atualizar_cadastro_geral_e_ip(
         session.commit()
 
         return {
-            "id": usuario_atualizado.id,
-            "nome": usuario_atualizado.nome_usuario,
+            "id_usuario": usuario_atualizado.id,
+            "nome_usuario": usuario_atualizado.nome_usuario,
             "cpf": usuario_atualizado.cpf,
             "mail": usuario_atualizado.mail,
             "municipio": usuario_ip_atualizado.municipio,

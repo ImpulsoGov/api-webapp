@@ -256,7 +256,7 @@ async def listar_usuarios_cadastrados():
 @router.put("/suporte/ger_usuarios/usuarios-ip/{id}")
 async def atualizar_dados_usuario(
     id: str,
-    nome: str = Form(...),
+    nome_usuario: str = Form(...),
     mail: str = Form(...),
     cpf: str = Form(...),
     municipio: str = Form(...),
@@ -267,7 +267,7 @@ async def atualizar_dados_usuario(
     return gerenciamento_usuarios.atualizar_cadastro_geral_e_ip(
         {
             "id": id,
-            "nome": nome,
+            "nome_usuario": nome_usuario,
             "mail": mail,
             "cpf": cpf,
             "municipio": municipio,
