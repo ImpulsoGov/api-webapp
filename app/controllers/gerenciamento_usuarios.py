@@ -6,7 +6,6 @@ from app.models import (
     ativar_usuario,
     usuarios_ip,
     recuperacao_senha,
-    gestao_de_usuarios_ip,
 )
 from app.controllers import recuperação_senha,auth,cadastro_usuarios
 from datetime import datetime
@@ -27,7 +26,6 @@ UsuariosIP = usuarios_ip.UsuarioIP
 Perfil = perfil_usuario.Perfil
 Perfil_lista = perfil_acesso.Perfil_lista
 Ativar = ativar_usuario.Ativar
-GestaoUsuariosIP = gestao_de_usuarios_ip.GestaoUsuariosIP
 enviar_mail = recuperação_senha.enviar_mail
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -577,35 +575,42 @@ def senha_primeiro_acesso(mail,codigo,senha):
         print({"error" : [error]})
         return {"erros" : [error]}
 
-# https://stackoverflow.com/questions/1958219/how-to-convert-sqlalchemy-row-object-to-a-python-dict
-def row_to_dict(row):
-    dictionary = {}
-
-    for column in row.__table__.columns:
-        dictionary[column.name] = str(getattr(row, column.name))
-
-    return dictionary
-
 
 def listar_usuarios_cadastrados_ip():
     try:
-        usuarios_cadastrados = session.query(GestaoUsuariosIP).all()
-        usuarios_formatados = []
-
-        for usuario in usuarios_cadastrados:
-            autorizacoes = [
-                autorizacao.strip()
-                for autorizacao in usuario.autorizacoes.split(",")
-            ]
-
-            usuarios_formatados.append(
-                {
-                    **row_to_dict(usuario),
-                    "autorizacoes": autorizacoes,
-                }
+        usuarios_cadastrados = (
+            session.query(Usuarios)
+            .join(UsuariosIP)
+            .join(Perfil)
+            .join(Perfil_lista)
+            .with_entities(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.id_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+                func.array_agg(func.distinct(Perfil_lista.descricao)).label(
+                    "autorizacoes"
+                ),
             )
+            .filter(UsuariosIP.municipio.isnot(None))
+            .group_by(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.id_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+            )
+            .all()
+        )
 
-        return usuarios_formatados
+        return usuarios_cadastrados
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
