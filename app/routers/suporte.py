@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios, chave_temp_data_studio
+from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios, chave_temp_data_studio , NPS
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuarios import Usuario
@@ -247,6 +247,13 @@ async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_sen
 async def primeiro_acesso(mail: str = Form(...)):
     return gerenciamento_usuarios.consulta_primeiro_acesso(mail)
 
+@router.get("/suporte/nps/consulta")
+async def consulta_nps(user_id,username: Usuario = Depends(auth.get_current_user)):
+    return NPS.consulta_avaliacao(user_id)
+
+@router.post("/suporte/nps/avaliacao")
+async def avaliacao_nps(user_id: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(auth.get_current_user)):
+    return NPS.NPS_UMANE(user_id,avaliacao)
 
 @router.get("/suporte/ger_usuarios/usuarios-ip")
 async def listar_usuarios_cadastrados():
