@@ -844,3 +844,116 @@ def listar_perfis_de_acesso():
             status_code=500,
             detail=("Internal Server Error"),
         )
+
+
+class CadastroUsuario(BaseModel):
+    nome_usuario: str
+    mail: str
+    cpf: str
+
+
+def criar_usuario_geral(dados_cadastro: CadastroUsuario):
+    novo_usuario = Usuarios(
+        id=uuid.uuid4(),
+        nome_usuario=dados_cadastro["nome_usuario"],
+        mail=dados_cadastro["mail"],
+        cpf=dados_cadastro["cpf"],
+        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+
+    return novo_usuario
+
+
+class CadastroUsuarioIP(BaseModel):
+    id_usuario: str
+    municipio: str
+    cargo: str
+    telefone: str
+    equipe: str
+    whatsapp: bool
+
+
+def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
+    novo_usuario_ip = UsuariosIP(
+        id=uuid.uuid4(),
+        id_usuario=dados_cadastro["id_usuario"],
+        municipio=dados_cadastro["municipio"],
+        cargo=dados_cadastro["cargo"],
+        telefone=dados_cadastro["telefone"],
+        equipe=dados_cadastro["equipe"],
+        whatsapp=dados_cadastro["whatsapp"],
+        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+
+    return novo_usuario_ip
+
+
+class DadosCadastro(BaseModel):
+    nome_usuario: str
+    mail: str
+    cpf: str
+    municipio: str
+    cargo: str
+    telefone: str
+    equipe: str
+    whatsapp: str
+
+
+def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
+    try:
+        validar_email(dados_cadastro["mail"])
+        validar_cpf(dados_cadastro["cpf"])
+        validar_telefone(dados_cadastro["telefone"])
+
+        novo_usuario = criar_usuario_geral(
+            {
+                "nome_usuario": dados_cadastro["nome_usuario"],
+                "mail": dados_cadastro["mail"],
+                "cpf": dados_cadastro["cpf"],
+            }
+        )
+
+        novo_usuario_ip = criar_usuario_ip(
+            {
+                "id_usuario": novo_usuario.id,
+                "municipio": dados_cadastro["municipio"],
+                "cargo": dados_cadastro["cargo"],
+                "telefone": dados_cadastro["telefone"],
+                "equipe": dados_cadastro["equipe"],
+                "whatsapp": True
+                if dados_cadastro["whatsapp"] == "1"
+                else False,
+            }
+        )
+
+        session.add(novo_usuario)
+        session.add(novo_usuario_ip)
+        session.commit()
+
+        return {
+            "id_usuario": novo_usuario.id,
+            "nome_usuario": novo_usuario.nome_usuario,
+            "cpf": novo_usuario.cpf,
+            "mail": novo_usuario.mail,
+            "municipio": novo_usuario_ip.municipio,
+            "equipe": novo_usuario_ip.equipe,
+            "cargo": novo_usuario_ip.cargo,
+            "telefone": novo_usuario_ip.telefone,
+            "whatsapp": novo_usuario_ip.whatsapp,
+        }
+
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
