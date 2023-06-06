@@ -299,3 +299,28 @@ async def atualizar_perfis_usuario(usuario_id: str, perfis: PerfisIds):
 @router.get("/suporte/ger_usuarios/perfis")
 async def listar_perfis():
     return gerenciamento_usuarios.listar_perfis_de_acesso()
+
+
+@router.post("/suporte/ger_usuarios/usuarios-ip")
+async def cadastrar_usuario_ip(
+    nome_usuario: str = Form(...),
+    mail: str = Form(...),
+    cpf: str = Form(...),
+    municipio: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    equipe: str = Form(...),
+    whatsapp: str = Form(...),
+):
+    return gerenciamento_usuarios.cadastrar_usuario_geral_e_ip(
+        {
+            "nome_usuario": nome_usuario,
+            "mail": mail,
+            "cpf": cpf,
+            "municipio": municipio,
+            "cargo": cargo,
+            "telefone": telefone,
+            "equipe": equipe,
+            "whatsapp": whatsapp,
+        }
+    )
