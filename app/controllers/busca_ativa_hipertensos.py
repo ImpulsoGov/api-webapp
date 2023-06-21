@@ -6,7 +6,6 @@ from cachetools import TTLCache
 session = DB_PRODUCAO.session
 
 def hipertensos_equipe(municipio_uf,equipe,faixa_etaria):
-    print("================================================="+ municipio_uf,equipe,faixa_etaria)
     '''
     try:
         return DB_PRODUCAO.session.query(Hipertensos).filter_by(equipe_ine_cadastro=equipe,municipio_uf=municipio_uf).all()
@@ -92,13 +91,13 @@ def hipertensao_score_cards_equipe(municipio_id_sus,equipe):
         return error
 
 cache_hipertensao_aps = TTLCache(maxsize=38, ttl=24*60*60)
-def hipertensao_aps(municipio_id_sus):
-    result = cache_hipertensao_aps.get(municipio_id_sus)
+def hipertensao_aps(municipio_uf):
+    result = cache_hipertensao_aps.get(municipio_uf)
     try:
         if result is None:
             result = DB_PRODUCAO.session.query(
                 Hipertensos).filter_by(
-                municipio_id_sus=municipio_id_sus
+                municipio_uf=municipio_uf
                 ).with_entities(
                     Hipertensos.cidadao_nome,
                     Hipertensos.cidadao_cpf,
@@ -109,19 +108,19 @@ def hipertensao_aps(municipio_id_sus):
                     Hipertensos.prazo_proxima_afericao_pa,
                     Hipertensos.acs_nome_cadastro
                 ).all()
-            cache_hipertensao_aps[municipio_id_sus] = result
+            cache_hipertensao_aps[municipio_uf] = result
         return result
     except Exception as error:
         session.rollback()
         print({"erros" : [error]})
         return error
 
-def hipertensao_equipe(municipio_id_sus,equipe):
+def hipertensao_equipe(municipio_uf,equipe):
     try:
         return DB_PRODUCAO.session.query(
                 Hipertensos
                 ).filter_by(
-                municipio_id_sus=municipio_id_sus,
+                municipio_uf=municipio_uf,
                 equipe_ine_cadastro=equipe
                 ).with_entities(
                     Hipertensos.cidadao_nome,
@@ -131,7 +130,9 @@ def hipertensao_equipe(municipio_id_sus,equipe):
                     Hipertensos.prazo_proxima_consulta,
                     Hipertensos.dt_afericao_pressao_mais_recente,
                     Hipertensos.prazo_proxima_afericao_pa,
-                    Hipertensos.acs_nome_cadastro
+                    Hipertensos.acs_nome_cadastro,
+                    Hipertensos.equipe_ine_cadastro,
+                    Hipertensos.equipe_nome_cadastro
                 ).all()
     except Exception as error:
         session.rollback()
