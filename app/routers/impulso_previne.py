@@ -113,8 +113,8 @@ async def hipertensos_municipio(municipio_id_sus,username: Usuario = Depends(get
     return res
 
 @router.get("/impulsoprevine/busca-ativa/hipertensao-por-municipio")
-async def hipertensao_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_hipertensos.hipertensao_aps(municipio_id_sus)
+async def hipertensao_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_aps(municipio_uf)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/hipertensao-por-equipe")
