@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends,Form
 from typing import Optional,List
-from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios, chave_temp_data_studio
+from app.controllers import municipios,auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios, chave_temp_data_studio , NPS
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuarios import Usuario
@@ -246,3 +246,81 @@ async def alteracao_senha(mail: str = Form(...),codigo: str = Form(...),nova_sen
 @router.post("/suporte/ger_usuarios/primeiro-acesso")
 async def primeiro_acesso(mail: str = Form(...)):
     return gerenciamento_usuarios.consulta_primeiro_acesso(mail)
+
+@router.get("/suporte/nps/consulta")
+async def consulta_nps(user_id,username: Usuario = Depends(auth.get_current_user)):
+    return NPS.consulta_avaliacao(user_id)
+
+@router.post("/suporte/nps/avaliacao")
+async def avaliacao_nps(user_id: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(auth.get_current_user)):
+    return NPS.NPS_UMANE(user_id,avaliacao)
+
+@router.get("/suporte/ger_usuarios/usuarios-ip")
+async def listar_usuarios_cadastrados():
+    return gerenciamento_usuarios.listar_usuarios_cadastrados_ip()
+
+
+@router.put("/suporte/ger_usuarios/usuarios-ip/{id}")
+async def atualizar_dados_usuario(
+    id: str,
+    nome_usuario: str = Form(...),
+    mail: str = Form(...),
+    cpf: str = Form(...),
+    municipio: str = Form(...),
+    equipe: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+):
+    return gerenciamento_usuarios.atualizar_cadastro_geral_e_ip(
+        {
+            "id": id,
+            "nome_usuario": nome_usuario,
+            "mail": mail,
+            "cpf": cpf,
+            "municipio": municipio,
+            "equipe": equipe,
+            "cargo": cargo,
+            "telefone": telefone,
+        }
+    )
+
+
+class PerfisIds(BaseModel):
+    perfis_ids: List[str]
+
+
+@router.put("/suporte/ger_usuarios/perfil-usuario/{usuario_id}")
+async def atualizar_perfis_usuario(usuario_id: str, perfis: PerfisIds):
+    return gerenciamento_usuarios.atualizar_perfis_usuario(
+        usuario_id=usuario_id, perfis_ids=perfis.perfis_ids
+    )
+
+
+@router.get("/suporte/ger_usuarios/perfis")
+async def listar_perfis():
+    return gerenciamento_usuarios.listar_perfis_de_acesso()
+
+
+@router.post("/suporte/ger_usuarios/usuarios-ip")
+async def cadastrar_usuario_ip(
+    nome_usuario: str = Form(...),
+    mail: str = Form(...),
+    cpf: str = Form(...),
+    municipio: str = Form(...),
+    cargo: str = Form(...),
+    telefone: str = Form(...),
+    equipe: str = Form(...),
+    whatsapp: str = Form(...),
+):
+    return gerenciamento_usuarios.cadastrar_usuario_geral_e_ip(
+        {
+            "nome_usuario": nome_usuario,
+            "mail": mail,
+            "cpf": cpf,
+            "municipio": municipio,
+            "cargo": cargo,
+            "telefone": telefone,
+            "equipe": equipe,
+            "whatsapp": whatsapp,
+        }
+    )
