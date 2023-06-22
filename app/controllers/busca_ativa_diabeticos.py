@@ -13,7 +13,7 @@ def diabeticos_equipe(municipio_uf,equipe):
                 equipe_ine_cadastro=equipe
                 ).with_entities(
                     Diabeticos.cidadao_nome,
-                    Diabeticos.cidadao_cpf,
+                    Diabeticos.cidadao_cpf_dt_nascimento,
                     Diabeticos.identificacao_condicao_diabetes,
                     Diabeticos.dt_ultima_consulta,
                     Diabeticos.prazo_proxima_consulta,
@@ -39,7 +39,7 @@ def diabetes_aps(municipio_uf):
                 municipio_uf=municipio_uf
                 ).with_entities(
                     Diabeticos.cidadao_nome,
-                    Diabeticos.cidadao_cpf,
+                    Diabeticos.cidadao_cpf_dt_nascimento,
                     Diabeticos.identificacao_condicao_diabetes,
                     Diabeticos.dt_ultima_consulta,
                     Diabeticos.prazo_proxima_consulta,
