@@ -100,7 +100,7 @@ def hipertensao_aps(municipio_uf):
                 municipio_uf=municipio_uf
                 ).with_entities(
                     Hipertensos.cidadao_nome,
-                    Hipertensos.cidadao_cpf,
+                    Hipertensos.cidadao_cpf_dt_nascimento,
                     Hipertensos.identificacao_condicao_hipertensao,
                     Hipertensos.dt_ultima_consulta,
                     Hipertensos.prazo_proxima_consulta,
@@ -124,7 +124,7 @@ def hipertensao_equipe(municipio_uf,equipe):
                 equipe_ine_cadastro=equipe
                 ).with_entities(
                     Hipertensos.cidadao_nome,
-                    Hipertensos.cidadao_cpf,
+                    Hipertensos.cidadao_cpf_dt_nascimento,
                     Hipertensos.identificacao_condicao_hipertensao,
                     Hipertensos.dt_ultima_consulta,
                     Hipertensos.prazo_proxima_consulta,
