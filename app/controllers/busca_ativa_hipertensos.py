@@ -106,7 +106,9 @@ def hipertensao_aps(municipio_uf):
                     Hipertensos.prazo_proxima_consulta,
                     Hipertensos.dt_afericao_pressao_mais_recente,
                     Hipertensos.prazo_proxima_afericao_pa,
-                    Hipertensos.acs_nome_cadastro
+                    Hipertensos.acs_nome_cadastro,
+                    Hipertensos.equipe_ine_cadastro,
+                    Hipertensos.equipe_nome_cadastro,
                 ).all()
             cache_hipertensao_aps[municipio_uf] = result
         return result
