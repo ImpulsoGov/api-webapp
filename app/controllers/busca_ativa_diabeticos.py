@@ -45,7 +45,9 @@ def diabetes_aps(municipio_uf):
                     Diabeticos.prazo_proxima_consulta,
                     Diabeticos.dt_solicitacao_hemoglobina_glicada_mais_recente,
                     Diabeticos.prazo_proxima_solicitacao_hemoglobina,
-                    Diabeticos.acs_nome_cadastro
+                    Diabeticos.acs_nome_cadastro,
+                    Diabeticos.equipe_ine_cadastro,
+                    Diabeticos.equipe_nome_cadastro
                 ).all()
             cache_hipertensao_aps[municipio_uf] = result
         return result
