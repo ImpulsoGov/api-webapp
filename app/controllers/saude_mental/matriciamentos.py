@@ -20,8 +20,7 @@ def obter_matriciamentos_caps_ultimo_ano_por_id_sus(municipio_id_sus: str):
         raise HTTPException(
             status_code=404,
             detail=(
-                "Matriciamentos CAPS no último ano "
-                "do município não encontrados"
+                "Matriciamentos CAPS no último ano " "do município não encontrados"
             ),
         )
 

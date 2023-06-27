@@ -32,9 +32,7 @@ async def obter_perfil_usuarios(
 async def obter_perfil_usuarios_estabelecimento(
     municipio_id_sus: str,
 ):
-    return obter_usuarios_perfil_estabelecimento(
-        municipio_id_sus=municipio_id_sus
-    )
+    return obter_usuarios_perfil_estabelecimento(municipio_id_sus=municipio_id_sus)
 
 
 @router.get("/saude-mental/usuarios/novos")

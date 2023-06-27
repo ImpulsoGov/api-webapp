@@ -24,12 +24,11 @@ def obter_acolhimento_noturno(
     if len(acolhimento_noturno) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return acolhimento_noturno
+
 
 def obter_internacoes_resumo_admissoes(
     municipio_id_sus: str,
@@ -43,11 +42,10 @@ def obter_internacoes_resumo_admissoes(
     if len(internacoes_resumo_admissoes) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
     return internacoes_resumo_admissoes
+
 
 # def obter_internacoes_resumo_admissoes_12m(
 #     municipio_id_sus: str,
@@ -68,6 +66,7 @@ def obter_internacoes_resumo_admissoes(
 
 #     return internacoes_resumo_admissoes_12m
 
+
 def obter_internacoes_resumo_altas(
     municipio_id_sus: str,
 ):
@@ -80,12 +79,11 @@ def obter_internacoes_resumo_altas(
     if len(internacoes_resumo_altas) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return internacoes_resumo_altas
+
 
 # def obter_internacoes_resumo_altas_12m(
 #     municipio_id_sus: str,

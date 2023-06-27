@@ -1,10 +1,7 @@
 from fastapi import HTTPException
 
 from app.models import db
-from app.models.saude_mental.reducaodedanos import (
-    ReducaoDanos,
-    ReducaoDanos12meses
-)
+from app.models.saude_mental.reducaodedanos import ReducaoDanos, ReducaoDanos12meses
 
 session = db.session
 
@@ -25,7 +22,6 @@ def dados_reducaodedanos(municipio_id_sus: str):
     return dados_reducaodedanos
 
 
-
 def dados_reducaodedanos_12meses(
     municipio_id_sus: str,
 ):
@@ -38,9 +34,7 @@ def dados_reducaodedanos_12meses(
     if len(dados_reducaodedanos_12meses) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados de Redução de danos dos 12 meses não encontrados",
-            ),
+            detail=("Dados de Redução de danos dos 12 meses não encontrados",),
         )
 
     return dados_reducaodedanos_12meses

@@ -1,11 +1,13 @@
-from sqlalchemy import Column, Integer, String,DATE,ForeignKey
+from sqlalchemy import Column, Integer, String, DATE, ForeignKey
 from app.models import db
+
 Base = db.Base
 
+
 class Estabelecimentos(Base):
-    __tablename__ = 'estabelecimentos'
+    __tablename__ = "estabelecimentos"
     ibge = Column(String)
-    cnes = Column(String, primary_key=True)   
+    cnes = Column(String, primary_key=True)
     nome_fantasia = Column(String)
     tipo_estabelecimento = Column(String)
     horario = Column(String)
@@ -20,6 +22,7 @@ class Estabelecimentos(Base):
     bairro = Column(String)
     latitude = Column(String)
     longitude = Column(String)
-    __table_args__ = {'schema': 'territorios'}
+    __table_args__ = {"schema": "territorios"}
 
-#Base.metadata.create_all(db.engine)
+
+# Base.metadata.create_all(db.engine)

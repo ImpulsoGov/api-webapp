@@ -1,9 +1,11 @@
-from sqlalchemy import Column, Integer, String,DATE,ForeignKey
+from sqlalchemy import Column, Integer, String, DATE, ForeignKey
 from app.models import db
+
 Base = db.Base
 
+
 class Individuos(Base):
-    __tablename__ = 'cadastro_individual'
+    __tablename__ = "cadastro_individual"
     id = Column(String, primary_key=True)
     familia_id = Column(String)
     domicilio_id = Column(String)
@@ -50,4 +52,4 @@ class Individuos(Base):
     uso_alcool_drogas = Column(String)
     bolsa_familia = Column(String)
     responsavel = Column(String)
-    __table_args__ = {'schema': 'territorios'}
+    __table_args__ = {"schema": "territorios"}

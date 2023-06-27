@@ -7,9 +7,7 @@ Base = db.Base
 
 
 class EncaminhamentoApsEspecializadaResumoUltimoMesHorizontal(Base):
-    __tablename__ = (
-        "encaminhamentos_aps_especializada_resumo_ultimo_mes_horizontal"
-    )
+    __tablename__ = "encaminhamentos_aps_especializada_resumo_ultimo_mes_horizontal"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
     unidade_geografica_id_sus = Column(VARCHAR(length=15))

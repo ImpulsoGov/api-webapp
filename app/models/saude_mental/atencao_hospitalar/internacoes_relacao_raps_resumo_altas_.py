@@ -5,6 +5,7 @@ from app.models import db
 
 Base = db.Base
 
+
 class InternacoesResumoAltas(Base):
     __tablename__ = "internacoes_relacao_raps_resumo_altas"
     id = Column(Text, primary_key=True)

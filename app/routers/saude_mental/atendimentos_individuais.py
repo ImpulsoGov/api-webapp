@@ -22,9 +22,7 @@ async def obter_atendimentos_caps(
 async def obter_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
-    return obter_perfil_usuarios_caps_por_id_sus(
-        municipio_id_sus=municipio_id_sus
-    )
+    return obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus=municipio_id_sus)
 
 
 @router.get("/saude-mental/atendimentosindividuais/caps/perfil/resumo")

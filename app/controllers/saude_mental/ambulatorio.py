@@ -5,7 +5,7 @@ from app.models.saude_mental.ambulatorio import (
     AmbulatorioAtendimentoResumo,
     AmbulatorioAtendimentoResumoUltimoMes,
     AmbulatorioProcedimentosPorProfissional,
-    AmbulatorioUsuariosPerfil
+    AmbulatorioUsuariosPerfil,
 )
 
 session = db.session
@@ -23,9 +23,7 @@ def obter_ambulatorio_atendimento_resumo(
     if len(ambulatorio_atendimento_resumo) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return ambulatorio_atendimento_resumo
@@ -43,9 +41,7 @@ def obter_ambulatorio_atendimento_resumo_ultimo_mes(
     if len(ambulatorio_atendimento_resumo_ultimo_mes) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return ambulatorio_atendimento_resumo_ultimo_mes
@@ -63,9 +59,7 @@ def obter_ambulatorio_procedimento_por_profissional(
     if len(ambulatorio_procedimento_por_profissional) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return ambulatorio_procedimento_por_profissional
@@ -83,9 +77,7 @@ def obter_ambulatorio_usuario_perfil(
     if len(ambulatorio_usuario_perfil) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados não encontrados",
-            ),
+            detail=("Dados não encontrados",),
         )
 
     return ambulatorio_usuario_perfil

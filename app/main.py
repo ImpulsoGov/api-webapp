@@ -14,7 +14,7 @@ from app.routers.saude_mental import (
     abandono,
     procedimentos,
     ambulatorio,
-    atencao_hospitalar
+    atencao_hospitalar,
 )
 
 app = FastAPI()

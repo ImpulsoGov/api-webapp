@@ -18,5 +18,4 @@ class UsuariosPerfilCondicao(Base):
     estabelecimento_linha_idade = Column(Text)
     usuario_abuso_substancias = Column(Text)
     usuario_situacao_rua = Column(Text)
-    __table_args__ = {"schema": "saude_mental", 'extend_existing': True}
- 
+    __table_args__ = {"schema": "saude_mental", "extend_existing": True}

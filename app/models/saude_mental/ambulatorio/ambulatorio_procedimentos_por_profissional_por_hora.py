@@ -5,6 +5,7 @@ from app.models import db
 
 Base = db.Base
 
+
 class AmbulatorioProcedimentosPorProfissional(Base):
     __tablename__ = "ambulatorio_procedimentos_por_profissional_por_hora"
     id = Column(Text, primary_key=True)

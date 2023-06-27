@@ -16,9 +16,7 @@ router = APIRouter()
 async def obter_dados_aps_especializada(
     municipio_id_sus: str,
 ):
-    return obter_dados_aps_especializada_por_id_sus(
-        municipio_id_sus=municipio_id_sus
-    )
+    return obter_dados_aps_especializada_por_id_sus(municipio_id_sus=municipio_id_sus)
 
 
 @router.get("/saude-mental/encaminhamentos/aps/especializada/resumo")

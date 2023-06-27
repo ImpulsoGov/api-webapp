@@ -173,9 +173,7 @@ def obter_perfil_usuarios_ativos_por_condicao(
         if len(usuarios_ativos_por_condicao) == 0:
             raise HTTPException(
                 status_code=404,
-                detail=(
-                    "Dados de condição de usuários ativos não encontrados."
-                ),
+                detail=("Dados de condição de usuários ativos não encontrados."),
             )
 
         return usuarios_ativos_por_condicao
@@ -209,9 +207,7 @@ def obter_perfil_usuarios_ativos_por_genero_e_idade(
         if len(usuarios_ativos_por_genero_e_idade) == 0:
             raise HTTPException(
                 status_code=404,
-                detail=(
-                    "Dados de gênero/idade de usuários ativos não encontrados."
-                ),
+                detail=("Dados de gênero/idade de usuários ativos não encontrados."),
             )
 
         return usuarios_ativos_por_genero_e_idade
@@ -245,9 +241,7 @@ def obter_perfil_usuarios_ativos_por_raca(
         if len(usuarios_ativos_por_raca) == 0:
             raise HTTPException(
                 status_code=404,
-                detail=(
-                    "Dados de raça/cor de usuários ativos não encontrados."
-                ),
+                detail=("Dados de raça/cor de usuários ativos não encontrados."),
             )
 
         return usuarios_ativos_por_raca
