@@ -64,9 +64,7 @@ async def consulta_municipio(
     estado_sigla: Optional[str] = None,
     estado_nome: Optional[str] = None,
 ):
-    res = municipios.consulta_municipio(
-        id_sus, municipio_nome, estado_sigla, estado_nome
-    )
+    res = municipios.consulta_municipio(id_sus, municipio_nome, estado_sigla, estado_nome)
     return res
 
 
@@ -372,9 +370,7 @@ async def validate_token(username: Usuario = Depends(auth.get_current_user)):
 
 
 @router.post("/suporte/ger_usuarios/solicitar-nova-senha")
-async def solicitar_nova_senha(
-    background_tasks: BackgroundTasks, mail: str = Form(...)
-):
+async def solicitar_nova_senha(background_tasks: BackgroundTasks, mail: str = Form(...)):
     background_tasks.add_task(
         gerenciamento_usuarios.apagar_codigo_recuperacao_tempo, mail
     )

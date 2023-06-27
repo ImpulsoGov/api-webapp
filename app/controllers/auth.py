@@ -151,9 +151,7 @@ def controle_perfil(perfil_usuario, perfil_rota):
     return (
         True
         if perfil_rota in perfil_usuario
-        else {
-            "mensagem": "Perfil de usuário com Privilégio insuficiente para essa rota"
-        }
+        else {"mensagem": "Perfil de usuário com Privilégio insuficiente para essa rota"}
     )
 
 

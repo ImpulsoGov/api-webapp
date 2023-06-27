@@ -44,9 +44,7 @@ def consulta_mail(email):
         query = db.session.query(usuarios.Usuario).filter_by(mail=email)
         res = query.all()
         return (
-            True
-            if len(res) == 0
-            else {"mensagem": "E-mail já cadastrado", "error": True}
+            True if len(res) == 0 else {"mensagem": "E-mail já cadastrado", "error": True}
         )
     except:
         return {"mensagem": "E-mail já cadastrado", "error": True}
@@ -372,10 +370,7 @@ def liberar_acesso(id_cod, id, perfil):
             return {"mensagem": "Usuário já passou pela primeira liberação de perfil"}
         usuario_id = session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
         perfil_id = (
-            session.query(perfil_acesso.Perfil_lista)
-            .filter_by(perfil=perfil)
-            .all()[0]
-            .id
+            session.query(perfil_acesso.Perfil_lista).filter_by(perfil=perfil).all()[0].id
         )  # perfil 6 - IP
         novo_perfil = perfil_usuario.Perfil(
             id=str(uuid.uuid4()),

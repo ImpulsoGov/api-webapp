@@ -19,6 +19,4 @@ async def obter_dados_consultorionarua_atendimentos_12meses(
 async def obter_dados_consultorionarua_atendimentos_12meses(
     municipio_id_sus: str,
 ):
-    return dados_consultorionarua_atendimentos_12meses(
-        municipio_id_sus=municipio_id_sus
-    )
+    return dados_consultorionarua_atendimentos_12meses(municipio_id_sus=municipio_id_sus)

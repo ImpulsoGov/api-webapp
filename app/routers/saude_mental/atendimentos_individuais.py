@@ -29,6 +29,4 @@ async def obter_perfil_usuarios_caps(
 async def obter_resumo_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
-    return obter_resumo_perfil_usuarios_caps_por_id_sus(
-        municipio_id_sus=municipio_id_sus
-    )
+    return obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus=municipio_id_sus)

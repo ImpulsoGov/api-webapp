@@ -26,9 +26,7 @@ class AvaliacaoConclusaoConteudo(Base):
         nullable=True,
         comment="Avaliação do usuario do conteudo 1 a 5 estrelas",
     )
-    concluido = Column(
-        Boolean, nullable=True, comment="Conteudo concluido pelo usuario"
-    )
+    concluido = Column(Boolean, nullable=True, comment="Conteudo concluido pelo usuario")
     criacao_data = Column(TIMESTAMP, nullable=False, comment="Data de Criação")
     atualizacao_data = Column(TIMESTAMP, nullable=False, comment="Data de Atualização")
     __table_args__ = {"schema": "impulso_previne"}

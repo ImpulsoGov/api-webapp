@@ -15,14 +15,10 @@ class UsuarioIP(Base):
         default=uuid.uuid4,
         comment="Chave de Identificação Unica",
     )
-    municipio = Column(
-        String, nullable=False, comment="Municipio de atuação do usuario"
-    )
+    municipio = Column(String, nullable=False, comment="Municipio de atuação do usuario")
     cargo = Column(String, nullable=False, comment="Cargo atuação do usuario")
     telefone = Column(String, nullable=False, comment="Telefone de contato")
-    whatsapp = Column(
-        Boolean, nullable=False, comment="Numero informado possui whatsapp"
-    )
+    whatsapp = Column(Boolean, nullable=False, comment="Numero informado possui whatsapp")
     id_usuario = Column(
         UUID(as_uuid=True),
         ForeignKey("suporte.usuarios.id"),

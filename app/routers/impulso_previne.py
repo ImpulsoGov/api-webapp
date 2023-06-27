@@ -138,9 +138,7 @@ async def gestantes_cadastros_equipe(
 async def gestantes_cadastros_municipio(
     municipio_uf, username: Usuario = Depends(get_current_user)
 ):
-    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(
-        municipio_uf
-    )
+    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
     return res
 
 

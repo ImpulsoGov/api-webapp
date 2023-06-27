@@ -7,9 +7,7 @@ router = APIRouter()
 
 
 @router.get("/territorios/estabelecimentos")
-async def busca_estabelecimentos(
-    ibge: Optional[str] = None, cnes: Optional[str] = None
-):
+async def busca_estabelecimentos(ibge: Optional[str] = None, cnes: Optional[str] = None):
     res = territorios.busca_estabelecimentos(ibge, cnes)
     return res
 
