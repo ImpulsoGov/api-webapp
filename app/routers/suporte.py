@@ -1,17 +1,18 @@
-from fastapi import APIRouter, Depends, Form
-from typing import Optional, List
+from typing import List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Form
+from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
+
 from app.controllers import (
-    municipios,
     auth,
     cadastro_usuarios,
-    recuperação_senha,
-    gerenciamento_usuarios,
     chave_temp_data_studio,
+    gerenciamento_usuarios,
+    municipios,
+    recuperação_senha,
 )
-from pydantic import BaseModel
-from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuarios import Usuario
-from fastapi import BackgroundTasks
 
 router = APIRouter()
 

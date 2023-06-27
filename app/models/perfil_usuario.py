@@ -1,8 +1,10 @@
-from sqlalchemy import Column, DATE, ForeignKey
+from sqlalchemy import DATE, Column, ForeignKey
+
 from app.models import db, usuarios
 
 Base = db.Base
 import uuid
+
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relation
 

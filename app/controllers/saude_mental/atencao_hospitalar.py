@@ -1,12 +1,10 @@
 from fastapi import HTTPException
 
 from app.models import db
-from app.models.saude_mental.atencao_hospitalar import (
+from app.models.saude_mental.atencao_hospitalar import (  # InternacoesResumoAdmissoes12m,; InternacoesResumoAltas12m
     AcolhimentoNoturno,
     InternacoesResumoAdmissoes,
-    # InternacoesResumoAdmissoes12m,
     InternacoesResumoAltas,
-    # InternacoesResumoAltas12m
 )
 
 session = db.session

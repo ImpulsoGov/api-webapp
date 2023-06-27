@@ -1,7 +1,9 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, Form
-from typing import Optional, List
-from app.controllers import territorios
 from fastapi.security import OAuth2PasswordRequestForm
+
+from app.controllers import territorios
 
 router = APIRouter()
 

@@ -1,7 +1,5 @@
 # flake8: noqa: F401
-from .relacao_raps_resumo_admissoes_12m import (
-    InternacaoRelacaoRapsResumoAdmissoes12m,
-)
+from .relacao_raps_resumo_admissoes_12m import InternacaoRelacaoRapsResumoAdmissoes12m
 from .relacao_raps_resumo_admissoes_12m_vertical import (
     InternacaoRelacaoRapsResumoAdmissoes12mVertical,
 )

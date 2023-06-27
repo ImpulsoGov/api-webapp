@@ -1,17 +1,19 @@
-from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import (
-    indicadores,
-    forum_ip,
-    auth,
-    busca_ativa_gestantes,
-    busca_ativa_diabeticos,
-    busca_ativa_hipertensos,
-    TrilhaCapacitacao,
-)
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, Form
-from typing import Optional, List
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
-from app.controllers.auth import get_current_user, Usuario
+
+from app.controllers import (
+    TrilhaCapacitacao,
+    auth,
+    busca_ativa_diabeticos,
+    busca_ativa_gestantes,
+    busca_ativa_hipertensos,
+    forum_ip,
+    indicadores,
+)
+from app.controllers.auth import Usuario, get_current_user
 
 router = APIRouter()
 

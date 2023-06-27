@@ -2,8 +2,9 @@ from app.models import db
 
 Base = db.Base
 import uuid
+
+from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, Boolean, TIMESTAMP, ForeignKey
 
 
 class UsuarioSM(Base):

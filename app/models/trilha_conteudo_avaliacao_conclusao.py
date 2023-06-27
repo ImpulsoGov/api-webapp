@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP
+from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
+
 from app.models import db
 
 Base = db.Base
 import uuid
+
 from sqlalchemy.dialects.postgresql import UUID
 
 

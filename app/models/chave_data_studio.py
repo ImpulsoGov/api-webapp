@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy import TIMESTAMP, Column, String
+
 from app.models import db
 
 Base = db.Base

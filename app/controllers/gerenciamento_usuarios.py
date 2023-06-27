@@ -1,18 +1,21 @@
+import math
+import random
+import uuid
+from datetime import datetime
+
+from sqlalchemy import func
+
+from app.controllers import auth, cadastro_usuarios, recuperação_senha
 from app.models import (
+    ativar_usuario,
     db,
-    usuarios,
     perfil_acesso,
     perfil_usuario,
-    ativar_usuario,
+    recuperacao_senha,
+    usuarios,
     usuarios_ip,
     usuarios_sm,
-    recuperacao_senha,
 )
-from app.controllers import recuperação_senha, auth, cadastro_usuarios
-from datetime import datetime
-from sqlalchemy import func
-import random, math
-import uuid
 
 session = db.session
 Usuarios = usuarios.Usuario
@@ -22,11 +25,11 @@ Perfil_lista = perfil_acesso.Perfil_lista
 Ativar = ativar_usuario.Ativar
 enviar_mail = recuperação_senha.enviar_mail
 UsuarioSM = usuarios_sm.UsuarioSM
+import os
 import smtplib
+import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
-import time
 
 from dotenv import load_dotenv
 

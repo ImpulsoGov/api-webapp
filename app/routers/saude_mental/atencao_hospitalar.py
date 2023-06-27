@@ -1,11 +1,9 @@
 from fastapi import APIRouter
 
-from app.controllers.saude_mental.atencao_hospitalar import (
+from app.controllers.saude_mental.atencao_hospitalar import (  # obter_internacoes_resumo_admissoes_12m,; obter_internacoes_resumo_altas_12m
     obter_acolhimento_noturno,
     obter_internacoes_resumo_admissoes,
-    # obter_internacoes_resumo_admissoes_12m,
     obter_internacoes_resumo_altas,
-    # obter_internacoes_resumo_altas_12m
 )
 
 router = APIRouter()

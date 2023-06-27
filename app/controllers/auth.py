@@ -1,14 +1,16 @@
+import os
 from datetime import datetime, timedelta
 from typing import Optional
+
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from requests import session
-from app.models import db, usuarios, perfil_acesso, perfil_usuario
-import os
-from dotenv import load_dotenv
+
+from app.models import db, perfil_acesso, perfil_usuario, usuarios
 
 Usuarios = usuarios.Usuario
 Perfil = perfil_usuario.Perfil

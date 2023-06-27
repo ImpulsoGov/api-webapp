@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Numeric, Text, Date, Float, TIMESTAMP
+from sqlalchemy import TIMESTAMP, Column, Date, Float, Numeric, Text
 from sqlalchemy.dialects.postgresql import UUID, VARCHAR
 
 from app.models import db

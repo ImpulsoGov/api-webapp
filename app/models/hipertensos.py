@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DATE, BOOLEAN, DateTime, TIMESTAMP
+from sqlalchemy import BOOLEAN, DATE, TIMESTAMP, Column, DateTime, Integer, String
+
 from app.models import DB_PRODUCAO
 
 Base = DB_PRODUCAO.Base

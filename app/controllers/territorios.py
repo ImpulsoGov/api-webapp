@@ -1,12 +1,13 @@
-from app.models import (
-    ts_estabelecimentos,
-    db,
-    ts_profissionais,
-    ts_domicilios,
-    ts_individuos,
-)
-from datetime import datetime
 import json
+from datetime import datetime
+
+from app.models import (
+    db,
+    ts_domicilios,
+    ts_estabelecimentos,
+    ts_individuos,
+    ts_profissionais,
+)
 
 session = db.session
 Estabelecimentos = ts_estabelecimentos.Estabelecimentos

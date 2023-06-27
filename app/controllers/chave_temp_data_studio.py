@@ -1,8 +1,10 @@
 import os
-from jose import jwt
-from typing import Optional
 from datetime import datetime, timedelta
-from app.models import db, chave_data_studio
+from typing import Optional
+
+from jose import jwt
+
+from app.models import chave_data_studio, db
 
 # openssl rand -base64 32
 SECRET_KEY = os.getenv("SECRET_KEY")

@@ -1,7 +1,8 @@
-from app.models import db, trilha_conteudo_avaliacao_conclusao
-from datetime import datetime
 import re
 import uuid
+from datetime import datetime
+
+from app.models import db, trilha_conteudo_avaliacao_conclusao
 
 session = db.session
 

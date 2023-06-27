@@ -1,6 +1,7 @@
-from app.models import forum_ip, db
-from datetime import datetime
 import json
+from datetime import datetime
+
+from app.models import db, forum_ip
 
 session = db.session
 Forum_ip = forum_ip.Forum_ip

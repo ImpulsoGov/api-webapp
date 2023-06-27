@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, DATE, ForeignKey
+import uuid
+
+from sqlalchemy import DATE, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relation
+
 from app.models import db, usuarios
-import uuid
 
 Base = db.Base
 
