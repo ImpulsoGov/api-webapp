@@ -18,7 +18,7 @@ jobs:
         run: pip install -r dev-requirements.txt
 
       - name: Roda verificador de formatação (black)
-        run: black -l 80 --check .
+        run: black -l 90 --check .
       - name: Roda verificador de ordem dos imports (isort)
         run: isort --check app
       - name: Roda verificador de tipagem (mypy)
