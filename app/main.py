@@ -4,17 +4,17 @@ from pydantic import BaseModel
 
 from app.routers import impulso_previne, suporte, territorios
 from app.routers.saude_mental import (
+    abandono,
+    ambulatorio,
+    atencao_hospitalar,
     atendimentos_individuais,
+    consultorionarua,
     encaminhamentos,
     internacoes,
     matriciamentos,
-    consultorionarua,
+    procedimentos,
     reducaodedanos,
     usuarios,
-    abandono,
-    procedimentos,
-    ambulatorio,
-    atencao_hospitalar
 )
 
 app = FastAPI()

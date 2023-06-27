@@ -5,6 +5,7 @@ from app.models import db
 
 Base = db.Base
 
+
 class AbandonoPerfil(Base):
     __tablename__ = "caps_adesao_usuarios_perfil"
     id = Column(Text, primary_key=True)

@@ -44,8 +44,7 @@ def obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
     if len(perfil_usuarios_caps) == 0:
         raise HTTPException(
             status_code=404,
-            detail="Dados de perfil de usuários CAPS "
-            "do município não encontrados",
+            detail="Dados de perfil de usuários CAPS " "do município não encontrados",
         )
 
     return Response(
@@ -64,8 +63,7 @@ def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
     if len(resumo_perfil_usuarios_caps) == 0:
         raise HTTPException(
             status_code=404,
-            detail="Resumo do perfil de usuários CAPS "
-            "do município não encontrado",
+            detail="Resumo do perfil de usuários CAPS " "do município não encontrado",
         )
 
     return resumo_perfil_usuarios_caps

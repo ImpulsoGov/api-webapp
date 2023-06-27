@@ -129,9 +129,7 @@ def obter_dados_aps_caps_resumo_vertical_por_id_sus(
     return dados_aps_caps_resumo
 
 
-def selecionar_resumo_aps_especializada_por_sentido(
-    municipio_id_sus: str, sentido: str
-):
+def selecionar_resumo_aps_especializada_por_sentido(municipio_id_sus: str, sentido: str):
     if sentido == "vertical":
         return obter_dados_aps_especializada_resumo_vertical_por_id_sus(
             municipio_id_sus=municipio_id_sus

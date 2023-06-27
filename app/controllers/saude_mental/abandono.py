@@ -3,10 +3,13 @@ from fastapi import HTTPException, Response
 
 from app.models import db
 from app.models.saude_mental.abandono import (
-    AbandonoCoortes, AbandonoMensal, AbandonoPerfil
+    AbandonoCoortes,
+    AbandonoMensal,
+    AbandonoPerfil,
 )
 
 session = db.session
+
 
 def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
     # dados_caps_adesao_usuarios_perfil = (
@@ -30,6 +33,7 @@ def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
         media_type="application/json",
     )
 
+
 def dados_caps_adesao_evasao_coortes_resumo(municipio_id_sus: str):
     dados_caps_adesao_evasao_coortes_resumo = (
         session.query(AbandonoCoortes)
@@ -40,12 +44,11 @@ def dados_caps_adesao_evasao_coortes_resumo(municipio_id_sus: str):
     if len(dados_caps_adesao_evasao_coortes_resumo) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados de Abandono Coortes não encontrados",
-            ),
+            detail=("Dados de Abandono Coortes não encontrados",),
         )
 
     return dados_caps_adesao_evasao_coortes_resumo
+
 
 def dados_caps_adesao_evasao_mensal(municipio_id_sus: str):
     dados_caps_adesao_evasao_mensal = (
@@ -57,9 +60,7 @@ def dados_caps_adesao_evasao_mensal(municipio_id_sus: str):
     if len(dados_caps_adesao_evasao_mensal) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Dados de evasão mensal não encontrados",
-            ),
+            detail=("Dados de evasão mensal não encontrados",),
         )
 
     return dados_caps_adesao_evasao_mensal

@@ -33,5 +33,3 @@ class UsuariosPerfil(Base):
     # usuario_tempo_servico_ordem = Column(Integer)
     # usuario_faixa_etaria_ordem = Column(Integer)
     __table_args__ = {"schema": "saude_mental"}
-    
- 

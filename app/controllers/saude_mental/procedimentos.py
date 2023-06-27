@@ -23,10 +23,7 @@ def dados_procedimentos_por_usuario_estabelecimento(municipio_id_sus: str):
     if len(ProcedimentoPorUsuarioEstabelecimento_dados) == 0:
         raise HTTPException(
             status_code=404,
-            detail=(
-                "Matriciamentos CAPS no último ano "
-                "do município não encontrados"
-            ),
+            detail=("Matriciamentos CAPS no último ano " "do município não encontrados"),
         )
 
     return ProcedimentoPorUsuarioEstabelecimento_dados

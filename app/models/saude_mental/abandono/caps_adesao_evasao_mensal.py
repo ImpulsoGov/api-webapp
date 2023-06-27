@@ -5,6 +5,7 @@ from app.models import db
 
 Base = db.Base
 
+
 class AbandonoMensal(Base):
     __tablename__ = "caps_adesao_evasao_mensal"
     id = Column(Text, primary_key=True)

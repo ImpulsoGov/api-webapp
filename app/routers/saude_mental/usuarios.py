@@ -1,19 +1,20 @@
+import pandas as pd
+import pymysql
 from fastapi import APIRouter
-import pymysql, pandas as pd
 from sqlalchemy import create_engine
 
 from app.controllers.saude_mental.usuarios import (
-    obter_usuarios_novos,
-    obter_usuarios_novos_resumo,
-    obter_usuarios_perfil,
-    obter_usuarios_perfil_estabelecimento,
+    obter_estabelecimentos_por_id_sus,
+    obter_perfil_usuarios_ativos_por_cid,
     obter_perfil_usuarios_ativos_por_condicao,
     obter_perfil_usuarios_ativos_por_genero_e_idade,
     obter_perfil_usuarios_ativos_por_raca,
-    obter_perfil_usuarios_ativos_por_cid,
-    obter_estabelecimentos_por_id_sus,
     obter_periodos_por_id_sus,
+    obter_usuarios_novos,
+    obter_usuarios_novos_resumo,
+    obter_usuarios_perfil,
     obter_usuarios_perfil_condicao,
+    obter_usuarios_perfil_estabelecimento,
     obter_usuarios_perfil_idade_raca,
 )
 from app.models.db import session
@@ -32,9 +33,7 @@ async def obter_perfil_usuarios(
 async def obter_perfil_usuarios_estabelecimento(
     municipio_id_sus: str,
 ):
-    return obter_usuarios_perfil_estabelecimento(
-        municipio_id_sus=municipio_id_sus
-    )
+    return obter_usuarios_perfil_estabelecimento(municipio_id_sus=municipio_id_sus)
 
 
 @router.get("/saude-mental/usuarios/novos")

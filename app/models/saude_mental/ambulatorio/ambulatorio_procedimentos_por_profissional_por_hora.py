@@ -1,9 +1,10 @@
-from sqlalchemy import Column, Numeric, Text, Date, Float, TIMESTAMP
+from sqlalchemy import TIMESTAMP, Column, Date, Float, Numeric, Text
 from sqlalchemy.dialects.postgresql import UUID, VARCHAR
 
 from app.models import db
 
 Base = db.Base
+
 
 class AmbulatorioProcedimentosPorProfissional(Base):
     __tablename__ = "ambulatorio_procedimentos_por_profissional_por_hora"

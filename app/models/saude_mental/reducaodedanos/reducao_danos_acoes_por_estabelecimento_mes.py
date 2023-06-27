@@ -25,5 +25,3 @@ class ReducaoDanos(Base):
     nome_mes = Column(Text)
     profissional_vinculo_ocupacao = Column(Text)
     __table_args__ = {"schema": "saude_mental"}
-    
- 
