@@ -14,6 +14,7 @@ from app.routers.saude_mental import (
     matriciamentos,
     procedimentos,
     reducaodedanos,
+    resumo,
     usuarios,
 )
 
@@ -49,6 +50,7 @@ app.include_router(abandono.router)
 app.include_router(procedimentos.router)
 app.include_router(atencao_hospitalar.router)
 app.include_router(ambulatorio.router)
+app.include_router(resumo.router)
 
 
 class Welcome(BaseModel):
