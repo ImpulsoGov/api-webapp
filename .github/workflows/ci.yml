@@ -25,7 +25,7 @@ jobs:
         run: mypy app
         continue-on-error: true
       - name: Roda linter (flake8)
-        run: flake8 app tests
+        run: flake8 --max-line-length 90 app tests
         continue-on-error: true
       - name: Roda testes (pytest)
         run: pytest
