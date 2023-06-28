@@ -36,7 +36,7 @@ class Indicador(BaseModel):
 async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, indicadores_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, id_sus: Optional[str] = None, municipio_nome: Optional[str] = None):
     res = indicadores.consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id)
     return res
-
+#aquii
 @router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
 async def consulta_indicadores_municipios_equipes_homologadas(id_sus: str ):
    
@@ -49,7 +49,7 @@ async def consulta_indicadores_desempenho(id_sus: str ):
    
     return consulta_indicadores_desempenho (
         id_sus = id_sus
-    )
+    )#aquii
 
 class Mensagem(BaseModel):
     erros : Optional[List] = None
