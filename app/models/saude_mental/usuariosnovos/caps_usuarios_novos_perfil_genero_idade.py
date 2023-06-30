@@ -6,7 +6,7 @@ from app.models import db
 Base = db.Base
 
 
-class UsuariosNovosPorGeneroEIdade(Base):
+class UsuarioNovoPorGeneroEIdade(Base):
     __tablename__ = "caps_usuarios_novos_perfil_genero_idade"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
