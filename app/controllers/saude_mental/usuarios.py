@@ -8,15 +8,11 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuarioAtivoPorCondicao,
     UsuarioAtivoPorGeneroEIdade,
     UsuarioAtivoPorRaca,
-    UsuariosPerfil,
     UsuariosPerfilCondicao,
     UsuariosPerfilEstabelecimento,
     UsuariosPerfilIdadeRaca,
 )
-from app.models.saude_mental.usuariosnovos import (
-    UsuariosNovosPerfil,
-    UsuariosNovosResumo,
-)
+from app.models.saude_mental.usuariosnovos import UsuariosNovosResumo
 
 session = db.session
 
