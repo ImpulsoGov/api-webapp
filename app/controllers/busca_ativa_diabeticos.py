@@ -22,6 +22,8 @@ def diabeticos_equipe(municipio_uf,equipe):
                     Diabeticos.acs_nome_cadastro,
                     Diabeticos.equipe_ine_cadastro,
                     Diabeticos.equipe_nome_cadastro
+                ).order_by(
+                    Diabeticos.cidadao_nome
                 ).all()
     except Exception as error:
         session.rollback()
@@ -48,6 +50,8 @@ def diabetes_aps(municipio_uf):
                     Diabeticos.acs_nome_cadastro,
                     Diabeticos.equipe_ine_cadastro,
                     Diabeticos.equipe_nome_cadastro
+                ).order_by(
+                    Diabeticos.cidadao_nome
                 ).all()
             cache_hipertensao_aps[municipio_uf] = result
         return result
