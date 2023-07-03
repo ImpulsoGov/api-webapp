@@ -8,13 +8,15 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuarioAtivoPorCondicao,
     UsuarioAtivoPorGeneroEIdade,
     UsuarioAtivoPorRaca,
-    UsuariosPerfil,
     UsuariosPerfilCondicao,
     UsuariosPerfilEstabelecimento,
     UsuariosPerfilIdadeRaca,
 )
 from app.models.saude_mental.usuariosnovos import (
-    UsuariosNovosPerfil,
+    UsuarioNovoPorCID,
+    UsuarioNovoPorCondicao,
+    UsuarioNovoPorGeneroEIdade,
+    UsuarioNovoPorRaca,
     UsuariosNovosResumo,
 )
 
@@ -344,6 +346,142 @@ def obter_periodos_por_id_sus(municipio_id_sus: str):
             )
 
         return estabelecimentos
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_usuarios_novos_por_condicao(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    try:
+        usuarios_novos_por_condicao = (
+            session.query(UsuarioNovoPorCondicao)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
+            .all()
+        )
+
+        if len(usuarios_novos_por_condicao) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de condição de usuários novos não encontrados."),
+            )
+
+        return usuarios_novos_por_condicao
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_usuarios_novos_por_genero_e_idade(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    try:
+        usuarios_novos_por_genero_e_idade = (
+            session.query(UsuarioNovoPorGeneroEIdade)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
+            .all()
+        )
+
+        if len(usuarios_novos_por_genero_e_idade) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de gênero/idade de usuários novos não encontrados."),
+            )
+
+        return usuarios_novos_por_genero_e_idade
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_usuarios_novos_por_raca(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    try:
+        usuarios_novos_por_raca = (
+            session.query(UsuarioNovoPorRaca)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
+            .all()
+        )
+
+        if len(usuarios_novos_por_raca) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de raça/cor de usuários novos não encontrados."),
+            )
+
+        return usuarios_novos_por_raca
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_usuarios_novos_por_cid(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    try:
+        usuarios_novos_por_cid = (
+            session.query(UsuarioNovoPorCID)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
+            .all()
+        )
+
+        if len(usuarios_novos_por_cid) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de cid de usuários novos não encontrados."),
+            )
+
+        return usuarios_novos_por_cid
     except HTTPException as error:
         session.rollback()
 
