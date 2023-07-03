@@ -38,17 +38,25 @@ async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, 
     return res
 #aquii
 @router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
-async def consulta_indicadores_municipios_equipes_homologadas(id_sus: str ):
-   
-    return consulta_indicadores_municipios_equipes_homologadas (
-        id_sus = id_sus
+async def consulta_indicadores_equipes_homologadas_municipios(
+    id_sus: str,
+    municipio_nome: str,
+    municipio_uf: str,
+    indicador_nome: str,
+    indicador_resultado: str,
+):
+    return consulta_indicadores_municipios_equipes_homologadas(
+        id_sus=id_sus,
+        municipio_nome=municipio_nome,
+        municipio_uf=municipio_uf,
+        indicador_nome=indicador_nome,
+        indicador_resultado=indicador_resultado
     )
 
 @router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
-async def consulta_indicadores_desempenho(id_sus: str ):
-   
-    return consulta_indicadores_desempenho (
-        id_sus = id_sus
+async def consulta_indicadores_desempenho_municipios(id_sus: str):
+    return consulta_indicadores_desempenho(
+        id_sus=id_sus
     )#aquii
 
 class Mensagem(BaseModel):
