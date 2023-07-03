@@ -54,10 +54,26 @@ async def consulta_indicadores_equipes_homologadas_municipios(
     )
 
 @router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
-async def consulta_indicadores_desempenho_municipios(id_sus: str):
+async def consulta_indicadores_desempenho_municipios(
+    id_sus: str,
+    municipio_nome: str,
+    municipio_uf:str ,
+    periodo_codigo: str , 
+    indicador_nome : str,
+    indicador_meta: float,
+    indicador_diferenca_meta: float, 
+    indicador_resultado: float,
+    ):
     return consulta_indicadores_desempenho(
-        id_sus=id_sus
-    )#aquii
+        id_sus=id_sus,
+        municipio_nome = municipio_nome,
+        municipio_uf =municipio_uf,
+        periodo_codigo=periodo_codigo, 
+        indicador_nome=indicador_nome,
+        indicador_meta= indicador_meta,
+        indicador_diferenca_meta= indicador_diferenca_meta, 
+        indicador_resultado = indicador_resultado 
+    )
 
 class Mensagem(BaseModel):
     erros : Optional[List] = None
