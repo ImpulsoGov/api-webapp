@@ -428,3 +428,37 @@ def obter_perfil_usuarios_novos_por_genero_e_idade(
             detail=("Internal Server Error"),
         )
 
+
+def obter_perfil_usuarios_novos_por_raca(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    try:
+        usuarios_novos_por_raca = (
+            session.query(UsuarioNovoPorRaca)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter_by(periodo=periodo)
+            .all()
+        )
+
+        if len(usuarios_novos_por_raca) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=("Dados de raça/cor de usuários novos não encontrados."),
+            )
+
+        return usuarios_novos_por_raca
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
