@@ -1,7 +1,4 @@
-import pandas as pd
-import pymysql
 from fastapi import APIRouter
-from sqlalchemy import create_engine
 
 from app.controllers.saude_mental.usuarios import (
     obter_estabelecimentos_por_id_sus,
@@ -13,11 +10,8 @@ from app.controllers.saude_mental.usuarios import (
     obter_usuarios_novos,
     obter_usuarios_novos_resumo,
     obter_usuarios_perfil,
-    obter_usuarios_perfil_condicao,
     obter_usuarios_perfil_estabelecimento,
-    obter_usuarios_perfil_idade_raca,
 )
-from app.models.db import session
 
 router = APIRouter()
 
