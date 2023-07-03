@@ -12,7 +12,13 @@ from app.models.saude_mental.perfildeusuarios import (
     UsuariosPerfilEstabelecimento,
     UsuariosPerfilIdadeRaca,
 )
-from app.models.saude_mental.usuariosnovos import UsuariosNovosResumo
+from app.models.saude_mental.usuariosnovos import (
+    UsuarioNovoPorCID,
+    UsuarioNovoPorCondicao,
+    UsuarioNovoPorGeneroEIdade,
+    UsuarioNovoPorRaca,
+    UsuariosNovosResumo,
+)
 
 session = db.session
 
