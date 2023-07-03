@@ -8,6 +8,7 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_ativos_por_raca,
     obter_perfil_usuarios_novos_por_condicao,
     obter_perfil_usuarios_novos_por_genero_e_idade,
+    obter_perfil_usuarios_novos_por_raca,
     obter_periodos_por_id_sus,
     obter_usuarios_novos,
     obter_usuarios_novos_resumo,
@@ -120,6 +121,17 @@ async def obter_genero_e_idade_usuarios_novos(
     municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
     return obter_perfil_usuarios_novos_por_genero_e_idade(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimento=estabelecimento,
+        periodo=periodo,
+    )
+
+
+@router.get("/saude-mental/usuarios/novos/raca")
+async def obter_raca_usuarios_novos(
+    municipio_id_sus: str, estabelecimento: str, periodo: str
+):
+    return obter_perfil_usuarios_novos_por_raca(
         municipio_id_sus=municipio_id_sus,
         estabelecimento=estabelecimento,
         periodo=periodo,
