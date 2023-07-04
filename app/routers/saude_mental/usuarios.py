@@ -108,43 +108,43 @@ async def obter_periodos(municipio_id_sus: str):
 
 @router.get("/saude-mental/usuarios/novos/condicao")
 async def obter_condicao_usuarios_novos(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     return obter_perfil_usuarios_novos_por_condicao(
         municipio_id_sus=municipio_id_sus,
         estabelecimento=estabelecimento,
-        periodo=periodo,
+        periodos=periodos,
     )
 
 
 @router.get("/saude-mental/usuarios/novos/genero-e-idade")
 async def obter_genero_e_idade_usuarios_novos(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     return obter_perfil_usuarios_novos_por_genero_e_idade(
         municipio_id_sus=municipio_id_sus,
         estabelecimento=estabelecimento,
-        periodo=periodo,
+        periodos=periodos,
     )
 
 
 @router.get("/saude-mental/usuarios/novos/raca")
 async def obter_raca_usuarios_novos(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     return obter_perfil_usuarios_novos_por_raca(
         municipio_id_sus=municipio_id_sus,
         estabelecimento=estabelecimento,
-        periodo=periodo,
+        periodos=periodos,
     )
 
 
 @router.get("/saude-mental/usuarios/novos/cid")
 async def obter_cid_usuarios_novos(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     return obter_perfil_usuarios_novos_por_cid(
         municipio_id_sus=municipio_id_sus,
         estabelecimento=estabelecimento,
-        periodo=periodo,
+        periodos=periodos,
     )

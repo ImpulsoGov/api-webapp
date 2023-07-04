@@ -1,3 +1,5 @@
+from typing import List
+
 import pandas as pd
 from fastapi import HTTPException, Response
 from sqlalchemy import exc
@@ -361,15 +363,20 @@ def obter_periodos_por_id_sus(municipio_id_sus: str):
         )
 
 
+def separar_string(separador: str, string: str) -> List[str]:
+    return string.split(sep=separador)
+
+
 def obter_perfil_usuarios_novos_por_condicao(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     try:
+        lista_periodos = separar_string(separador="-", string=periodos)
         usuarios_novos_por_condicao = (
             session.query(UsuarioNovoPorCondicao)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .filter_by(estabelecimento=estabelecimento)
-            .filter_by(periodo=periodo)
+            .filter(UsuarioNovoPorCondicao.periodo.in_(lista_periodos))
             .all()
         )
 
@@ -396,14 +403,15 @@ def obter_perfil_usuarios_novos_por_condicao(
 
 
 def obter_perfil_usuarios_novos_por_genero_e_idade(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     try:
+        lista_periodos = separar_string(separador="-", string=periodos)
         usuarios_novos_por_genero_e_idade = (
             session.query(UsuarioNovoPorGeneroEIdade)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .filter_by(estabelecimento=estabelecimento)
-            .filter_by(periodo=periodo)
+            .filter(UsuarioNovoPorGeneroEIdade.periodo.in_(lista_periodos))
             .all()
         )
 
@@ -430,14 +438,15 @@ def obter_perfil_usuarios_novos_por_genero_e_idade(
 
 
 def obter_perfil_usuarios_novos_por_raca(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     try:
+        lista_periodos = separar_string(separador="-", string=periodos)
         usuarios_novos_por_raca = (
             session.query(UsuarioNovoPorRaca)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .filter_by(estabelecimento=estabelecimento)
-            .filter_by(periodo=periodo)
+            .filter(UsuarioNovoPorRaca.periodo.in_(lista_periodos))
             .all()
         )
 
@@ -464,14 +473,15 @@ def obter_perfil_usuarios_novos_por_raca(
 
 
 def obter_perfil_usuarios_novos_por_cid(
-    municipio_id_sus: str, estabelecimento: str, periodo: str
+    municipio_id_sus: str, estabelecimento: str, periodos: str
 ):
     try:
+        lista_periodos = separar_string(separador="-", string=periodos)
         usuarios_novos_por_cid = (
             session.query(UsuarioNovoPorCID)
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .filter_by(estabelecimento=estabelecimento)
-            .filter_by(periodo=periodo)
+            .filter(UsuarioNovoPorCID.periodo.in_(lista_periodos))
             .all()
         )
 
