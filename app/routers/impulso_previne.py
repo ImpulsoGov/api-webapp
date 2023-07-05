@@ -31,15 +31,15 @@ class Indicador(BaseModel):
 async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, indicadores_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, id_sus: Optional[str] = None, municipio_nome: Optional[str] = None):
     res = indicadores.consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id)
     return res
-#aquii
+
 @router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
-async def consulta_indicadores_equipes_homologadas_municipios(municipio_uf: Optional[str] = None):
-    res = indicadores_municipios_equipes_homologadas.consulta_indicadores_municipios_equipes_homologadas(municipio_uf)
+async def consultar_indicadores_equipes_homologadas_municipios(municipio_uf: Optional[str] = None):
+    res = indicadores_municipios_equipes_homologadas.consultar_indicadores_municipios_equipes_homologadas(municipio_uf)
     return res 
 
 @router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
-async def consulta_indicadores_desempenho(municipio_uf: Optional[str] = None):
-    res = indicadores_desempenho_score_equipes_validas.consulta_indicadores_desempenho(municipio_uf)
+async def consultar_indicadores_desempenho(municipio_uf: Optional[str] = None):
+    res = indicadores_desempenho_score_equipes_validas.consultar_indicadores_desempenho(municipio_uf)
     return res
 
 class Mensagem(BaseModel):

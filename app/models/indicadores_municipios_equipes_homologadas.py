@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, Numeric, DATE
+from sqlalchemy import Column, Integer, String, Float, DATE
 from app.models import db
 Base = db.Base
 
-class IndicadoresMuEquipesHomologadas(Base):
+class IndicadoresMunicipiosEquipesHomologadas(Base):
     __tablename__ = 'indicadores_municipios_equipes_homologadas'
     periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio')
     periodo_data_fim = Column(DATE,nullable=False,comment='Data de finalizacao')

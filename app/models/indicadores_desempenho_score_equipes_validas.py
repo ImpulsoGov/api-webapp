@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, Numeric, DATE
 from app.models import db
 Base = db.Base
 
-class IndicadorDesempenho(Base):
+class IndicadoresDesempenho(Base):
     __tablename__ = 'indicadores_desempenho_score_equipes_validas'
     municipio_id_ibge = Column(String)
     municipio_id_sus = Column(String,primary_key=True)
