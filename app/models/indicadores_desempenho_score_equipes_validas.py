@@ -4,9 +4,8 @@ Base = db.Base
 
 class IndicadorDesempenho(Base):
     __tablename__ = 'indicadores_desempenho_score_equipes_validas'
-    id = Column(Integer,primary_key=True)
     municipio_id_ibge = Column(String)
-    municipio_id_sus = Column(String)
+    municipio_id_sus = Column(String,primary_key=True)
     municipio_nome = Column(String)
     municipio_uf = Column(String)
     periodo_codigo = Column(String)
@@ -17,7 +16,7 @@ class IndicadorDesempenho(Base):
     indicador_nome = Column(String)
     indicador_peso = Column(Float)
     indicador_validade_resultado = Column(Float)
-    indicador_acao_por_usuario = Column(Float)
+    indicador_acoes_por_usuario = Column(Float)
     indicador_numerador = Column(Integer)
     indicador_denominador_estimado = Column(Integer)
     indicador_denominador_utilizado_informado = Column(String)

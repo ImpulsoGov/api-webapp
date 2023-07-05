@@ -4,12 +4,11 @@ Base = db.Base
 
 class IndicadoresMuEquipesHomologadas(Base):
     __tablename__ = 'indicadores_municipios_equipes_homologadas'
-    id = Column(Integer,primary_key=True)
     periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio')
     periodo_data_fim = Column(DATE,nullable=False,comment='Data de finalizacao')
     periodo_codigo = Column(String)
     municipio_id_ibge = Column(String)
-    municipio_id_sus = Column(String)
+    municipio_id_sus = Column(String,primary_key=True)
     municipio_nome = Column(String)
     municipio_uf = Column(String)
     indicador_ordem = Column(String)

@@ -1,15 +1,10 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao
+from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao, indicadores_desempenho_score_equipes_validas,indicadores_municipios_equipes_homologadas
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
 from app.controllers.auth import get_current_user,Usuario
-from app.controllers.indicadores_desempenho_score_equipes_validas import (
-    consulta_indicadores_desempenho
-)
-from app.controllers.indicadores_municipios_equipes_homologadas import (
-    consulta_indicadores_municipios_equipes_homologadas
-)
+
 router = APIRouter()
 
 class Indicador(BaseModel):
@@ -38,42 +33,14 @@ async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, 
     return res
 #aquii
 @router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
-async def consulta_indicadores_equipes_homologadas_municipios(
-    id_sus: str,
-    municipio_nome: str,
-    municipio_uf: str,
-    indicador_nome: str,
-    indicador_resultado: str,
-):
-    return consulta_indicadores_municipios_equipes_homologadas(
-        id_sus=id_sus,
-        municipio_nome=municipio_nome,
-        municipio_uf=municipio_uf,
-        indicador_nome=indicador_nome,
-        indicador_resultado=indicador_resultado
-    )
+async def consulta_indicadores_equipes_homologadas_municipios(municipio_uf: Optional[str] = None):
+    res = indicadores_municipios_equipes_homologadas.consulta_indicadores_municipios_equipes_homologadas(municipio_uf)
+    return res 
 
 @router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
-async def consulta_indicadores_desempenho_municipios(
-    id_sus: str,
-    municipio_nome: str,
-    municipio_uf:str ,
-    periodo_codigo: str , 
-    indicador_nome : str,
-    indicador_meta: float,
-    indicador_diferenca_meta: float, 
-    indicador_resultado: float,
-    ):
-    return consulta_indicadores_desempenho(
-        id_sus=id_sus,
-        municipio_nome = municipio_nome,
-        municipio_uf =municipio_uf,
-        periodo_codigo=periodo_codigo, 
-        indicador_nome=indicador_nome,
-        indicador_meta= indicador_meta,
-        indicador_diferenca_meta= indicador_diferenca_meta, 
-        indicador_resultado = indicador_resultado 
-    )
+async def consulta_indicadores_desempenho(municipio_uf: Optional[str] = None):
+    res = indicadores_desempenho_score_equipes_validas.consulta_indicadores_desempenho(municipio_uf)
+    return res
 
 class Mensagem(BaseModel):
     erros : Optional[List] = None
