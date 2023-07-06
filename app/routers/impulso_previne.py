@@ -33,12 +33,12 @@ async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, 
     return res
 
 @router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
-async def consultar_indicadores_equipes_homologadas_municipios(municipio_uf: Optional[str] = None):
+async def consultar_indicadores_equipes_homologadas_municipios(municipio_uf: str):
     res = indicadores_municipios_equipes_homologadas.consultar_indicadores_municipios_equipes_homologadas(municipio_uf)
     return res 
 
 @router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
-async def consultar_indicadores_desempenho(municipio_uf: Optional[str] = None):
+async def consultar_indicadores_desempenho(municipio_uf: str):
     res = indicadores_desempenho_score_equipes_validas.consultar_indicadores_desempenho(municipio_uf)
     return res
 
