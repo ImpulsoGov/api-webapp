@@ -380,17 +380,7 @@ def obter_perfil_usuarios_novos_por_condicao(
             .all()
         )
 
-        if len(usuarios_novos_por_condicao) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados de condição de usuários novos não encontrados."),
-            )
-
         return usuarios_novos_por_condicao
-    except HTTPException as error:
-        session.rollback()
-
-        raise error
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
@@ -415,17 +405,7 @@ def obter_perfil_usuarios_novos_por_genero_e_idade(
             .all()
         )
 
-        if len(usuarios_novos_por_genero_e_idade) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados de gênero/idade de usuários novos não encontrados."),
-            )
-
         return usuarios_novos_por_genero_e_idade
-    except HTTPException as error:
-        session.rollback()
-
-        raise error
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
@@ -450,17 +430,7 @@ def obter_perfil_usuarios_novos_por_raca(
             .all()
         )
 
-        if len(usuarios_novos_por_raca) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados de raça/cor de usuários novos não encontrados."),
-            )
-
         return usuarios_novos_por_raca
-    except HTTPException as error:
-        session.rollback()
-
-        raise error
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
@@ -485,17 +455,7 @@ def obter_perfil_usuarios_novos_por_cid(
             .all()
         )
 
-        if len(usuarios_novos_por_cid) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados de cid de usuários novos não encontrados."),
-            )
-
         return usuarios_novos_por_cid
-    except HTTPException as error:
-        session.rollback()
-
-        raise error
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
