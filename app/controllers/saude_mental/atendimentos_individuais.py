@@ -4,7 +4,6 @@ from fastapi import HTTPException, Response
 from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
     AtendimentosIndividuaisPorCaps,
-    PerfilUsuariosAtendimentosIndividuaisCaps,
     ResumoPerfilUsuariosAtendimentosIndividuaisCaps,
 )
 
