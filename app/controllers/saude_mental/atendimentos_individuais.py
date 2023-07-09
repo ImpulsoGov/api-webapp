@@ -5,6 +5,7 @@ from sqlalchemy import exc
 from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
     AtendimentoIndividualPorCID,
+    AtendimentoIndividualPorGeneroEIdade,
     AtendimentosIndividuaisPorCaps,
     ResumoPerfilUsuariosAtendimentosIndividuaisCaps,
 )
@@ -85,6 +86,31 @@ def obter_perfil_atendimentos_individuais_por_cid(
         )
 
         return atendimentos_individuais_por_cid
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_atendimentos_individuais_por_genero_e_idade(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    try:
+        lista_periodos = separar_string(separador="-", string=periodos)
+        atendimentos_individuais_por_genero_e_idade = (
+            session.query(AtendimentoIndividualPorGeneroEIdade)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter(AtendimentoIndividualPorGeneroEIdade.periodo.in_(lista_periodos))
+            .all()
+        )
+
+        return atendimentos_individuais_por_genero_e_idade
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
