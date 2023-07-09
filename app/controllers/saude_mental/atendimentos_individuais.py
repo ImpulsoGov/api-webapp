@@ -6,6 +6,7 @@ from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
     AtendimentoIndividualPorCID,
     AtendimentoIndividualPorGeneroEIdade,
+    AtendimentoIndividualPorRaca,
     AtendimentosIndividuaisPorCaps,
     ResumoPerfilUsuariosAtendimentosIndividuaisCaps,
 )
@@ -111,6 +112,31 @@ def obter_perfil_atendimentos_individuais_por_genero_e_idade(
         )
 
         return atendimentos_individuais_por_genero_e_idade
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_atendimentos_individuais_por_raca(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    try:
+        lista_periodos = separar_string(separador="-", string=periodos)
+        atendimentos_individuais_por_raca = (
+            session.query(AtendimentoIndividualPorRaca)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter(AtendimentoIndividualPorRaca.periodo.in_(lista_periodos))
+            .all()
+        )
+
+        return atendimentos_individuais_por_raca
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
