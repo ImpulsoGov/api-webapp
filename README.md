@@ -28,7 +28,7 @@ Para acessar documentação automatica gerada por FASTAPI
 
 ## Tecnologias Utilizadas
 
-- Pyhon
+- Python
 - FASTAPI
 - Postgres
 - Docker/Docker Composer
