@@ -4,16 +4,22 @@ from fastapi import HTTPException
 from sqlalchemy import exc
 
 from app.models.db import session
+from app.models.saude_mental.atendimentos_individuais import AtendimentoIndividualPorCID
 from app.models.saude_mental.perfildeusuarios import UsuarioAtivoPorCondicao
 from app.models.saude_mental.usuariosnovos import UsuarioNovoPorCondicao
 
 entidades = {
     "usuarios_ativos_perfil": UsuarioAtivoPorCondicao,
     "usuarios_novos_perfil": UsuarioNovoPorCondicao,
+    "atendimentos_inidividuais_perfil": AtendimentoIndividualPorCID,
 }
 
-Entidade = Literal["usuarios_ativos_perfil", "usuarios_novos_perfil"]
-Model = Union[UsuarioAtivoPorCondicao, UsuarioNovoPorCondicao]
+Entidade = Literal[
+    "usuarios_ativos_perfil", "usuarios_novos_perfil", "atendimentos_inidividuais_perfil"
+]
+Model = Union[
+    UsuarioAtivoPorCondicao, UsuarioNovoPorCondicao, AtendimentoIndividualPorCID
+]
 
 
 def obter_model_de_entidade(entidade: Entidade) -> Model:
