@@ -1,9 +1,10 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao
+from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao, indicadores_desempenho_score_equipes_validas,indicadores_municipios_equipes_homologadas
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
 from app.controllers.auth import get_current_user,Usuario
+
 router = APIRouter()
 
 class Indicador(BaseModel):
@@ -29,6 +30,16 @@ class Indicador(BaseModel):
 @router.get("/impulsoprevine/indicadores/resumo", response_model=List[Indicador])
 async def consulta_indicadores(indicadores_parametros_id: Optional[str] = None, indicadores_nome: Optional[str] = None , estado_sigla: Optional[str] = None, estado_nome: Optional[str] = None, id_sus: Optional[str] = None, municipio_nome: Optional[str] = None):
     res = indicadores.consulta_indicadores(id_sus,municipio_nome,estado_sigla,estado_nome,indicadores_nome,indicadores_parametros_id)
+    return res
+
+@router.get("/impulsoprevine/indicadores/municipios_equipes_homologadas")
+async def consultar_indicadores_equipes_homologadas_municipios(municipio_uf: str):
+    res = indicadores_municipios_equipes_homologadas.consultar_indicadores_municipios_equipes_homologadas(municipio_uf)
+    return res 
+
+@router.get("/impulsoprevine/indicadores/desempenho_score_equipes_validas")
+async def consultar_indicadores_desempenho(municipio_uf: str):
+    res = indicadores_desempenho_score_equipes_validas.consultar_indicadores_desempenho(municipio_uf)
     return res
 
 class Mensagem(BaseModel):
