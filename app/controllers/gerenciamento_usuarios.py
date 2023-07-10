@@ -1,21 +1,24 @@
-import math
-import random
-import uuid
-from datetime import datetime
-
-from sqlalchemy import func
-
-from app.controllers import auth, cadastro_usuarios, recuperação_senha
 from app.models import (
-    ativar_usuario,
     db,
+    usuarios,
     perfil_acesso,
     perfil_usuario,
-    recuperacao_senha,
-    usuarios,
+    ativar_usuario,
     usuarios_ip,
     usuarios_sm,
+    recuperacao_senha,
 )
+from app.controllers import recuperação_senha,auth,cadastro_usuarios
+from datetime import datetime
+from sqlalchemy import func, exc
+import random,math, uuid
+from fastapi import HTTPException
+from email_validator import validate_email, EmailNotValidError
+from validate_docbr import CPF
+import re
+from typing import Union, NoReturn, List
+from pydantic import BaseModel
+
 
 session = db.session
 Usuarios = usuarios.Usuario
@@ -37,12 +40,22 @@ env_path = os.path.dirname(os.path.realpath(__file__)) + "/.env"
 load_dotenv(dotenv_path=env_path)
 
 
-def lista_usuarios_sem_liberacao(username, acesso):
-    # controle de acesso
-    controle = auth.controle_perfil(username, acesso)
-    if controle != True:
-        return controle
-    # Retorna todos os usuarios sem perfil
+class UsuarioIPAtualizado(BaseModel):
+    id: str
+    nome_usuario: str
+    cpf: str
+    mail: str
+    municipio: str
+    equipe: str
+    cargo: str
+    telefone: str
+
+
+def lista_usuarios_sem_liberacao(username,acesso):
+    #controle de acesso
+    controle = auth.controle_perfil(username,acesso)
+    if controle != True : return controle
+    #Retorna todos os usuarios sem perfil
     try:
         res = (
             db.session.query(Usuarios)
@@ -90,30 +103,31 @@ def cargo_nome(id_cod, id):
         return {"erros": ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
     id_db = {"mail": id} if int(id_cod) == 1 else {"cpf": id}
     try:
-        perfil = (
-            db.session.query(Perfil)
-            .join(Perfil_lista)
-            .join(Usuarios)
-            .filter_by(**id_db)
-            .join(UsuariosIP)
-            .with_entities(
-                func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
-                Usuarios.nome_usuario.label("nome"),
-                Usuarios.id,
-                UsuariosIP.cargo,
-                UsuariosIP.municipio,
-                UsuariosIP.equipe,
-            )
-            .group_by(
-                Usuarios.nome_usuario,
-                Usuarios.id,
-                UsuariosIP.cargo,
-                UsuariosIP.municipio,
-                UsuariosIP.equipe,
-            )
-            .all()
-        )
-        return {"cadastro": perfil}
+        res = db.session.query(
+            Usuarios
+        ).join(UsuariosIP, UsuariosIP.id_usuario == Usuarios.id, isouter=True
+        ).join(Perfil, Perfil.usuario_id == UsuariosIP.id_usuario, isouter=True
+        ).join(Perfil_lista, Perfil_lista.id == Perfil.perfil_id, isouter=True
+        ).with_entities(
+            Usuarios.mail,
+            Usuarios.cpf,
+            Usuarios.nome_usuario,
+            UsuariosIP.municipio,
+            UsuariosIP.cargo,
+            UsuariosIP.telefone,
+            UsuariosIP.equipe,
+            func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
+        ).filter(Usuarios.perfil_ativo==True,UsuariosIP.municipio.isnot(None)
+        ).group_by(
+            Usuarios.mail,
+            Usuarios.cpf,
+            Usuarios.nome_usuario,
+            UsuariosIP.municipio,
+            UsuariosIP.cargo,
+            UsuariosIP.telefone,
+            UsuariosIP.equipe,
+        ).all()
+        return {"usuarios" : res}
     except Exception as error:
         print({"erros": [error]})
         return error
@@ -675,5 +689,388 @@ def senha_primeiro_acesso(mail, codigo, senha):
             return ativarPerfil
         return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
-        print({"error": [error]})
-        return {"erros": [error]}
+        print({"error" : [error]})
+        return {"erros" : [error]}
+
+
+def listar_usuarios_cadastrados_ip():
+    try:
+        usuarios_cadastrados = (
+            session.query(Usuarios)
+            .join(UsuariosIP)
+            .join(Perfil)
+            .join(Perfil_lista)
+            .with_entities(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.id_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+                func.array_agg(func.distinct(Perfil_lista.descricao)).label(
+                    "autorizacoes"
+                ),
+            )
+            .filter(UsuariosIP.municipio.isnot(None))
+            .group_by(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.id_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+            )
+            .all()
+        )
+
+        return usuarios_cadastrados
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def encontrar_usuario_por_id(id: str) -> Union[usuarios.Usuario, NoReturn]:
+    usuario_encontrado = session.query(Usuarios).filter_by(id=id).first()
+
+    if not usuario_encontrado:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+    return usuario_encontrado
+
+
+def encontrar_usuario_ip_por_id(
+    id: str,
+) -> Union[usuarios_ip.UsuarioIP, NoReturn]:
+    usuario_encontrado = (
+        session.query(UsuariosIP).filter_by(id_usuario=id).first()
+    )
+
+    if not usuario_encontrado:
+        raise HTTPException(
+            status_code=404, detail="Usuário não encontrado na plataforma IP"
+        )
+
+    return usuario_encontrado
+
+
+def validar_email(email: str) -> Union[None, NoReturn]:
+    try:
+        validate_email(email)
+
+    except EmailNotValidError:
+        raise HTTPException(
+            status_code=400, detail="Formato de e-mail inválido"
+        )
+
+
+def checar_se_novo_email_existe(email: str) -> Union[None, NoReturn]:
+    usuario_encontrado = session.query(Usuarios).filter_by(mail=email).first()
+
+    if usuario_encontrado and email != usuario_encontrado.mail:
+        raise HTTPException(status_code=400, detail="E-mail já cadastrado")
+
+
+def validar_cpf(cpf: str) -> Union[None, NoReturn]:
+    cpf_esta_valido = CPF().validate(cpf)
+
+    if not cpf_esta_valido:
+        raise HTTPException(status_code=400, detail="CPF inválido")
+
+
+def validar_telefone(telefone: str) -> Union[None, NoReturn]:
+    telefone_regex = "^\d{10,11}$"
+    resultado = re.search(telefone_regex, telefone)
+
+    if resultado is None:
+        raise HTTPException(
+            status_code=400, detail="Formato de telefone inválido"
+        )
+
+
+def atualizar_cadastro_geral(
+    id: str, nome: str, cpf: str, mail: str
+) -> usuarios.Usuario:
+    validar_email(email=mail)
+    checar_se_novo_email_existe(email=mail)
+    validar_cpf(cpf=cpf)
+
+    usuario_encontrado = encontrar_usuario_por_id(id=id)
+
+    usuario_encontrado.nome_usuario = nome
+    usuario_encontrado.cpf = cpf
+    usuario_encontrado.mail = mail
+    usuario_encontrado.atualizacao_data = datetime.now().strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    return usuario_encontrado
+
+
+def atualizar_cadastro_ip(
+    id: str, municipio: str, equipe: str, cargo: str, telefone: str
+) -> usuarios_ip.UsuarioIP:
+    validar_telefone(telefone=telefone)
+
+    usuario_encontrado = encontrar_usuario_ip_por_id(id=id)
+
+    usuario_encontrado.municipio = municipio
+    usuario_encontrado.equipe = equipe
+    usuario_encontrado.cargo = cargo
+    usuario_encontrado.telefone = telefone
+    usuario_encontrado.atualizacao_data = datetime.now().strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    return usuario_encontrado
+
+
+def atualizar_cadastro_geral_e_ip(
+    dados_usuario: UsuarioIPAtualizado,
+):
+    try:
+        usuario_atualizado = atualizar_cadastro_geral(
+            id=dados_usuario["id"],
+            nome=dados_usuario["nome_usuario"],
+            cpf=dados_usuario["cpf"],
+            mail=dados_usuario["mail"],
+        )
+        usuario_ip_atualizado = atualizar_cadastro_ip(
+            id=dados_usuario["id"],
+            municipio=dados_usuario["municipio"],
+            equipe=dados_usuario["equipe"],
+            cargo=dados_usuario["cargo"],
+            telefone=dados_usuario["telefone"],
+        )
+
+        session.commit()
+
+        return {
+            "id_usuario": usuario_atualizado.id,
+            "nome_usuario": usuario_atualizado.nome_usuario,
+            "cpf": usuario_atualizado.cpf,
+            "mail": usuario_atualizado.mail,
+            "municipio": usuario_ip_atualizado.municipio,
+            "equipe": usuario_ip_atualizado.equipe,
+            "cargo": usuario_ip_atualizado.cargo,
+            "telefone": usuario_ip_atualizado.telefone,
+        }
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def adicionar_novo_perfil_para_usuario(perfil_id: str, usuario_id: str):
+    novo_perfil = Perfil(
+        id=uuid.uuid4(),
+        usuario_id=usuario_id,
+        perfil_id=perfil_id,
+        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+
+    session.add(novo_perfil)
+
+
+def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
+    try:
+        perfis_cadastrados = (
+            session.query(Perfil.perfil_id)
+            .filter_by(usuario_id=usuario_id)
+            .all()
+        )
+
+        perfis_ids_cadastrados = set(
+            [str(perfil.perfil_id) for perfil in perfis_cadastrados]
+        )
+
+        perfis_ids_a_adicionar = set(perfis_ids).difference(
+            perfis_ids_cadastrados
+        )
+
+        for perfil_id in perfis_ids_a_adicionar:
+            adicionar_novo_perfil_para_usuario(
+                perfil_id=perfil_id, usuario_id=usuario_id
+            )
+
+        perfis_ids_a_remover = set(perfis_ids_cadastrados).difference(
+            perfis_ids
+        )
+
+        perfis_a_remover = (
+            session.query(Perfil)
+            .filter(Perfil.perfil_id.in_(list(perfis_ids_a_remover)))
+            .filter(Perfil.usuario_id == usuario_id)
+            .all()
+        )
+
+        for perfil in perfis_a_remover:
+            session.delete(perfil)
+
+        session.commit()
+
+        return (
+            session.query(Perfil_lista.id, Perfil_lista.descricao)
+            .filter(Perfil_lista.id.in_(perfis_ids))
+            .all()
+        )
+
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def listar_perfis_de_acesso():
+    try:
+        perfis_de_acesso = session.query(
+            Perfil_lista.id, Perfil_lista.descricao
+        ).all()
+
+        return perfis_de_acesso
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+class CadastroUsuario(BaseModel):
+    nome_usuario: str
+    mail: str
+    cpf: str
+
+
+def criar_usuario_geral(dados_cadastro: CadastroUsuario):
+    novo_usuario = Usuarios(
+        id=uuid.uuid4(),
+        nome_usuario=dados_cadastro["nome_usuario"],
+        mail=dados_cadastro["mail"],
+        cpf=dados_cadastro["cpf"],
+        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+
+    return novo_usuario
+
+
+class CadastroUsuarioIP(BaseModel):
+    id_usuario: str
+    municipio: str
+    cargo: str
+    telefone: str
+    equipe: str
+    whatsapp: bool
+
+
+def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
+    novo_usuario_ip = UsuariosIP(
+        id=uuid.uuid4(),
+        id_usuario=dados_cadastro["id_usuario"],
+        municipio=dados_cadastro["municipio"],
+        cargo=dados_cadastro["cargo"],
+        telefone=dados_cadastro["telefone"],
+        equipe=dados_cadastro["equipe"],
+        whatsapp=dados_cadastro["whatsapp"],
+        criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        atualizacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+
+    return novo_usuario_ip
+
+
+class DadosCadastro(BaseModel):
+    nome_usuario: str
+    mail: str
+    cpf: str
+    municipio: str
+    cargo: str
+    telefone: str
+    equipe: str
+    whatsapp: str
+
+
+def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
+    try:
+        validar_email(dados_cadastro["mail"])
+        validar_cpf(dados_cadastro["cpf"])
+        validar_telefone(dados_cadastro["telefone"])
+
+        novo_usuario = criar_usuario_geral(
+            {
+                "nome_usuario": dados_cadastro["nome_usuario"],
+                "mail": dados_cadastro["mail"],
+                "cpf": dados_cadastro["cpf"],
+            }
+        )
+
+        novo_usuario_ip = criar_usuario_ip(
+            {
+                "id_usuario": novo_usuario.id,
+                "municipio": dados_cadastro["municipio"],
+                "cargo": dados_cadastro["cargo"],
+                "telefone": dados_cadastro["telefone"],
+                "equipe": dados_cadastro["equipe"],
+                "whatsapp": True
+                if dados_cadastro["whatsapp"] == "1"
+                else False,
+            }
+        )
+
+        session.add(novo_usuario)
+        session.add(novo_usuario_ip)
+        session.commit()
+
+        return {
+            "id_usuario": novo_usuario.id,
+            "nome_usuario": novo_usuario.nome_usuario,
+            "cpf": novo_usuario.cpf,
+            "mail": novo_usuario.mail,
+            "municipio": novo_usuario_ip.municipio,
+            "equipe": novo_usuario_ip.equipe,
+            "cargo": novo_usuario_ip.cargo,
+            "telefone": novo_usuario_ip.telefone,
+            "whatsapp": novo_usuario_ip.whatsapp,
+        }
+
+    except HTTPException as error:
+        session.rollback()
+
+        raise error
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )

@@ -43,8 +43,7 @@ def avaliacao_conteudo(usuario_id: str, codigo_conteudo: str, avaliacao: int):
     atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def avaliacao_check(avaliacao):
-        if avaliacao in range(1, 5):
-            return int(avaliacao)
+        if avaliacao in range(1,6) : return int(avaliacao)
         return False
 
     if avaliacao_check(avaliacao) == False:
