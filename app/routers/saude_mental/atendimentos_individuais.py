@@ -2,6 +2,9 @@ from fastapi import APIRouter
 
 from app.controllers.saude_mental.atendimentos_individuais import (
     obter_atendimentos_individuais_por_caps_de_municipio,
+    obter_perfil_atendimentos_individuais_por_cid,
+    obter_perfil_atendimentos_individuais_por_genero_e_idade,
+    obter_perfil_atendimentos_individuais_por_raca,
     obter_perfil_usuarios_caps_por_id_sus,
     obter_resumo_perfil_usuarios_caps_por_id_sus,
 )
@@ -30,3 +33,36 @@ async def obter_resumo_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
     return obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus=municipio_id_sus)
+
+
+@router.get("/saude-mental/atendimentosindividuais/cid")
+async def obter_cid_atendimentos_individuais(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    return obter_perfil_atendimentos_individuais_por_cid(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimento=estabelecimento,
+        periodos=periodos,
+    )
+
+
+@router.get("/saude-mental/atendimentosindividuais/genero-e-idade")
+async def obter_genero_e_idade_atendimentos_individuais(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    return obter_perfil_atendimentos_individuais_por_genero_e_idade(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimento=estabelecimento,
+        periodos=periodos,
+    )
+
+
+@router.get("/saude-mental/atendimentosindividuais/raca")
+async def obter_raca_atendimentos_individuais(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    return obter_perfil_atendimentos_individuais_por_raca(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimento=estabelecimento,
+        periodos=periodos,
+    )

@@ -1,5 +1,3 @@
-from typing import List
-
 import pandas as pd
 from fastapi import HTTPException, Response
 from sqlalchemy import exc
@@ -21,6 +19,7 @@ from app.models.saude_mental.usuariosnovos import (
     UsuarioNovoPorRaca,
     UsuariosNovosResumo,
 )
+from app.utils.separar_string import separar_string
 
 session = db.session
 
@@ -361,10 +360,6 @@ def obter_periodos_por_id_sus(municipio_id_sus: str):
             status_code=500,
             detail=("Internal Server Error"),
         )
-
-
-def separar_string(separador: str, string: str) -> List[str]:
-    return string.split(sep=separador)
 
 
 def obter_perfil_usuarios_novos_por_condicao(

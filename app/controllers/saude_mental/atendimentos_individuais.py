@@ -1,12 +1,16 @@
 import pandas as pd
 from fastapi import HTTPException, Response
+from sqlalchemy import exc
 
 from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
+    AtendimentoIndividualPorCID,
+    AtendimentoIndividualPorGeneroEIdade,
+    AtendimentoIndividualPorRaca,
     AtendimentosIndividuaisPorCaps,
-    PerfilUsuariosAtendimentosIndividuaisCaps,
     ResumoPerfilUsuariosAtendimentosIndividuaisCaps,
 )
+from app.utils.separar_string import separar_string
 
 session = db.session
 
@@ -67,3 +71,78 @@ def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
         )
 
     return resumo_perfil_usuarios_caps
+
+
+def obter_perfil_atendimentos_individuais_por_cid(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    try:
+        lista_periodos = separar_string(separador="-", string=periodos)
+        atendimentos_individuais_por_cid = (
+            session.query(AtendimentoIndividualPorCID)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter(AtendimentoIndividualPorCID.periodo.in_(lista_periodos))
+            .all()
+        )
+
+        return atendimentos_individuais_por_cid
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_atendimentos_individuais_por_genero_e_idade(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    try:
+        lista_periodos = separar_string(separador="-", string=periodos)
+        atendimentos_individuais_por_genero_e_idade = (
+            session.query(AtendimentoIndividualPorGeneroEIdade)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter(AtendimentoIndividualPorGeneroEIdade.periodo.in_(lista_periodos))
+            .all()
+        )
+
+        return atendimentos_individuais_por_genero_e_idade
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def obter_perfil_atendimentos_individuais_por_raca(
+    municipio_id_sus: str, estabelecimento: str, periodos: str
+):
+    try:
+        lista_periodos = separar_string(separador="-", string=periodos)
+        atendimentos_individuais_por_raca = (
+            session.query(AtendimentoIndividualPorRaca)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .filter_by(estabelecimento=estabelecimento)
+            .filter(AtendimentoIndividualPorRaca.periodo.in_(lista_periodos))
+            .all()
+        )
+
+        return atendimentos_individuais_por_raca
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
