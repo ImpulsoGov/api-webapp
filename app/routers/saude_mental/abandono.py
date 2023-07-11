@@ -26,7 +26,7 @@ async def obter_dados_caps_adesao_evasao_mensal(
 
 
 @router.get("/saude-mental/abandono/resumo")
-async def obter_dados_caps_adesao_evasao_coortes_resumo(
+async def obter_dados_caps_adesao_usuarios_perfil(
     municipio_id_sus: str,
 ):
     return dados_caps_adesao_usuarios_perfil(municipio_id_sus=municipio_id_sus)
