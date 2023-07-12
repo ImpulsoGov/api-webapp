@@ -1,4 +1,5 @@
-from app.models import db,trilha_conteudo_avaliacao_conclusao
+from app.models import db,trilha_conteudo_avaliacao_conclusao, trilhas_acessos
+from sqlalchemy import func
 from datetime import datetime
 import re
 import uuid
@@ -24,7 +25,6 @@ def consulta_avaliacao_conclusao_por_usuario(usuario_id):
         session.rollback()
         print(error)
         return {"mensagem":"Operação não efetuada","error":error}
-
 
 def avaliacao_conteudo(usuario_id : str,codigo_conteudo : str,avaliacao : int):
     if len(re.findall('[A-Z][A-Z]-MOD[0-99]-C[0-99]', codigo_conteudo))==0: return {"msg": "Código de conteudo invalido", "error": True}
@@ -101,3 +101,48 @@ def conclusao_conteudo(usuario_id : str,codigo_conteudo : str,concluido : bool):
         except Exception as error: 
             session.rollback()
             return {"error":error}
+
+def trilha_acesso(usuario_id : str):
+        try:
+            res = session.query(trilhas_acessos.Trilhas_acesso).with_entities(
+                trilhas_acessos.Trilhas_acesso.trilha_id
+            ).filter_by(usuario_id=usuario_id).all()
+            return res 
+        except Exception as error:
+            session.rollback()
+            print({"erros" : [error]})
+            return error
+
+def trilha_modulos_acesso(usuario_id : str, trilha_id : str):
+        try:
+            res = session.query(trilhas_acessos.Trilhas_acesso).filter_by(
+                usuario_id=usuario_id,trilha_id=trilha_id
+            ).with_entities(
+                trilhas_acessos.Trilhas_acesso.trilha_id,
+                func.array_agg(trilhas_acessos.Trilhas_acesso.modulo).label("modulos"),
+            ).group_by(
+                trilhas_acessos.Trilhas_acesso.modulo,
+                trilhas_acessos.Trilhas_acesso.trilha_id
+            ).all()
+            return res
+        except Exception as error:
+            session.rollback()
+            print({"erros" : [error]})
+            return error
+
+def trilha_modulos_acesso_add(usuario_id : str, trilha_id : str, modulo : int):
+    try:
+        liberar_modulo = trilhas_acessos.Trilhas_acesso(
+            id = str(uuid.uuid4()),
+            usuario_id=usuario_id,
+            trilha_id=trilha_id,
+            modulo=modulo,
+            criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+        session.add(liberar_modulo)
+        session.commit()
+        return {"mensagem":"dados cadastrados com sucesso","error":None}
+
+    except:
+        session.rollback()
+        return {"mensagem":"Inserção dos dados falhou","error":True}
