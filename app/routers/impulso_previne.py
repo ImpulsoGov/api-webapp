@@ -171,3 +171,20 @@ async def consulta_avaliacao_conclusao_conteudo(
     ):
     res = TrilhaCapacitacao.consulta_avaliacao_conclusao_por_usuario(usuario_id)
     return res
+
+@router.get("/impulsoprevine/capacitacao/acesso-trilhas")
+async def acesso_trilha(usuario_id: str,username: Usuario = Depends(auth.get_current_user)):
+    return TrilhaCapacitacao.trilha_acesso(usuario_id)
+
+@router.get("/impulsoprevine/capacitacao/acesso-modulos-trilha")
+async def acesso_modulos(usuario_id: str,trilha_id : str, username: Usuario = Depends(auth.get_current_user)):
+    return TrilhaCapacitacao.trilha_modulos_acesso(usuario_id,trilha_id)
+
+@router.post("/impulsoprevine/capacitacao/liberar-acesso-modulo-trilha")
+async def liberar_acesso_modulo_trilha(
+    usuario_id: str = Form(...),
+    trilha_id: str = Form(...),
+    modulo : int = Form(...),
+    username: Usuario = Depends(auth.get_current_user)
+):
+    return TrilhaCapacitacao.trilha_modulos_acesso_add(usuario_id,trilha_id,modulo)
