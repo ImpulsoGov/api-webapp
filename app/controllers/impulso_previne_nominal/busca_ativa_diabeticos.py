@@ -1,5 +1,5 @@
 from app.models import DB_PRODUCAO
-from app.models.diabeticos import Diabeticos
+from app.models.impulso_previne_nominal.diabeticos import Diabeticos
 from cachetools import TTLCache
 
 session = DB_PRODUCAO.session

@@ -4,7 +4,8 @@ from sqlalchemy import DATE, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relation
 
-from app.models import db, usuarios
+from app.models import db
+from app.models.usuarios import usuarios
 
 Base = db.Base
 

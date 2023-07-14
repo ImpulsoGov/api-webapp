@@ -5,15 +5,15 @@ from passlib.context import CryptContext
 from validate_docbr import CPF
 
 from app.models import (
-    cargos,
     db,
-    municipios,
+    municipios
+)
+from app.models.usuarios import (
+    usuarios,
     perfil_acesso,
     perfil_usuario,
-    usuarios,
     usuarios_ip,
-    usuarios_sm,
-)
+    usuarios_sm)
 
 from .auth import controle_perfil
 

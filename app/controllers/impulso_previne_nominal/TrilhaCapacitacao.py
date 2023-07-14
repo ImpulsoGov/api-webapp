@@ -2,7 +2,8 @@ import re
 import uuid
 from datetime import datetime
 
-from app.models import db, trilha_conteudo_avaliacao_conclusao
+from app.models import db
+from app.models.impulso_previne_nominal import trilha_conteudo_avaliacao_conclusao
 
 session = db.session
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from app.routers import impulso_previne, suporte, territorios
+from app.routers import impulso_previne, usuarios, territorios
 from app.routers.saude_mental import (
     abandono,
     ambulatorio,

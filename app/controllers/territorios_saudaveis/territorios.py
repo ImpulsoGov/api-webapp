@@ -2,7 +2,9 @@ import json
 from datetime import datetime
 
 from app.models import (
-    db,
+    db
+)
+from app.models.territorios_saudaveis import (
     ts_domicilios,
     ts_estabelecimentos,
     ts_individuos,

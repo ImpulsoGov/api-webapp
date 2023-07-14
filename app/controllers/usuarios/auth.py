@@ -10,7 +10,8 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 from requests import session
 
-from app.models import db, perfil_acesso, perfil_usuario, usuarios
+from app.models import db
+from app.models.usuarios import perfil_acesso, perfil_usuario, usuarios
 
 Usuarios = usuarios.Usuario
 Perfil = perfil_usuario.Perfil
