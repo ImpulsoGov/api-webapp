@@ -1,11 +1,17 @@
-from fastapi import APIRouter, Depends,Form,BackgroundTasks
-from typing import Optional,List
-from app.controllers.usuarios import auth,cadastro_usuarios,recuperação_senha,gerenciamento_usuarios
-from app.controllers import municipios,chave_temp_data_studio
-from pydantic import BaseModel
+from typing import List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
-from app.models.usuarios import Usuario
+
+from app.controllers import chave_temp_data_studio, municipios
+from app.controllers.usuarios import (
+    auth,
+    cadastro_usuarios,
+    gerenciamento_usuarios,
+    recuperação_senha,
+)
+from app.models.usuarios.usuarios import Usuario
 
 router = APIRouter()
 
@@ -194,6 +200,7 @@ async def lista_usuarios_sem_liberacao(
 ):
     res = gerenciamento_usuarios.lista_usuarios_sem_liberacao(username["perfil"], 2)
     return res
+
 
 @router.get("/suporte/ger_usuarios/lista-usuarios")
 async def lista_usuarios(username: Usuario = Depends(auth.get_current_user)):
@@ -393,13 +400,20 @@ async def alteracao_senha(
 async def primeiro_acesso(mail: str = Form(...)):
     return gerenciamento_usuarios.consulta_primeiro_acesso(mail)
 
+
 @router.get("/suporte/nps/consulta")
-async def consulta_nps(user_id,username: Usuario = Depends(auth.get_current_user)):
+async def consulta_nps(user_id, username: Usuario = Depends(auth.get_current_user)):
     return NPS.consulta_avaliacao(user_id)
 
+
 @router.post("/suporte/nps/avaliacao")
-async def avaliacao_nps(user_id: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(auth.get_current_user)):
-    return NPS.NPS_UMANE(user_id,avaliacao)
+async def avaliacao_nps(
+    user_id: str = Form(...),
+    avaliacao: int = Form(...),
+    username: Usuario = Depends(auth.get_current_user),
+):
+    return NPS.NPS_UMANE(user_id, avaliacao)
+
 
 @router.get("/suporte/ger_usuarios/usuarios-ip")
 async def listar_usuarios_cadastrados():

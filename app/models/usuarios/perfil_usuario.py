@@ -1,6 +1,7 @@
 from sqlalchemy import DATE, Column, ForeignKey
 
-from app.models import db, usuarios
+from app.models import db
+from app.models.usuarios.usuarios import Usuario
 
 Base = db.Base
 import uuid
@@ -32,7 +33,7 @@ class Perfil(Base):
     )
     criacao_data = Column(DATE, nullable=False, comment="Data de Criação")
     atualizacao_data = Column(DATE, nullable=False, comment="Data de Atualização")
-    usuario = relation(usuarios.Usuario, backref="perfil_usuario")
+    usuario = relation(Usuario, backref="perfil_usuario")
     __table_args__ = {"schema": "suporte"}
 
 
