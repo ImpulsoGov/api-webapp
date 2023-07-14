@@ -1,11 +1,10 @@
-from app.models import db, indicadores
+from app.models import db
+from app.models.impulso_previne_publico import indicadores
 
 session = db.session
 Indicadores = indicadores.Indicadores
 
 from fastapi.responses import HTMLResponse
-
-from .response_pages.indicadores import html as response_indicadores
 
 
 def consulta_indicadores(

@@ -1,13 +1,3 @@
-from app.models import (
-    db,
-    usuarios,
-    perfil_acesso,
-    perfil_usuario,
-    ativar_usuario,
-    usuarios_ip,
-    usuarios_sm,
-    recuperacao_senha,
-)
 from app.controllers import recuperação_senha,auth,cadastro_usuarios
 from datetime import datetime
 from sqlalchemy import func, exc
@@ -19,6 +9,17 @@ import re
 from typing import Union, NoReturn, List
 from pydantic import BaseModel
 
+from app.models import (
+    db
+)
+from app.models.usuarios import (
+    usuarios,
+    perfil_acesso,
+    perfil_usuario,
+    ativar_usuario,
+    usuarios_ip,
+    usuarios_sm,
+    recuperacao_senha)
 
 session = db.session
 Usuarios = usuarios.Usuario

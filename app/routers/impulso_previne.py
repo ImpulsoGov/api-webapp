@@ -1,9 +1,10 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao, indicadores_desempenho_score_equipes_validas,indicadores_municipios_equipes_homologadas
+from app.controllers.impulso_previne_nominal import forum_ip,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao
+from app.controllers.impulso_previne_publico import indicadores,indicadores_desempenho_score_equipes_validas,indicadores_municipios_equipes_homologadas
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
-from app.controllers.auth import get_current_user,Usuario
+from app.controllers.usuarios.auth import get_current_user,Usuario
 
 router = APIRouter()
 

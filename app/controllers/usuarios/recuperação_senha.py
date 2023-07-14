@@ -4,8 +4,8 @@ from app.models import db, recuperacao_senha, usuarios
 
 Recuperar = recuperacao_senha.Recuperar
 Usuario = usuarios.Usuario
-from app.controllers.auth import senha_hash
-from app.controllers.cadastro_usuarios import validar_senha
+from app.controllers.usuarios.auth import senha_hash
+from app.controllers.usuarios.cadastro_usuarios import validar_senha
 
 session = db.session
 import os

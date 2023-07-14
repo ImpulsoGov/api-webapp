@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from app.routers import impulso_previne, suporte, territorios
+from app.routers import impulso_previne, territorios, usuarios
 from app.routers.saude_mental import router_saude_mental
 
 app = FastAPI()
@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 
-app.include_router(suporte.router)
+app.include_router(usuarios.router)
 app.include_router(impulso_previne.router)
 app.include_router(territorios.router)
 app.include_router(router_saude_mental)

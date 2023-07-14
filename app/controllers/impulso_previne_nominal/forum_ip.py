@@ -1,11 +1,10 @@
-import json
 from datetime import datetime
 
-from app.models import db, forum_ip
+from app.models import db
+from app.models.impulso_previne_nominal import forum_ip
 
 session = db.session
 Forum_ip = forum_ip.Forum_ip
-
 
 def criar_topico(titulo, texto):
     try:

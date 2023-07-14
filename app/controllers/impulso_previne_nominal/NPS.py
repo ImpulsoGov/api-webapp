@@ -1,8 +1,8 @@
 from datetime import datetime
-from app.models import NPS,db
+from app.models import db
+from app.models.impulso_previne_nominal import NPS
 session = db.session
 from fastapi import HTTPException,status
-import uuid
 
 def consulta_avaliacao(usuario_id):
     res = session.query(NPS.NPS).filter_by(usuario_id=usuario_id).all()

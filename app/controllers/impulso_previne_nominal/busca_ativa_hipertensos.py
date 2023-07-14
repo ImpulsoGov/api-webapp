@@ -1,6 +1,6 @@
 from app.models import DB_PRODUCAO
-from app.models.hipertensos import Hipertensos
-from app.models.score_cards_hipertensos import ScoreCardHipertensos
+from app.models.impulso_previne_nominal.hipertensos import Hipertensos
+from app.models.impulso_previne_nominal.score_cards_hipertensos import ScoreCardHipertensos
 from sqlalchemy.sql import func
 from cachetools import TTLCache
 session = DB_PRODUCAO.session

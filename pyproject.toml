@@ -1,2 +1,3 @@
 [tool.isort]
+name = "api-impulsogov"
 profile = "black"
