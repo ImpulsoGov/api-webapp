@@ -17,7 +17,7 @@ Usuarios = usuarios.Usuario
 Perfil = perfil_usuario.Perfil
 Perfil_lista = perfil_acesso.Perfil_lista
 
-env_path = os.path.dirname(os.path.realpath("app/controllers/usuarios")) + "/.env"
+env_path = os.path.dirname(os.path.realpath(os.path.dirname(__file__))) + "/.env"
 load_dotenv(dotenv_path=env_path)
 # openssl rand -base64 32
 SECRET_KEY = os.getenv("SECRET_KEY")
