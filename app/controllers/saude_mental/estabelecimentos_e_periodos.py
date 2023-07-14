@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy import exc
 
 from app.models.db import session
+from app.models.saude_mental.abandono import AbandonoPorCID
 from app.models.saude_mental.atendimentos_individuais import AtendimentoIndividualPorCID
 from app.models.saude_mental.perfildeusuarios import UsuarioAtivoPorCondicao
 from app.models.saude_mental.usuariosnovos import UsuarioNovoPorCondicao
@@ -12,13 +13,20 @@ entidades = {
     "usuarios_ativos_perfil": UsuarioAtivoPorCondicao,
     "usuarios_novos_perfil": UsuarioNovoPorCondicao,
     "atendimentos_inidividuais_perfil": AtendimentoIndividualPorCID,
+    "abandono_perfil": AbandonoPorCID,
 }
 
 Entidade = Literal[
-    "usuarios_ativos_perfil", "usuarios_novos_perfil", "atendimentos_inidividuais_perfil"
+    "usuarios_ativos_perfil",
+    "usuarios_novos_perfil",
+    "atendimentos_inidividuais_perfil",
+    "abandono_perfil",
 ]
 Model = Union[
-    UsuarioAtivoPorCondicao, UsuarioNovoPorCondicao, AtendimentoIndividualPorCID
+    UsuarioAtivoPorCondicao,
+    UsuarioNovoPorCondicao,
+    AtendimentoIndividualPorCID,
+    AbandonoPorCID,
 ]
 
 
