@@ -6,20 +6,27 @@ from fastapi import HTTPException
 from email_validator import validate_email, EmailNotValidError
 from validate_docbr import CPF
 import re
-from typing import Union, NoReturn, List
-from pydantic import BaseModel
+import uuid
+from datetime import datetime
+from typing import List, NoReturn, Union
 
-from app.models import (
-    db
-)
+from email_validator import EmailNotValidError, validate_email
+from fastapi import HTTPException
+from pydantic import BaseModel
+from sqlalchemy import exc, func
+from validate_docbr import CPF
+
+from app.controllers.usuarios import auth, cadastro_usuarios, recuperação_senha
+from app.models import db
 from app.models.usuarios import (
-    usuarios,
+    ativar_usuario,
     perfil_acesso,
     perfil_usuario,
-    ativar_usuario,
+    recuperacao_senha,
+    usuarios,
     usuarios_ip,
     usuarios_sm,
-    recuperacao_senha)
+)
 
 session = db.session
 Usuarios = usuarios.Usuario
@@ -52,11 +59,12 @@ class UsuarioIPAtualizado(BaseModel):
     telefone: str
 
 
-def lista_usuarios_sem_liberacao(username,acesso):
-    #controle de acesso
-    controle = auth.controle_perfil(username,acesso)
-    if controle != True : return controle
-    #Retorna todos os usuarios sem perfil
+def lista_usuarios_sem_liberacao(username, acesso):
+    # controle de acesso
+    controle = auth.controle_perfil(username, acesso)
+    if controle != True:
+        return controle
+    # Retorna todos os usuarios sem perfil
     try:
         res = (
             db.session.query(Usuarios)
@@ -104,31 +112,34 @@ def cargo_nome(id_cod, id):
         return {"erros": ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
     id_db = {"mail": id} if int(id_cod) == 1 else {"cpf": id}
     try:
-        res = db.session.query(
-            Usuarios
-        ).join(UsuariosIP, UsuariosIP.id_usuario == Usuarios.id, isouter=True
-        ).join(Perfil, Perfil.usuario_id == UsuariosIP.id_usuario, isouter=True
-        ).join(Perfil_lista, Perfil_lista.id == Perfil.perfil_id, isouter=True
-        ).with_entities(
-            Usuarios.mail,
-            Usuarios.cpf,
-            Usuarios.nome_usuario,
-            UsuariosIP.municipio,
-            UsuariosIP.cargo,
-            UsuariosIP.telefone,
-            UsuariosIP.equipe,
-            func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
-        ).filter(Usuarios.perfil_ativo==True,UsuariosIP.municipio.isnot(None)
-        ).group_by(
-            Usuarios.mail,
-            Usuarios.cpf,
-            Usuarios.nome_usuario,
-            UsuariosIP.municipio,
-            UsuariosIP.cargo,
-            UsuariosIP.telefone,
-            UsuariosIP.equipe,
-        ).all()
-        return {"usuarios" : res}
+        res = (
+            db.session.query(Usuarios)
+            .join(UsuariosIP, UsuariosIP.id_usuario == Usuarios.id, isouter=True)
+            .join(Perfil, Perfil.usuario_id == UsuariosIP.id_usuario, isouter=True)
+            .join(Perfil_lista, Perfil_lista.id == Perfil.perfil_id, isouter=True)
+            .with_entities(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+                func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
+            )
+            .filter(Usuarios.perfil_ativo == True, UsuariosIP.municipio.isnot(None))
+            .group_by(
+                Usuarios.mail,
+                Usuarios.cpf,
+                Usuarios.nome_usuario,
+                UsuariosIP.municipio,
+                UsuariosIP.cargo,
+                UsuariosIP.telefone,
+                UsuariosIP.equipe,
+            )
+            .all()
+        )
+        return {"usuarios": res}
     except Exception as error:
         print({"erros": [error]})
         return error
@@ -690,8 +701,8 @@ def senha_primeiro_acesso(mail, codigo, senha):
             return ativarPerfil
         return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
-        print({"error" : [error]})
-        return {"erros" : [error]}
+        print({"error": [error]})
+        return {"erros": [error]}
 
 
 def listar_usuarios_cadastrados_ip():
@@ -752,9 +763,7 @@ def encontrar_usuario_por_id(id: str) -> Union[usuarios.Usuario, NoReturn]:
 def encontrar_usuario_ip_por_id(
     id: str,
 ) -> Union[usuarios_ip.UsuarioIP, NoReturn]:
-    usuario_encontrado = (
-        session.query(UsuariosIP).filter_by(id_usuario=id).first()
-    )
+    usuario_encontrado = session.query(UsuariosIP).filter_by(id_usuario=id).first()
 
     if not usuario_encontrado:
         raise HTTPException(
@@ -769,9 +778,7 @@ def validar_email(email: str) -> Union[None, NoReturn]:
         validate_email(email)
 
     except EmailNotValidError:
-        raise HTTPException(
-            status_code=400, detail="Formato de e-mail inválido"
-        )
+        raise HTTPException(status_code=400, detail="Formato de e-mail inválido")
 
 
 def checar_se_novo_email_existe(email: str) -> Union[None, NoReturn]:
@@ -793,14 +800,10 @@ def validar_telefone(telefone: str) -> Union[None, NoReturn]:
     resultado = re.search(telefone_regex, telefone)
 
     if resultado is None:
-        raise HTTPException(
-            status_code=400, detail="Formato de telefone inválido"
-        )
+        raise HTTPException(status_code=400, detail="Formato de telefone inválido")
 
 
-def atualizar_cadastro_geral(
-    id: str, nome: str, cpf: str, mail: str
-) -> usuarios.Usuario:
+def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuarios.Usuario:
     validar_email(email=mail)
     checar_se_novo_email_existe(email=mail)
     validar_cpf(cpf=cpf)
@@ -810,9 +813,7 @@ def atualizar_cadastro_geral(
     usuario_encontrado.nome_usuario = nome
     usuario_encontrado.cpf = cpf
     usuario_encontrado.mail = mail
-    usuario_encontrado.atualizacao_data = datetime.now().strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+    usuario_encontrado.atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     return usuario_encontrado
 
@@ -828,9 +829,7 @@ def atualizar_cadastro_ip(
     usuario_encontrado.equipe = equipe
     usuario_encontrado.cargo = cargo
     usuario_encontrado.telefone = telefone
-    usuario_encontrado.atualizacao_data = datetime.now().strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+    usuario_encontrado.atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     return usuario_encontrado
 
@@ -895,27 +894,19 @@ def adicionar_novo_perfil_para_usuario(perfil_id: str, usuario_id: str):
 def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
     try:
         perfis_cadastrados = (
-            session.query(Perfil.perfil_id)
-            .filter_by(usuario_id=usuario_id)
-            .all()
+            session.query(Perfil.perfil_id).filter_by(usuario_id=usuario_id).all()
         )
 
         perfis_ids_cadastrados = set(
             [str(perfil.perfil_id) for perfil in perfis_cadastrados]
         )
 
-        perfis_ids_a_adicionar = set(perfis_ids).difference(
-            perfis_ids_cadastrados
-        )
+        perfis_ids_a_adicionar = set(perfis_ids).difference(perfis_ids_cadastrados)
 
         for perfil_id in perfis_ids_a_adicionar:
-            adicionar_novo_perfil_para_usuario(
-                perfil_id=perfil_id, usuario_id=usuario_id
-            )
+            adicionar_novo_perfil_para_usuario(perfil_id=perfil_id, usuario_id=usuario_id)
 
-        perfis_ids_a_remover = set(perfis_ids_cadastrados).difference(
-            perfis_ids
-        )
+        perfis_ids_a_remover = set(perfis_ids_cadastrados).difference(perfis_ids)
 
         perfis_a_remover = (
             session.query(Perfil)
@@ -948,9 +939,7 @@ def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
 
 def listar_perfis_de_acesso():
     try:
-        perfis_de_acesso = session.query(
-            Perfil_lista.id, Perfil_lista.descricao
-        ).all()
+        perfis_de_acesso = session.query(Perfil_lista.id, Perfil_lista.descricao).all()
 
         return perfis_de_acesso
     except (exc.SQLAlchemyError, Exception) as error:
@@ -1040,9 +1029,7 @@ def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
                 "cargo": dados_cadastro["cargo"],
                 "telefone": dados_cadastro["telefone"],
                 "equipe": dados_cadastro["equipe"],
-                "whatsapp": True
-                if dados_cadastro["whatsapp"] == "1"
-                else False,
+                "whatsapp": True if dados_cadastro["whatsapp"] == "1" else False,
             }
         )
 
