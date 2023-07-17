@@ -7,7 +7,8 @@ from sqlalchemy.orm import relation
 from app.models import db
 from app.models.usuarios import usuarios
 
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('impulso_previne_nominal')
 
 
 class Forum_ip(Base):

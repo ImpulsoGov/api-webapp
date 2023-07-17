@@ -1,7 +1,8 @@
 from sqlalchemy import Column,DATE,Integer, ForeignKey
 from app.models import db
 from app.models.usuarios import Usuario
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('impulso_previne_nominal')
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship

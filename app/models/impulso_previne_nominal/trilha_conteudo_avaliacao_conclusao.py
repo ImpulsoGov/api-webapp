@@ -2,7 +2,8 @@ from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
 
 from app.models import db
 
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('impulso_previne_nominal')
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID

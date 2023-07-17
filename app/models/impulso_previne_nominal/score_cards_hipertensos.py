@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String,DATE, BOOLEAN, DateTime, TIMESTAMP
-from app.models import DB_PRODUCAO
-Base = DB_PRODUCAO.Base
+
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('impulso_previne_nominal')
 
 class ScoreCardHipertensos(Base):
     __tablename__ = 'painel_hipertensos'
