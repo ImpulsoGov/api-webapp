@@ -1,9 +1,8 @@
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.models import db
-
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('suporte')
 import uuid
 
 

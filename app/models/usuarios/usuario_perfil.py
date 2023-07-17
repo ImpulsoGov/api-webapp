@@ -3,7 +3,8 @@ from xml.etree.ElementTree import Comment
 from models import db
 from sqlalchemy import DATE, Boolean, Column, ForeignKey, Integer, String
 
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('suporte')
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID

@@ -2,13 +2,14 @@ from xml.etree.ElementTree import Comment
 
 from sqlalchemy import DATE, Boolean, Column, Integer, String
 
-from app.models import db
-
-Base = db.Base
+# from app.models import db
+# Base = db.Base
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
 
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('suporte')
 
 class Usuario(Base):
     __tablename__ = "usuarios"

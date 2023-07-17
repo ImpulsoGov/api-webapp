@@ -3,7 +3,8 @@ from sqlalchemy import DATE, Column, ForeignKey
 from app.models import db
 from app.models.usuarios.usuarios import Usuario
 
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('suporte')
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
