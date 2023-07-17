@@ -3,7 +3,8 @@ from sqlalchemy.dialects.postgresql import CHAR, UUID
 
 from app.models import db
 
-Base = db.Base
+from app.models._conexao_banco import conexao_banco
+Base = conexao_banco('saude_mental')
 
 
 class MatriciamentoPorMunicipioUltimoAno(Base):
