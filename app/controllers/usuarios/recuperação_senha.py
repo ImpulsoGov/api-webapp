@@ -1,6 +1,7 @@
 import uuid
 
-from app.models import db, recuperacao_senha, usuarios
+from app.models import db
+from app.models.usuarios import recuperacao_senha, usuarios
 
 Recuperar = recuperacao_senha.Recuperar
 Usuario = usuarios.Usuario

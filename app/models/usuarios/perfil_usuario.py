@@ -1,6 +1,7 @@
 from sqlalchemy import DATE, Column, ForeignKey
 
-from app.models import db, usuarios
+from app.models import db
+from app.models.usuarios import usuarios
 
 Base = db.Base
 import uuid

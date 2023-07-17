@@ -147,12 +147,12 @@ async def hipertensos_graficos_municipio(municipio_uf,username: Usuario = Depend
 
 
 @router.post("/impulsoprevine/capacitacao/conclusao-conteudo")
-async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(auth.get_current_user)):
+async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(get_current_user)):
     res = TrilhaCapacitacao.conclusao_conteudo(usuario_id,codigo_conteudo,conclusao)
     return res
 
 @router.post("/impulsoprevine/capacitacao/avaliacao-conteudo")
-async def avaliacao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(auth.get_current_user)):
+async def avaliacao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),avaliacao: int = Form(...),username: Usuario = Depends(get_current_user)):
     res = TrilhaCapacitacao.avaliacao_conteudo(usuario_id,codigo_conteudo,avaliacao)
     return res
 
@@ -160,7 +160,7 @@ async def avaliacao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...
 async def consulta_avaliacao_conclusao_conteudo(
     usuario_id: str = Form(...),
     codigo_conteudo: str = Form(...),
-    username: Usuario = Depends(auth.get_current_user)
+    username: Usuario = Depends(get_current_user)
     ):
     res = TrilhaCapacitacao.consulta_avaliacao_conclusao(usuario_id,codigo_conteudo)
     return res
@@ -168,7 +168,7 @@ async def consulta_avaliacao_conclusao_conteudo(
 @router.post("/impulsoprevine/capacitacao/consulta-avaliacao-conclusao-por-usuario")
 async def consulta_avaliacao_conclusao_conteudo(
     usuario_id: str = Form(...),
-    username: Usuario = Depends(auth.get_current_user)
+    username: Usuario = Depends(get_current_user)
     ):
     res = TrilhaCapacitacao.consulta_avaliacao_conclusao_por_usuario(usuario_id)
     return res

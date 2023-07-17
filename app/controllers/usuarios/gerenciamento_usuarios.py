@@ -1,4 +1,4 @@
-from app.controllers import recuperação_senha,auth,cadastro_usuarios
+from app.controllers.usuarios import recuperação_senha,auth,cadastro_usuarios
 from datetime import datetime
 from sqlalchemy import func, exc
 import random,math, uuid
