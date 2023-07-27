@@ -1,20 +1,20 @@
-from sqlalchemy import Column, Integer, String, Float, Numeric, DATE
-from app.models import db
+from sqlalchemy import Column, Integer, String, Float, Numeric, DATE,PrimaryKeyConstraint
 from app.models._conexao_banco import conexao_banco
 Base = conexao_banco('impulso_previne_publico')
 
 class IndicadoresDesempenho(Base):
+    """Modelo da tabela indicadores_desempenho_score_equipes_validas que alimenta os gráficos e tabelas do painel Indicadores de Desempenho"""
     __tablename__ = 'indicadores_desempenho_score_equipes_validas'
     municipio_id_ibge = Column(String)
     municipio_id_sus = Column(String,primary_key=True)
     municipio_nome = Column(String)
     municipio_uf = Column(String)
     periodo_codigo = Column(String)
-    periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio')
+    periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio',primary_key=True)
     periodo_data_fim = Column(DATE,nullable=False,comment='Data de finalizacao')
     indicador_ordem = Column(String)
     indicador_prioridade = Column(Integer)
-    indicador_nome = Column(String)
+    indicador_nome = Column(String,primary_key=True)
     indicador_peso = Column(Float)
     indicador_validade_resultado = Column(Float)
     indicador_acoes_por_usuario = Column(Float)
@@ -38,4 +38,7 @@ class IndicadoresDesempenho(Base):
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
     indicador_denominador_informado =  Column(Integer)
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = (
+        PrimaryKeyConstraint('municipio_id_sus','periodo_data_inicio','indicador_nome'),
+        {'schema': 'impulso_previne_dados_abertos_replica'}
+    )
