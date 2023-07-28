@@ -1,5 +1,14 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from app.controllers import indicadores,forum_ip,auth,busca_ativa_gestantes,busca_ativa_diabeticos,busca_ativa_hipertensos,TrilhaCapacitacao, indicadores_desempenho_score_equipes_validas,indicadores_municipios_equipes_homologadas
+from app.controllers import (
+    indicadores,forum_ip,
+    auth,busca_ativa_gestantes,
+    busca_ativa_diabeticos,
+    busca_ativa_hipertensos,
+    busca_ativa_citopatologico,
+    TrilhaCapacitacao,
+    indicadores_desempenho_score_equipes_validas,
+    indicadores_municipios_equipes_homologadas
+)
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
@@ -133,17 +142,13 @@ async def hipertensao_equipe(municipio_uf,equipe,username: Usuario = Depends(get
     res = busca_ativa_hipertensos.hipertensao_equipe(municipio_uf,equipe)
     return res
 
-@router.get("/impulsoprevine/busca-ativa/hipertensao-grafico")
-async def hipertensao_grafico_aps(municipio_id_sus,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_hipertensos.hipertensao_grafico(municipio_id_sus)
-    return res
+@router.get("/impulsoprevine/busca-ativa/citopatologico-por-municipio")
+async def cito_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_citopatologico.citopatologico_aps(municipio_uf)
 
-
-@router.get("/impulsoprevine/busca-ativa/hipertensos-graficos")
-async def hipertensos_graficos_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_hipertensos.hipertensos_graficos(municipio_uf)
-    return res
-
+@router.get("/impulsoprevine/busca-ativa/citopatologico-por-equipe")
+async def cito_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_citopatologico.citopatologico_equipe(municipio_uf,equipe)
 
 @router.post("/impulsoprevine/capacitacao/conclusao-conteudo")
 async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(auth.get_current_user)):
