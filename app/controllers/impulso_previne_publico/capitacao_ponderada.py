@@ -12,7 +12,7 @@ cache_capitacao_ponderada_cadastros_por_equipe = TTLCache(maxsize=38, ttl=24*60*
 def capitacao_ponderada_cadastros_por_equipe(
         municipio_uf:str,
         ):
-    result = capitacao_ponderada_cadastros_por_equipe.get(municipio_uf)
+    result = cache_capitacao_ponderada_cadastros_por_equipe.get(municipio_uf)
     try:
         if result is None:
             result = DB_PRODUCAO.session.query(
@@ -32,8 +32,8 @@ def capitacao_ponderada_cadastros_por_equipe(
                 ).order_by(
                     CadastrosEquipes.data_inicio
                 ).all()
-            capitacao_ponderada_cadastros_por_equipe[municipio_uf] = result
-            return result
+            cache_capitacao_ponderada_cadastros_por_equipe[municipio_uf] = result
+        return result
     except Exception as error:
         session.rollback()
         print({"erros": [error]})
@@ -42,9 +42,10 @@ def capitacao_ponderada_cadastros_por_equipe(
 
 cache_capitacao_ponderada_cadastros_status = TTLCache(maxsize=38, ttl=24*60*60)
 def capitacao_ponderada_cadastros_status( municipio_uf:str):
-    result = capitacao_ponderada_cadastros_status.get(municipio_uf)
+    result = cache_capitacao_ponderada_cadastros_status.get(municipio_uf)
     try:
         if result is None:
+        
             result = DB_PRODUCAO.session.query(
                 CadastrosEquipeContagem).filter_by(
                 municipio_uf=municipio_uf
@@ -54,8 +55,8 @@ def capitacao_ponderada_cadastros_status( municipio_uf:str):
                 ).order_by(
                     CadastrosEquipeContagem.equipe_status_tipo
                 ).all()
-            capitacao_ponderada_cadastros_status[municipio_uf] = result
-            return result
+            cache_capitacao_ponderada_cadastros_status[municipio_uf] = result
+        return result
     except Exception as error:
         session.rollback()
         print({"erros" : [error]})
@@ -65,7 +66,7 @@ cache_capitacao_ponderada_validacao_por_producao = TTLCache(maxsize=38, ttl=24*6
 def capitacao_ponderada_validacao_por_producao(
         municipio_uf:str,
         ):
-    result = capitacao_ponderada_validacao_por_producao.get(municipio_uf)
+    result = cache_capitacao_ponderada_validacao_por_producao.get(municipio_uf)
     try:
         if result is None:
             result = DB_PRODUCAO.session.query(
@@ -83,8 +84,8 @@ def capitacao_ponderada_validacao_por_producao(
                 ).order_by(
                     ValidacaoProducao.validacao_nome
                 ).all()
-            capitacao_ponderada_validacao_por_producao[municipio_uf] = result
-            return result
+            cache_capitacao_ponderada_validacao_por_producao[municipio_uf] = result
+        return result
     except Exception as error:
         session.rollback()
         print({"erros": [error]})
@@ -95,7 +96,7 @@ cache_capitacao_ponderada_validacao_por_producao_por_aplicacao = TTLCache(maxsiz
 def capitacao_ponderada_validacao_por_producao_por_aplicacao(
         municipio_uf:str,
         ):
-    result = capitacao_ponderada_validacao_por_producao_por_aplicacao.get(municipio_uf)
+    result = cache_capitacao_ponderada_validacao_por_producao.get(municipio_uf)
     try:
         if result is None:
             result = DB_PRODUCAO.session.query(
@@ -115,8 +116,8 @@ def capitacao_ponderada_validacao_por_producao_por_aplicacao(
                 ).order_by(
                     ValidacaoProducaoAplicacao.periodo_data_inicio
                 ).all()
-            capitacao_ponderada_validacao_por_producao_por_aplicacao[municipio_uf] = result
-            return result
+            cache_capitacao_ponderada_validacao_por_producao_por_aplicacao[municipio_uf] = result
+        return result
     except Exception as error:
         session.rollback()
         print({"erros": [error]})

@@ -8,6 +8,7 @@ session = DB_PRODUCAO.session
 
 cache_acoes_estrategicas_repasses = TTLCache(maxsize=38, ttl=24*60*60)
 def acoes_estrategicas_repasses(municipio_uf):
+    result = cache_acoes_estrategicas_repasses.get(municipio_uf)
     try:
         if result is None:
             result = DB_PRODUCAO.session.query(

@@ -5,7 +5,6 @@ from cachetools import TTLCache
 
 session = DB_PRODUCAO.session
 
-
 cache_caracterizacao_municipal_resumo = TTLCache(maxsize=38, ttl=24*60*60)
 def caracterizacao_municipal_resumo(municipio_uf:str):
     result = cache_caracterizacao_municipal_resumo.get(municipio_uf)
