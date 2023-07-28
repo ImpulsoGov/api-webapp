@@ -33,7 +33,6 @@ class Indicador(BaseModel):
     class Config:
         orm_mode = True
 
-
 @router.get("/impulsoprevine/indicadores/resumo", response_model=List[Indicador])
 async def consulta_indicadores(
     indicadores_parametros_id: Optional[str] = None,
