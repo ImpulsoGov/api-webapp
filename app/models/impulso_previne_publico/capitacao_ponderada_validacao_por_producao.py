@@ -19,5 +19,5 @@ class ValidacaoProducao(Base):
     validacao_nome = Column(String)
     validacao_quantidade = Column(Integer)
     recomendacao = Column(String)
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = {'schema': 'impulso_previne_dados_abertos_replica'}
 

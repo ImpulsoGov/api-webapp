@@ -13,6 +13,6 @@ class CadastrosEquipeContagem(Base):
     equipe_status_tipo = Column(String)
     equipe_status = Column(String,primary_key=True)
     equipe_total = Column(Integer)
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = {'schema': 'impulso_previne_dados_abertos_replica'}
 
 

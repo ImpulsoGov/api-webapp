@@ -21,4 +21,4 @@ class IndicadoresMunicipiosEquipesHomologadas(Base):
     indicador_denominador_estimado = Column(Integer)
     indicador_denominador_utilizado = Column(Integer)
     indicador_resultado =  Column(Integer) 
-    __table_args__ = {'schema': 'impulso_previne_replica'}
+    __table_args__ = {'schema': 'impulso_previne_dados_abertos_replica'}

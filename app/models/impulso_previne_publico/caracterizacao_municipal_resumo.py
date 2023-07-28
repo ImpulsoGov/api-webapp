@@ -16,5 +16,5 @@ class CaracterizacaoMunicipalResumo(Base):
     cadastros_equipes_validas = Column(Integer)
     cadastros_equipes_validas_com_ponderacao = Column(Integer)
     cadastro_parametro = Column(Integer)
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = {'schema': 'impulso_previne_dados_abertos_replica'}
 

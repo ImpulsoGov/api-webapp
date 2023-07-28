@@ -13,4 +13,4 @@ class AcoesEstrategicasRepasses(Base):
     acao_nome = Column(String,primary_key=True)
     pagamento_total = Column(Integer)
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
-    __table_args__ = {'schema': 'impulso_previne'}
+    __table_args__ = {'schema': 'impulso_previne_dados_abertos_replica'}

@@ -27,7 +27,7 @@ class CadastrosEquipes(Base):
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
     __table_args__ = (
-        {'schema': 'impulso_previne'}
+        {'schema': 'impulso_previne_dados_abertos_replica'}
     )
 
 

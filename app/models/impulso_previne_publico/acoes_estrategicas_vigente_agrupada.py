@@ -13,5 +13,5 @@ class AcoesEstrategicasVigenteAgrupada(Base):
     periodicidade = Column(String)
     ultimo_pagamento = Column(String)
     requisitos = Column(String)
-    __table_args__ =  {'schema': 'impulso_previne'}
+    __table_args__ =  {'schema': 'impulso_previne_dados_abertos_replica'}
 

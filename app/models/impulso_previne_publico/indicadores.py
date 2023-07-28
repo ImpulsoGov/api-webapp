@@ -23,4 +23,4 @@ class Indicadores(Base):
     indicadores_parametros_peso = Column(Float)
     indicadores_resultados_porcentagem = Column(Float)
     diff_numerador_para_meta = Column(Integer)
-    __table_args__ = {"schema": "impulso_previne"}
+    __table_args__ = {"schema": "impulso_previne_dados_abertos_replica"}
