@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, DATE, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, String, DATE
 from app.models import db
 from app.models._conexao_banco import conexao_banco
 Base = conexao_banco('impulso_previne_publico')
@@ -15,14 +15,11 @@ class ValidacaoProducaoAplicacao(Base):
     cnes_id = Column(String)
     cnes_nome = Column(String)
     equipe_id_ine =  Column(String,primary_key=True)
-    equipe_nome = Column(Numeric)
+    equipe_nome = Column(String)
     validacao_aplicacao = Column(String,primary_key=True)
     validacao_nome = Column(String,primary_key=True)
     validacao_quantidade = Column(Integer)
     recomendacao = Column(String)
-    __table_args__ = (
-        PrimaryKeyConstraint('municipio_id_sus','periodo_data_inicio','equipe_id_ine','validacao_aplicacao','validacao_nome'),
-        {'schema': 'impulso_previne_dados_abertos_replica'}
-    )
+    __table_args__ =  {'schema': 'impulso_previne'}
 
 

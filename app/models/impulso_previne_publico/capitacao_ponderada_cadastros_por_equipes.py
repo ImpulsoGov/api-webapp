@@ -11,13 +11,13 @@ class CadastrosEquipes(Base):
     municipio_nome = Column(String)
     municipio_uf = Column(String)
     periodo_codigo = Column(String)
-    data_inicio = Column(DATE,nullable=False,comment='Data de inicio',primary_key=True)
+    data_inicio = Column(DATE,nullable=False,comment='Data de inicio')
     tipologia = Column(String)
     uf_nome = Column(String)
-    cnes_id = Column(String)
+    cnes_id = Column(String,primary_key=True)
     cnes_nome = Column(String)
     equipe_id_ine =  Column(String,primary_key=True)
-    equipe_nome = Column(Numeric)
+    equipe_nome = Column(String)
     equipe_status = Column(String)
     municipio_ultimo_parametro = Column(Integer)
     cadastro_total = Column(Integer)
@@ -27,8 +27,7 @@ class CadastrosEquipes(Base):
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
     __table_args__ = (
-        PrimaryKeyConstraint('municipio_uf','data_inicio','equipe_id_ine'),
-        {'schema': 'impulso_previne_dados_abertos_replica'}
+        {'schema': 'impulso_previne'}
     )
 
 

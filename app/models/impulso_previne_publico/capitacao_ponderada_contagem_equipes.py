@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, String
 from app.models import db
 from app.models._conexao_banco import conexao_banco
 Base = conexao_banco('impulso_previne_publico')
@@ -13,9 +13,6 @@ class CadastrosEquipeContagem(Base):
     equipe_status_tipo = Column(String)
     equipe_status = Column(String,primary_key=True)
     equipe_total = Column(Integer)
-    __table_args__ = (
-        PrimaryKeyConstraint('municipio_id_sus','periodo_codigo','equipe_status'),
-        {'schema': 'impulso_previne_dados_abertos_replica'}
-    )
+    __table_args__ = {'schema': 'impulso_previne'}
 
 

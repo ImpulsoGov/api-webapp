@@ -13,8 +13,5 @@ class AcoesEstrategicasVigenteAgrupada(Base):
     periodicidade = Column(String)
     ultimo_pagamento = Column(String)
     requisitos = Column(String)
-    __table_args__ = (
-        PrimaryKeyConstraint('municipio_uf','acao_nome'),
-        {'schema': 'impulso_previne_dados_abertos_replica'}
-    )
+    __table_args__ =  {'schema': 'impulso_previne'}
 
