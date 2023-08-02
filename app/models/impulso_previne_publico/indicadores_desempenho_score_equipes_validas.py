@@ -1,8 +1,11 @@
 from sqlalchemy import Column, Integer, String, Float, Numeric, DATE,PrimaryKeyConstraint
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_publico')
+# from app.models._conexao_banco import conexao_banco
+# Base = conexao_banco('impulso_previne_publico')
 
-class IndicadoresDesempenho(Base):
+from app.models import db
+
+
+class IndicadoresDesempenho(db.Base_impulso_previne_publico):
     """Modelo da tabela indicadores_desempenho_score_equipes_validas que alimenta os gráficos e tabelas do painel Indicadores de Desempenho"""
     __tablename__ = 'indicadores_desempenho_score_equipes_validas'
     municipio_id_ibge = Column(String)
