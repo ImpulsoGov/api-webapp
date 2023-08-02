@@ -1,5 +1,5 @@
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('suporte')
+from app.models import db
+Base = db.Base_usuarios
 import uuid
 
 from sqlalchemy import TIMESTAMP, Column, String

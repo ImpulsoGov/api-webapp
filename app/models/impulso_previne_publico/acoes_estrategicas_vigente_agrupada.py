@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, PrimaryKeyConstraint
 from app.models import db
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_publico')
+from app.models import db
+Base = db.Base_impulso_previne_publico
 
 class AcoesEstrategicasVigenteAgrupada(Base):
     """Modelo da tabela acoes_estrategicas_vigente_agrupada que alimenta o gráfico 'Ações Estratégicas implementadas em vigor' """

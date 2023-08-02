@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from app.models import db
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_publico')
+from app.models import db
+Base = db.Base_impulso_previne_publico
 
 class CadastrosEquipeContagem(Base):
     """Modelo da tabela capitacao_ponderada_contagem_equipes que alimenta o gráfico 'Suas equipes' """

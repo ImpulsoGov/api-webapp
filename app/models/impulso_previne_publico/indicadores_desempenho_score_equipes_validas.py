@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Numeric, DATE,PrimaryKeyConstraint
-# from app.models._conexao_banco import conexao_banco
-# Base = conexao_banco('impulso_previne_publico')
+# 
+# Base = db.Base_impulso_previne_publico
 
 from app.models import db
 

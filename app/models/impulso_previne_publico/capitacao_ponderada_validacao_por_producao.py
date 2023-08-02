@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Numeric, DATE
 from app.models import db
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_publico')
+from app.models import db
+Base = db.Base_impulso_previne_publico
 
 class ValidacaoProducao(Base):
     """Modelo da tabela capitacao_ponderada_validacao_por_producao que alimenta o gráfico 'Cadastros Preliminares Inválidos' """

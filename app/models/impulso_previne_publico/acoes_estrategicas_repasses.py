@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DATE
-from app.models._conexao_banco import conexao_banco
+
 from app.models import db
-Base = conexao_banco('impulso_previne_publico')
+Base = db.Base_impulso_previne_publico
 
 class AcoesEstrategicasRepasses(Base):
     """Modelo da tabela acoes_estrategicas_repasses que alimenta o gráfico 'Histórico de repasses' """

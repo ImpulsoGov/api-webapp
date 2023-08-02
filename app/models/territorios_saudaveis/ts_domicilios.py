@@ -2,7 +2,7 @@ from sqlalchemy import DATE, Column, ForeignKey, Integer, String
 
 from app.models import db
 
-Base = db.Base
+Base = db.Base_PRODUCAO
 
 
 class Domicilios(Base):

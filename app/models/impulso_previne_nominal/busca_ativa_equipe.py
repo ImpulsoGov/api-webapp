@@ -2,8 +2,8 @@ from sqlalchemy import BOOLEAN, DATE, Column, DateTime, Integer, String
 
 from app.models import DB_PRODUCAO
 
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_nominal')
+from app.models import db
+Base = db.Base_impulso_previne_nominal
 
 
 class Gestantes(Base):

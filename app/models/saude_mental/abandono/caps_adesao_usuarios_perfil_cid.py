@@ -3,8 +3,8 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
 
 from app.models import db
 
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('saude_mental')
+from app.models import db
+Base = db.Base_saude_mental
 
 
 class AbandonoPorCID(Base):

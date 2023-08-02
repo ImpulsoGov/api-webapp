@@ -8,8 +8,8 @@ import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('suporte')
+from app.models import db
+Base = db.Base_usuarios
 
 class Usuario(Base):
     __tablename__ = "usuarios"

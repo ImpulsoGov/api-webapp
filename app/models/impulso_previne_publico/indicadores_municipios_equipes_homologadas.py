@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DATE
 from app.models import db
-from app.models._conexao_banco import conexao_banco
-Base = conexao_banco('impulso_previne_publico')
+from app.models import db
+Base = db.Base_impulso_previne_publico
 
 class IndicadoresMunicipiosEquipesHomologadas(Base):
     __tablename__ = 'indicadores_municipios_equipes_homologadas'
