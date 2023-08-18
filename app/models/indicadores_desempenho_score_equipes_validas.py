@@ -33,6 +33,7 @@ class IndicadoresDesempenho(Base):
     delta_formatado = Column(String)
     indicador_usuarios_100_porcento_meta = Column(Numeric)
     indicador_usuarios_cadastrados_sem_atendimento = Column(Numeric)
+    indicador_usuarios_cadastrar_para_meta = Column(Numeric)
     indicador_score = Column(Integer)
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
