@@ -45,6 +45,7 @@ def diabetes_aps(municipio_uf):
                     Diabeticos.identificacao_condicao_diabetes,
                     Diabeticos.dt_ultima_consulta,
                     Diabeticos.prazo_proxima_consulta,
+                    Diabeticos.status_usuario,
                     Diabeticos.dt_solicitacao_hemoglobina_glicada_mais_recente,
                     Diabeticos.prazo_proxima_solicitacao_hemoglobina,
                     Diabeticos.acs_nome_cadastro,
