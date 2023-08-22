@@ -104,46 +104,40 @@ def lista_usuarios(username, acesso):
         return error
 
 
-def cargo_nome(id_cod, id):
-    # Informa dados cadastrais a partir do e-mail ou cpf do usuario
-    # id_cod 1 para e-mail e 2 para cpf
-    id_cod_ref = [1, 2]
-    if id_cod not in id_cod_ref:
-        return {"erros": ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
-    id_db = {"mail": id} if int(id_cod) == 1 else {"cpf": id}
+def cargo_nome(id_cod,id):
+    #Informa dados cadastrais a partir do e-mail ou cpf do usuario
+    #id_cod 1 para e-mail e 2 para cpf
+    id_cod_ref = [1,2]
+    if id_cod not in id_cod_ref : return {"erros" : ["id_cod invalido, insira 1 para e-mail e 2 para CPF"]}
+    id_db = {"mail":id} if int(id_cod) == 1 else {"cpf":id}
     try:
-        res = (
-            db.session.query(Usuarios)
-            .join(UsuariosIP, UsuariosIP.id_usuario == Usuarios.id, isouter=True)
-            .join(Perfil, Perfil.usuario_id == UsuariosIP.id_usuario, isouter=True)
-            .join(Perfil_lista, Perfil_lista.id == Perfil.perfil_id, isouter=True)
-            .with_entities(
-                Usuarios.mail,
-                Usuarios.cpf,
-                Usuarios.nome_usuario,
-                UsuariosIP.municipio,
-                UsuariosIP.cargo,
-                UsuariosIP.telefone,
-                UsuariosIP.equipe,
-                func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
-            )
-            .filter(Usuarios.perfil_ativo == True, UsuariosIP.municipio.isnot(None))
-            .group_by(
-                Usuarios.mail,
-                Usuarios.cpf,
-                Usuarios.nome_usuario,
-                UsuariosIP.municipio,
-                UsuariosIP.cargo,
-                UsuariosIP.telefone,
-                UsuariosIP.equipe,
-            )
-            .all()
-        )
-        return {"usuarios": res}
+        perfil = db.session.query(
+            Perfil
+        ).join(
+            Perfil_lista
+        ).join(
+            Usuarios
+        ).filter_by(**id_db
+        ).join(
+            UsuariosIP
+        ).with_entities(
+            func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
+            Usuarios.nome_usuario.label("nome"),
+            Usuarios.id,
+            UsuariosIP.cargo,
+            UsuariosIP.municipio,
+            UsuariosIP.equipe
+        ).group_by(
+            Usuarios.nome_usuario,
+            Usuarios.id,
+            UsuariosIP.cargo,
+            UsuariosIP.municipio,
+            UsuariosIP.equipe
+        ).all()
+        return { "cadastro" : perfil}
     except Exception as error:
-        print({"erros": [error]})
+        print({"erros" : [error]})
         return error
-
 
 def obter_dados_usuarioSM(id_cod, id):
     # Informa dados cadastrais a partir do e-mail ou cpf do usuario
