@@ -1,4 +1,5 @@
 import pandas as pd
+from cachetools import TTLCache, cached
 from fastapi import HTTPException, Response
 
 from app.models import db
@@ -10,6 +11,9 @@ from app.models.saude_mental.procedimentos import (
     ProcedimentosPorTipo,
 )
 
+QUANTIDADE_SEGUNDOS_DE_1_MES = 60 * 60 * 24 * 30
+
+cache = TTLCache(maxsize=14, ttl=QUANTIDADE_SEGUNDOS_DE_1_MES)
 session = db.session
 
 
@@ -45,6 +49,7 @@ def dados_procedimentos_por_usuario_resumo(municipio_id_sus: str):
     return ProcedimentoPorUsuarioResumo_dados
 
 
+@cached(cache=cache)
 def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
     # procedimentos_por_usuario_por_tempo_servico = (
     #     session.query(ProcedimentoPorUsuarioTempoServiço)
@@ -70,6 +75,7 @@ def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
     )
 
 
+@cached(cache=cache)
 def dados_procedimentos_por_hora(municipio_id_sus: str):
     # procedimentos_por_hora = (
     #     session.query(ProcedimentosPorHora)
@@ -92,6 +98,7 @@ def dados_procedimentos_por_hora(municipio_id_sus: str):
     )
 
 
+@cached(cache=cache)
 def dados_procedimentos_por_tipo(municipio_id_sus: str):
     # procedimentos_por_tipo = (
     #     session.query(ProcedimentosPorTipo)
