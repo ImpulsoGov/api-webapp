@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Float, Text
 from sqlalchemy.dialects.postgresql import UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -33,4 +33,4 @@ class ProcedimentosPorHora(Base):
     dif_procedimentos_registrados_bpa_anterior = Column(Float)
     dif_procedimentos_registrados_total_anterior = Column(Float)
     perc_dif_procedimentos_por_hora_anterior = Column(Float)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

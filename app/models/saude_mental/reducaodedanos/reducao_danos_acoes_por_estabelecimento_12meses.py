@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Float, Integer, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -26,4 +26,4 @@ class ReducaoDanos12meses(Base):
     ate_ano = Column(Text)
     a_partir_do_mes = Column(Text)
     ate_mes = Column(Text)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

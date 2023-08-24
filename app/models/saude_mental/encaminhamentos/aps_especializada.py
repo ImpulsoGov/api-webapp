@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Float, Integer, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -22,4 +22,4 @@ class EncaminhamentoApsEspecializada(Base):
     periodo = Column(Text)
     nome_mes = Column(Text)
     periodo_ordem = Column(Float)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

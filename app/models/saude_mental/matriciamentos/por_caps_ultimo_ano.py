@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Integer, Numeric, Text
 from sqlalchemy.dialects.postgresql import CHAR, UUID
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -21,4 +21,4 @@ class MatriciamentoPorCapsUltimoAno(Base):
     estabelecimento_linha_perfil = Column(Text)
     estabelecimento_linha_idade = Column(Text)
     estabelecimento = Column(Text)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

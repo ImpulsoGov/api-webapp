@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Float, Numeric, Text
 from sqlalchemy.dialects.postgresql import CHAR, UUID
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -23,4 +23,4 @@ class ResumoPerfilUsuariosAtendimentosIndividuaisCaps(Base):
     usuarios_faixa_etaria_predominante = Column(Numeric)
     cid_grupo_predominante = Column(Text)
     usuarios_cid_predominante = Column(Numeric)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

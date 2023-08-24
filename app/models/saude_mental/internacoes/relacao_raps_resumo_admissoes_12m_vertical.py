@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Numeric, Text
 from sqlalchemy.dialects.postgresql import UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -18,4 +18,4 @@ class InternacaoRelacaoRapsResumoAdmissoes12mVertical(Base):
     ate_mes = Column(Text)
     atendimento_raps_6m_antes = Column(Text)
     prop_internacoes = Column(Numeric)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

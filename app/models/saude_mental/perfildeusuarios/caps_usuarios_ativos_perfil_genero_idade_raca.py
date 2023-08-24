@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Float, Integer, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -21,4 +21,4 @@ class UsuariosPerfilIdadeRaca(Base):
     usuario_sexo = Column(Text)
     usuario_faixa_etaria = Column(Text)
     usuario_faixa_etaria_ordem = Column(Integer)
-    __table_args__ = {"schema": "saude_mental", "extend_existing": True}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL, "extend_existing": True}

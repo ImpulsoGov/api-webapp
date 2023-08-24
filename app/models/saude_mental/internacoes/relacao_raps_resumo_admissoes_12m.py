@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Numeric, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -22,4 +22,4 @@ class InternacaoRelacaoRapsResumoAdmissoes12m(Base):
     internacoes_transtornos = Column(Numeric)
     atualizacao_data = Column(TIMESTAMP(timezone=True))
     perc_internacoes_atendimento_raps_antes = Column(Numeric)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}

@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Date, Numeric, Text
 from sqlalchemy.dialects.postgresql import UUID, VARCHAR
+from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
 
-from app.models import db
 Base = db.Base_saude_mental
 
 
@@ -17,4 +17,4 @@ class ProcedimentoPorUsuarioResumo(Base):
     estabelecimento = Column(Text)
     tempo_servico_maior_taxa = Column(Text)
     maior_taxa = Column(Numeric)
-    __table_args__ = {"schema": "saude_mental"}
+    __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}
