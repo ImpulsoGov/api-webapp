@@ -1,5 +1,5 @@
 from app.models import DB_PRODUCAO  
-from app.models.citopatologico import Citopatologico
+from app.models.impulso_previne_nominal.citopatologico import Citopatologico
 from sqlalchemy.sql import func
 from cachetools import TTLCache
 session = DB_PRODUCAO.session

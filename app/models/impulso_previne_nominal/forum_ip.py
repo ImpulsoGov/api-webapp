@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relation
 
 from app.models import db
-from app.models.usuarios import usuarios
+from app.models.usuarios.usuarios import Usuario
 
 from app.models import db
 Base = db.Base_impulso_previne_nominal
@@ -26,7 +26,6 @@ class Forum_ip(Base):
     )
     data_criacao = Column(DATE, nullable=False, comment="Data de Criação")
     data_atualizacao = Column(DATE, nullable=False, comment="Data de Atualização")
-    usuario_id_rel = relation(usuarios.Usuario, backref="forum_ip")
     __table_args__ = {"schema": "impulso_previne"}
 
 
