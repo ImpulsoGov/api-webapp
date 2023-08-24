@@ -1,4 +1,4 @@
-from app.models import DB_PRODUCAO
+from app.models import DB_PRODUCAO  
 from app.models.impulso_previne_nominal.diabeticos import Diabeticos
 from cachetools import TTLCache
 
@@ -17,6 +17,7 @@ def diabeticos_equipe(municipio_uf,equipe):
                     Diabeticos.identificacao_condicao_diabetes,
                     Diabeticos.dt_ultima_consulta,
                     Diabeticos.prazo_proxima_consulta,
+                    Diabeticos.status_usuario,
                     Diabeticos.dt_solicitacao_hemoglobina_glicada_mais_recente,
                     Diabeticos.prazo_proxima_solicitacao_hemoglobina,
                     Diabeticos.acs_nome_cadastro,
@@ -27,7 +28,7 @@ def diabeticos_equipe(municipio_uf,equipe):
                 ).all()
     except Exception as error:
         session.rollback()
-        print({"erros": [error]})
+        print({"erros" : [error]})
         return error
 
 
@@ -45,6 +46,7 @@ def diabetes_aps(municipio_uf):
                     Diabeticos.identificacao_condicao_diabetes,
                     Diabeticos.dt_ultima_consulta,
                     Diabeticos.prazo_proxima_consulta,
+                    Diabeticos.status_usuario,
                     Diabeticos.dt_solicitacao_hemoglobina_glicada_mais_recente,
                     Diabeticos.prazo_proxima_solicitacao_hemoglobina,
                     Diabeticos.acs_nome_cadastro,
@@ -60,11 +62,3 @@ def diabetes_aps(municipio_uf):
         print({"erros" : [error]})
         return error
 
-
-def diabeticos_graficos(municipio_uf):
-    try:
-        return session.execute("SELECT  acs_nome_cadastro,apenas_autorreferida,cidadao_cpf_dt_nascimento,cidadao_nome,consulta_e_afericao_em_dia,criacao_data,diagnostico_clinico,dt_consulta_mais_recente,dt_solicitacao_hemoglobina_glicada_mais_recente,equipe_ine_cadastro,equipe_nome_atendimento,equipe_nome_cadastro,identificacao_condicao_diabetes,municipio_uf,prazo_proxima_consulta,prazo_proxima_solicitacao_hemoglobina,quadrimestre_atual,realizou_consulta_ultimos_6_meses,realizou_solicitacao_hemoglobina_ultimos_6_meses,se_faleceu,se_mudou,status_em_dia,status_usuario,cidadao_faixa_etaria FROM impulso_previne_dados_nominais.painel_enfermeiras_lista_nominal_diabeticos where municipio_uf='"+municipio_uf+"';").fetchall()
-    except Exception as error:
-        session.rollback()
-        print({"erros": [error]})
-        return error
