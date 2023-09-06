@@ -25,4 +25,5 @@ class InternacoesResumoAltas(Base):
     altas_total = Column(Numeric)
     perc_altas_atendimento_raps_6m_antes = Column(Numeric)
     perc_altas_atendimento_raps_1m_apos = Column(Numeric)
+    nome_mes = Column(Text)
     __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}
