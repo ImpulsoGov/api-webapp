@@ -7,7 +7,8 @@ from app.controllers import (
     busca_ativa_citopatologico,
     TrilhaCapacitacao,
     indicadores_desempenho_score_equipes_validas,
-    indicadores_municipios_equipes_homologadas
+    indicadores_municipios_equipes_homologadas,
+    caracterizacao_municipal_resumo
 )
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
@@ -50,6 +51,11 @@ async def consultar_indicadores_equipes_homologadas_municipios(municipio_uf: str
 async def consultar_indicadores_desempenho(municipio_uf: str):
     res = indicadores_desempenho_score_equipes_validas.consultar_indicadores_desempenho(municipio_uf)
     return res
+
+@router.get("/impulso_previne_dados_abertos_replica/caracterizacao/municipal_resumo")
+async def consultar_caracterizacaoMunicipal(municipio_uf: str):
+    res =     caracterizacao_municipal_resumo.consultar_caracterizacaoMunicipal(municipio_uf)
+    return res 
 
 class Mensagem(BaseModel):
     erros : Optional[List] = None
