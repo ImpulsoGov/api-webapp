@@ -3,8 +3,6 @@ from app.models import db
 Base = db.Base_impulso_previne_publico
 
 class CaracterizacaoMunicipalResumo(Base):
-    """Modelo da tabela caracterizacao_municipal_resumo que alimenta o painel Caracterização Municipal"""
-    
     __tablename__ = 'caracterizacao_municipal_resumo'
     municipio_id_sus = Column(String,primary_key=True)
     municipio_nome = Column(String)
