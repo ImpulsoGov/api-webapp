@@ -54,7 +54,7 @@ async def consultar_indicadores_desempenho(municipio_uf: str):
 
 @router.get("/impulso_previne_dados_abertos_replica/caracterizacao/municipal_resumo")
 async def consultar_caracterizacaoMunicipal(municipio_uf: str):
-    res =     caracterizacao_municipal_resumo.consultar_caracterizacaoMunicipal(municipio_uf)
+    res = caracterizacao_municipal_resumo.consultar_caracterizacaoMunicipal(municipio_uf)
     return res 
 
 class Mensagem(BaseModel):
