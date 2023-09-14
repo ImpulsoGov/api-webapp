@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, Float, Integer, Numeric, Text
+from sqlalchemy import Column, Date, Float, Integer, Text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID, VARCHAR
 from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
@@ -23,4 +23,7 @@ class AmbulatorioUsuariosPerfil(Base):
     cid_grupo_descricao_curta = Column(Text)
     usuario_sexo = Column(Text)
     usuarios_unicos_mes = Column(Integer)
+    estabelecimento = Column(VARCHAR)
+    estabelecimento_linha_perfil = Column(Text)
+    estabelecimento_linha_idade = Column(Text)
     __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}
