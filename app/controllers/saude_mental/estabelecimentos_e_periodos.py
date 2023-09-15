@@ -81,7 +81,8 @@ def obter_periodos_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
             session.query(
                 model.periodo,
                 model.competencia,
-                model.periodo_ordem
+                model.periodo_ordem,
+                model.nome_mes
             )
             .filter_by(unidade_geografica_id_sus=municipio_id_sus)
             .distinct()
