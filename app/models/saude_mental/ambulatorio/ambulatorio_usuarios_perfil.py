@@ -20,7 +20,6 @@ class AmbulatorioUsuariosPerfil(Base):
     nome_mes = Column(Text)
     usuario_faixa_etaria = Column(Text)
     usuario_faixa_etaria_ordem = Column(Text)
-    cid_grupo_descricao_curta = Column(Text)
     usuario_sexo = Column(Text)
     usuarios_unicos_mes = Column(Integer)
     estabelecimento = Column(VARCHAR)
