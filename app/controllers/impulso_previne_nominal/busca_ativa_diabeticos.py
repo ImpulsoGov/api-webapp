@@ -22,7 +22,8 @@ def diabeticos_equipe(municipio_uf,equipe):
                     Diabeticos.prazo_proxima_solicitacao_hemoglobina,
                     Diabeticos.acs_nome_cadastro,
                     Diabeticos.equipe_ine_cadastro,
-                    Diabeticos.equipe_nome_cadastro
+                    Diabeticos.equipe_nome_cadastro,
+                    Diabeticos.dt_consulta_mais_recente
                 ).order_by(
                     Diabeticos.cidadao_nome
                 ).all()

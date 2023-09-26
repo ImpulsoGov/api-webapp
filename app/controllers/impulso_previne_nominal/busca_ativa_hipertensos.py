@@ -23,6 +23,7 @@ def hipertensao_aps(municipio_uf):
                     Hipertensos.acs_nome_cadastro,
                     Hipertensos.equipe_ine_cadastro,
                     Hipertensos.equipe_nome_cadastro,
+                    Hipertensos.dt_consulta_mais_recente
                 ).order_by(
                     Hipertensos.cidadao_nome
                 ).all()
