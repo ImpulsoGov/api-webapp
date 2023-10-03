@@ -1,4 +1,4 @@
-from app.models import DB_PRODUCAO
+from app.models import db
 from app.models.impulso_previne_publico.capitacao_ponderada_cadastros_por_equipes import CadastrosEquipes
 from app.models.impulso_previne_publico.capitacao_ponderada_contagem_equipes import CadastrosEquipeContagem
 from app.models.impulso_previne_publico.capitacao_ponderada_validacao_por_producao import ValidacaoProducao 
@@ -6,7 +6,7 @@ from app.models.impulso_previne_publico.capitacao_ponderada_validacao_por_produc
 
 from cachetools import TTLCache
 
-session = DB_PRODUCAO.session
+session = db.session
 
 cache_capitacao_ponderada_cadastros_por_equipe = TTLCache(maxsize=38, ttl=24*60*60)
 def capitacao_ponderada_cadastros_por_equipe(
@@ -15,7 +15,7 @@ def capitacao_ponderada_cadastros_por_equipe(
     result = cache_capitacao_ponderada_cadastros_por_equipe.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 CadastrosEquipes
                 ).filter_by(
                 municipio_uf=municipio_uf,
@@ -46,10 +46,11 @@ def capitacao_ponderada_cadastros_status( municipio_uf:str):
     try:
         if result is None:
         
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 CadastrosEquipeContagem).filter_by(
                 municipio_uf=municipio_uf
                 ).with_entities(
+                    CadastrosEquipeContagem.equipe_total,
                     CadastrosEquipeContagem.equipe_status_tipo,
                     CadastrosEquipeContagem.equipe_status
                 ).order_by(
@@ -59,7 +60,7 @@ def capitacao_ponderada_cadastros_status( municipio_uf:str):
         return result
     except Exception as error:
         session.rollback()
-        print({"erros" : [error]})
+        print({"erros" : [error]}) 
         return error
 
 cache_capitacao_ponderada_validacao_por_producao = TTLCache(maxsize=38, ttl=24*60*60)
@@ -69,7 +70,7 @@ def capitacao_ponderada_validacao_por_producao(
     result = cache_capitacao_ponderada_validacao_por_producao.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 ValidacaoProducao
                 ).filter_by(
                 municipio_uf=municipio_uf,
@@ -99,7 +100,7 @@ def capitacao_ponderada_validacao_por_producao_por_aplicacao(
     result = cache_capitacao_ponderada_validacao_por_producao.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 ValidacaoProducaoAplicacao
                 ).filter_by(
                 municipio_uf=municipio_uf,
@@ -122,5 +123,3 @@ def capitacao_ponderada_validacao_por_producao_por_aplicacao(
         session.rollback()
         print({"erros": [error]})
         return error
-
-
