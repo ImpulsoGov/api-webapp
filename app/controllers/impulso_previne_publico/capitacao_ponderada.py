@@ -25,6 +25,8 @@ def capitacao_ponderada_cadastros_por_equipe(
                     CadastrosEquipes.equipe_nome,
                     CadastrosEquipes.equipe_status,
                     CadastrosEquipes.data_inicio,
+                    CadastrosEquipes.cnes_nome,
+                    CadastrosEquipes.equipe_id_ine,
                     CadastrosEquipes.cadastro_total,
                     CadastrosEquipes.cadastros_com_pontuacao,
                     CadastrosEquipes.municipio_ultimo_parametro,
@@ -79,6 +81,8 @@ def capitacao_ponderada_validacao_por_producao(
                     ValidacaoProducao.equipe_id_ine,
                     ValidacaoProducao.equipe_nome,
                     ValidacaoProducao.periodo_data_inicio,
+                    ValidacaoProducao.cnes_nome,
+                    ValidacaoProducao.equipe_id_ine,
                     ValidacaoProducao.validacao_nome,
                     ValidacaoProducao.validacao_quantidade,
                     ValidacaoProducao.recomendacao
@@ -97,7 +101,7 @@ cache_capitacao_ponderada_validacao_por_producao_por_aplicacao = TTLCache(maxsiz
 def capitacao_ponderada_validacao_por_producao_por_aplicacao(
         municipio_uf:str,
         ):
-    result = cache_capitacao_ponderada_validacao_por_producao.get(municipio_uf)
+    result = cache_capitacao_ponderada_validacao_por_producao_por_aplicacao.get(municipio_uf)
     try:
         if result is None:
             result = session.query(
