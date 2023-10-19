@@ -46,28 +46,32 @@ def dados_procedimentos_por_usuario_resumo(municipio_id_sus: str):
 
 
 def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
-    # procedimentos_por_usuario_por_tempo_servico = (
-    #     session.query(ProcedimentoPorUsuarioTempoServiço)
-    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-    #     .all()
-    # )
-
-    procedimentos_por_usuario_por_tempo_servico = pd.read_parquet(
-        f"data/caps_procedimentos_por_usuario_por_tempo_servico_{municipio_id_sus}.parquet",
-    ).query(
-        "((estabelecimento_linha_perfil == 'Todos' & estabelecimento_linha_idade == 'Todos')) & competencia > @pd.Timestamp(2022, 11, 1).date()"
-    )
-
-    if len(procedimentos_por_usuario_por_tempo_servico) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Matriciamentos no último ano do município não encontrados",
+    try:
+        procedimentos_por_usuario_por_tempo_servico = (
+            session.query(
+                ProcedimentoPorUsuarioTempoServiço.id,
+                ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
+                ProcedimentoPorUsuarioTempoServiço.competencia,
+                ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
+                ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
+                ProcedimentoPorUsuarioTempoServiço.estabelecimento,
+                ProcedimentoPorUsuarioTempoServiço.periodo,
+                ProcedimentoPorUsuarioTempoServiço.nome_mes
+            )
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .all()
         )
 
-    return Response(
-        procedimentos_por_usuario_por_tempo_servico.to_json(orient="records"),
-        media_type="application/json",
-    )
+        return procedimentos_por_usuario_por_tempo_servico
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
 
 
 def dados_procedimentos_por_hora(municipio_id_sus: str):
