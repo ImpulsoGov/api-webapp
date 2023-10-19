@@ -7,7 +7,7 @@ from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_usuario_resumo,
     dados_procedimentos_por_usuario_tempo_servico,
 )
-from typing import Optional
+from typing import Union
 
 router = APIRouter()
 
@@ -45,8 +45,8 @@ async def obter_dados_procedimentos_por_usuario_resumo(
 @router.get("/saude-mental/procedimentos_por_usuario_tempo")
 async def obter_dados_procedimentos_por_usuario_tempo_servico(
     municipio_id_sus: str,
-    estabelecimentos: Optional[str],
-    periodos: Optional[str]
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None
 ):
     return dados_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
