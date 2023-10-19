@@ -9,6 +9,7 @@ from app.models.saude_mental.procedimentos import (
     ProcedimentosPorHora,
     ProcedimentosPorTipo,
 )
+from app.utils.separar_string import separar_string
 
 session = db.session
 
@@ -45,8 +46,98 @@ def dados_procedimentos_por_usuario_resumo(municipio_id_sus: str):
     return ProcedimentoPorUsuarioResumo_dados
 
 
-def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
+def dados_procedimentos_por_usuario_tempo_servico(
+    municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str
+):
     try:
+        if estabelecimentos is not None and periodos is None:
+            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
+            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+
+            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
+            # município recebido e cujo estabelecimento está incluso na lista de
+            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
+            procedimentos_por_usuario_por_tempo_servico = (
+                session.query(
+                    ProcedimentoPorUsuarioTempoServiço.id,
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.competencia,
+                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
+                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
+                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
+                    ProcedimentoPorUsuarioTempoServiço.periodo,
+                    ProcedimentoPorUsuarioTempoServiço.nome_mes
+                )
+                .filter(
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.estabelecimento.in_(lista_estabelecimentos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_usuario_por_tempo_servico
+
+        if estabelecimentos is None and periodos is not None:
+            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
+            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+            lista_periodos = separar_string("-", periodos)
+
+            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
+            # município recebido e cujo estabelecimento está incluso na lista de
+            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
+            procedimentos_por_usuario_por_tempo_servico = (
+                session.query(
+                    ProcedimentoPorUsuarioTempoServiço.id,
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.competencia,
+                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
+                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
+                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
+                    ProcedimentoPorUsuarioTempoServiço.periodo,
+                    ProcedimentoPorUsuarioTempoServiço.nome_mes
+                )
+                .filter(
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_usuario_por_tempo_servico
+
+        if estabelecimentos is not None and periodos is not None:
+            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
+            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+            lista_periodos = separar_string("-", periodos)
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+
+            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
+            # município recebido e cujo estabelecimento está incluso na lista de
+            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
+            procedimentos_por_usuario_por_tempo_servico = (
+                session.query(
+                    ProcedimentoPorUsuarioTempoServiço.id,
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.competencia,
+                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
+                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
+                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
+                    ProcedimentoPorUsuarioTempoServiço.periodo,
+                    ProcedimentoPorUsuarioTempoServiço.nome_mes
+                )
+                .filter(
+                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos),
+                    ProcedimentoPorUsuarioTempoServiço.estabelecimento.in_(lista_estabelecimentos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_usuario_por_tempo_servico
+
         procedimentos_por_usuario_por_tempo_servico = (
             session.query(
                 ProcedimentoPorUsuarioTempoServiço.id,
