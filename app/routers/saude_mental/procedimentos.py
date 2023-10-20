@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi.responses import Response
 
 from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_hora,
@@ -44,10 +45,13 @@ async def obter_dados_procedimentos_por_usuario_resumo(
 
 @router.get("/saude-mental/procedimentos_por_usuario_tempo")
 async def obter_dados_procedimentos_por_usuario_tempo_servico(
+    response: Response,
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
-    periodos: Union[str, None] = None
+    periodos: Union[str, None] = None,
 ):
+    response.headers["Cache-Control"] = "private, max-age=90"
+
     return dados_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
