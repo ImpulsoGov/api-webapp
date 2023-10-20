@@ -7,6 +7,7 @@ from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_usuario_estabelecimento,
     dados_procedimentos_por_usuario_resumo,
     dados_procedimentos_por_usuario_tempo_servico,
+    consultar_procedimentos_por_usuario_tempo_servico
 )
 from typing import Union
 
@@ -45,6 +46,15 @@ async def obter_dados_procedimentos_por_usuario_resumo(
 
 @router.get("/saude-mental/procedimentos_por_usuario_tempo")
 async def obter_dados_procedimentos_por_usuario_tempo_servico(
+    municipio_id_sus: str,
+):
+    return dados_procedimentos_por_usuario_tempo_servico(
+        municipio_id_sus=municipio_id_sus
+    )
+
+
+@router.get("/saude-mental/procedimentos-por-usuario-tempo")
+async def obter_procedimentos_por_usuario_tempo_servico(
     response: Response,
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
@@ -52,7 +62,7 @@ async def obter_dados_procedimentos_por_usuario_tempo_servico(
 ):
     response.headers["Cache-Control"] = "private, max-age=90"
 
-    return dados_procedimentos_por_usuario_tempo_servico(
+    return consultar_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
         periodos=periodos
