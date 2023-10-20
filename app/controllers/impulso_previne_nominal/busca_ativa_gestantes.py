@@ -46,7 +46,8 @@ def consulta_gestantes_equipe(municipio_uf, equipe):
                     Gestantes.exame_sifilis_hiv_realizado,
                     Gestantes.exame_sifilis_hiv_realizado_identificacao,
                     Gestantes.possui_registro_aborto,
-                    Gestantes.possui_registro_parto
+                    Gestantes.possui_registro_parto,
+                    Gestantes.criacao_data
                 ).order_by(
                     Gestantes.gestante_nome
                 ).all()
@@ -95,7 +96,8 @@ def consulta_gestantes_coordenacao(municipio_uf):
                     Gestantes.exame_sifilis_hiv_realizado,
                     Gestantes.exame_sifilis_hiv_realizado_identificacao,
                     Gestantes.possui_registro_aborto,
-                    Gestantes.possui_registro_parto
+                    Gestantes.possui_registro_parto,
+                    Gestantes.criacao_data
                 ).order_by(
                     Gestantes.gestante_nome
                 ).all()
