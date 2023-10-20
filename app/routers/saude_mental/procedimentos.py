@@ -60,7 +60,8 @@ async def obter_procedimentos_por_usuario_tempo_servico(
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
 ):
-    response.headers["Cache-Control"] = "private, max-age=90"
+    quantidade_segundos_48_horas = 60 * 60 * 48
+    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
 
     return consultar_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
