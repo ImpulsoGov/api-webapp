@@ -1,14 +1,14 @@
-from app.models import DB_PRODUCAO  
+from app.models import db  
 from app.models.impulso_previne_nominal.hipertensos import Hipertensos
 from cachetools import TTLCache
-session = DB_PRODUCAO.session
+session = db.session
 
 cache_hipertensao_aps = TTLCache(maxsize=38, ttl=24*60*60)
 def hipertensao_aps(municipio_uf):
     result = cache_hipertensao_aps.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 Hipertensos).filter_by(
                 municipio_uf=municipio_uf
                 ).with_entities(
@@ -24,6 +24,7 @@ def hipertensao_aps(municipio_uf):
                     Hipertensos.equipe_ine_cadastro,
                     Hipertensos.equipe_nome_cadastro,
                     Hipertensos.dt_consulta_mais_recente,
+                    Hipertensos.dt_registro_producao_mais_recente
                 ).order_by(
                     Hipertensos.cidadao_nome
                 ).all()
@@ -36,7 +37,7 @@ def hipertensao_aps(municipio_uf):
 
 def hipertensao_equipe(municipio_uf,equipe):
     try:
-        return DB_PRODUCAO.session.query(
+        return session.query(
                 Hipertensos
                 ).filter_by(
                 municipio_uf=municipio_uf,
@@ -53,7 +54,8 @@ def hipertensao_equipe(municipio_uf,equipe):
                     Hipertensos.acs_nome_cadastro,
                     Hipertensos.equipe_ine_cadastro,
                     Hipertensos.equipe_nome_cadastro,
-                    Hipertensos.dt_consulta_mais_recente
+                    Hipertensos.dt_consulta_mais_recente,
+                    Hipertensos.dt_registro_producao_mais_recente
                 ).order_by(
                     Hipertensos.cidadao_nome
                 ).all()
