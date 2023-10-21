@@ -35,15 +35,15 @@ class Indicador(BaseModel):
     indicadores_resultados_porcentagem : float
     diff_numerador_para_meta : int
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 class Mensagem(BaseModel):
     erros : Optional[List] = None
     mensagem : Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 @router.post("/impulsoprevine/forum/criar-topico", response_model=Mensagem)
 async def criar_topico(titulo: str, texto: str,username: Usuario = Depends(get_current_user)):
@@ -59,8 +59,8 @@ class Topico(BaseModel):
     erros : Optional[List] = None
     topicos : Optional[List] = None
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 @router.get("/impulsoprevine/forum/", response_model=Topico)
 async def buscar_topicos(respostas: Optional[int] = None, topico_id: Optional[str] = None, username: Usuario = Depends(get_current_user)):
@@ -91,31 +91,31 @@ async def gestantes_cadastros_municipio(municipio_uf,username: Usuario = Depends
     return res
 
 @router.get("/impulsoprevine/busca-ativa/diabeticos-por-equipe")
-async def diabeticos_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    return busca_ativa_diabeticos.diabeticos_equipe(municipio_uf,equipe)
+async def diabeticos_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_diabeticos.diabeticos_equipe(municipio_id_sus,equipe)
 
 @router.get("/impulsoprevine/busca-ativa/diabeticos-por-municipio")
-async def diabeticos_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_diabeticos.diabetes_aps(municipio_uf)
+async def diabeticos_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_diabeticos.diabetes_aps(municipio_id_sus)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/hipertensao-por-municipio")
-async def hipertensao_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_hipertensos.hipertensao_aps(municipio_uf)
+async def hipertensao_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_aps(municipio_id_sus)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/hipertensao-por-equipe")
-async def hipertensao_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_hipertensos.hipertensao_equipe(municipio_uf,equipe)
+async def hipertensao_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_hipertensos.hipertensao_equipe(municipio_id_sus,equipe)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/citopatologico-por-municipio")
-async def cito_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    return busca_ativa_citopatologico.citopatologico_aps(municipio_uf)
+async def cito_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_citopatologico.citopatologico_aps(municipio_id_sus)
 
 @router.get("/impulsoprevine/busca-ativa/citopatologico-por-equipe")
-async def cito_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    return busca_ativa_citopatologico.citopatologico_equipe(municipio_uf,equipe)
+async def cito_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    return busca_ativa_citopatologico.citopatologico_equipe(municipio_id_sus,equipe)
 
 @router.post("/impulsoprevine/capacitacao/conclusao-conteudo")
 async def conclusao(usuario_id: str = Form(...), codigo_conteudo: str = Form(...),conclusao: bool = Form(...),username: Usuario = Depends(auth.get_current_user)):

@@ -11,6 +11,7 @@ from app.controllers.usuarios import (
     gerenciamento_usuarios,
     recuperação_senha,
 )
+from app.controllers.impulso_previne_nominal import NPS
 from app.models.usuarios.usuarios import Usuario
 
 router = APIRouter()
@@ -43,8 +44,8 @@ class Municipio(BaseModel):
     regiao_intermediaria_id_ibge: str
     regiao_intermediaria_nome: str
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class User(BaseModel):
@@ -72,8 +73,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 @router.post("/suporte/usuarios/token", response_model=Token)
@@ -85,8 +86,8 @@ class Mensagem(BaseModel):
     erros: Optional[List] = None
     mensagem: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 @router.post("/suporte/usuarios/cadastro")
@@ -335,16 +336,16 @@ class ChaveDS(BaseModel):
     access_token: str
     mensagem: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class ValChaveDS(BaseModel):
     access_token: Optional[bool]
     mensagem: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 @router.post("/suporte/ds/genchavetemp", response_model=ChaveDS)

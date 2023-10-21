@@ -30,8 +30,8 @@ class Indicador(BaseModel):
     indicadores_resultados_porcentagem: float
     diff_numerador_para_meta: int
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 @router.get("/impulsoprevine/indicadores/resumo", response_model=List[Indicador])
 async def consulta_indicadores(
