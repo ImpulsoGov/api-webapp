@@ -31,4 +31,5 @@ class UsuarioIP(Base):
     equipe = Column(String, nullable=False, comment="equipe de atuação do usuario")
     criacao_data = Column(DATE, nullable=False, comment="Data de Criação")
     atualizacao_data = Column(DATE, nullable=False, comment="Data de Atualização")
+    municipio_id_sus = Column(String, nullable=False)
     __table_args__ = {"schema": "suporte"}

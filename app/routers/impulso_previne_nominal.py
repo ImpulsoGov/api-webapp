@@ -7,6 +7,7 @@ from app.controllers.impulso_previne_nominal import (
     busca_ativa_diabeticos,
     busca_ativa_hipertensos,
     busca_ativa_citopatologico,
+    cadastros_duplicados,
     TrilhaCapacitacao,
 )
 
@@ -70,23 +71,23 @@ async def excluir_topicos(topico_id: Optional[str] = None, username: Usuario = D
     return forum_ip.excluir_topico(topico_id)
 
 @router.get("/impulsoprevine/busca-ativa/gestantes")
-async def gestantes_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.consulta_gestantes_equipe(municipio_uf,equipe)
+async def gestantes_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes_equipe(municipio_id_sus,equipe)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-coordenacao")
-async def gestantes_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_uf)
+async def gestantes_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_id_sus)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-equipe")
 async def gestantes_cadastros_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_equipe(municipio_uf,equipe)
+    res = cadastros_duplicados.cadastros_duplicados_gestantes_por_equipe(municipio_uf,equipe)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-municipio")
 async def gestantes_cadastros_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
+    res = cadastros_duplicados.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/diabeticos-por-equipe")
