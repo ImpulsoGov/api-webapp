@@ -71,13 +71,13 @@ async def excluir_topicos(topico_id: Optional[str] = None, username: Usuario = D
     return forum_ip.excluir_topico(topico_id)
 
 @router.get("/impulsoprevine/busca-ativa/gestantes")
-async def gestantes_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.consulta_gestantes_equipe(municipio_uf,equipe)
+async def gestantes_equipe(municipio_id_sus,equipe,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes_equipe(municipio_id_sus,equipe)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-coordenacao")
-async def gestantes_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_uf)
+async def gestantes_municipio(municipio_id_sus,username: Usuario = Depends(get_current_user)):
+    res = busca_ativa_gestantes.consulta_gestantes_coordenacao(municipio_id_sus)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-equipe")

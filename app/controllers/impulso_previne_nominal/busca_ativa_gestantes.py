@@ -35,22 +35,22 @@ def consulta_gestantes_equipe(municipio_id_sus, equipe):
                     Gestantes.municipio_uf,
                     Gestantes.dt_registro_producao_mais_recente,
                 ).order_by(
-                    Gestantes.gestante_nome
+                    Gestantes.cidadao_nome
                 ).all()
     except Exception as error:
         session.rollback()
-        return HTTPException(
+        raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        detail=error,
+        detail=str(error)
     )
 
 
-def consulta_gestantes_coordenacao(municipio_uf):
+def consulta_gestantes_coordenacao(municipio_id_sus):
     try:
         return session.query(
                     Gestantes
                 ).filter_by(
-                    municipio_uf=municipio_uf
+                    municipio_id_sus=municipio_id_sus
                 ).with_entities(
                     Gestantes.chave_id_gestacao,
                     Gestantes.municipio_id_sus,
@@ -75,7 +75,7 @@ def consulta_gestantes_coordenacao(municipio_uf):
                     Gestantes.municipio_uf,
                     Gestantes.dt_registro_producao_mais_recente,
                 ).order_by(
-                    Gestantes.gestante_nome
+                    Gestantes.cidadao_nome
                 ).all()
     except Exception as error:
         session.rollback()
