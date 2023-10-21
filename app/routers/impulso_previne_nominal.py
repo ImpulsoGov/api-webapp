@@ -7,6 +7,7 @@ from app.controllers.impulso_previne_nominal import (
     busca_ativa_diabeticos,
     busca_ativa_hipertensos,
     busca_ativa_citopatologico,
+    cadastros_duplicados,
     TrilhaCapacitacao,
 )
 
@@ -81,12 +82,12 @@ async def gestantes_municipio(municipio_uf,username: Usuario = Depends(get_curre
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-equipe")
 async def gestantes_cadastros_equipe(municipio_uf,equipe,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_equipe(municipio_uf,equipe)
+    res = cadastros_duplicados.cadastros_duplicados_gestantes_por_equipe(municipio_uf,equipe)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/gestantes-cadastros-duplicados-por-municipio")
 async def gestantes_cadastros_municipio(municipio_uf,username: Usuario = Depends(get_current_user)):
-    res = busca_ativa_gestantes.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
+    res = cadastros_duplicados.cadastros_duplicados_gestantes_por_municipio(municipio_uf)
     return res
 
 @router.get("/impulsoprevine/busca-ativa/diabeticos-por-equipe")

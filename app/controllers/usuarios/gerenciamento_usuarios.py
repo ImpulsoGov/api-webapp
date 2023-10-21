@@ -132,7 +132,8 @@ def cargo_nome(id_cod,id):
             Usuarios.id,
             UsuariosIP.cargo,
             UsuariosIP.municipio,
-            UsuariosIP.equipe
+            UsuariosIP.equipe,
+            UsuariosIP.municipio_id_sus
         ).all()
         return { "cadastro" : perfil}
     except Exception as error:
