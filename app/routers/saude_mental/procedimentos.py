@@ -8,10 +8,11 @@ from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_usuario_resumo,
     dados_procedimentos_por_usuario_tempo_servico,
     consultar_procedimentos_por_usuario_tempo_servico,
-    consultar_procedimentos_por_hora
+    consultar_procedimentos_por_hora,
+    consultar_procedimentos_por_tipo
 )
 from typing import Union
-
+quantidade_segundos_48_horas = 60 * 60 * 48
 router = APIRouter()
 
 
@@ -60,7 +61,6 @@ async def obter_procedimentos_por_hora(
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
 ):
-    quantidade_segundos_48_horas = 60 * 60 * 48
     response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
 
     return consultar_procedimentos_por_hora(
@@ -68,6 +68,21 @@ async def obter_procedimentos_por_hora(
         estabelecimentos=estabelecimentos,
         periodos=periodos
     )
+@router.get("/saude-mental/procedimentos-por-tipo")
+async def obter_procedimentos_por_tipo(
+    response: Response,
+    municipio_id_sus: str,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
+):
+    
+    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
+
+    return consultar_procedimentos_por_tipo(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos
+    )    
 @router.get("/saude-mental/procedimentos-por-usuario-tempo")
 async def obter_procedimentos_por_usuario_tempo_servico(
     response: Response,
@@ -75,7 +90,6 @@ async def obter_procedimentos_por_usuario_tempo_servico(
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
 ):
-    quantidade_segundos_48_horas = 60 * 60 * 48
     response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
 
     return consultar_procedimentos_por_usuario_tempo_servico(
