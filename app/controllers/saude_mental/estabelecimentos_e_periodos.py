@@ -29,7 +29,7 @@ Entidade = Literal[
     "atendimentos_inidividuais_perfil",
     "abandono_perfil",
     "procedimentos_usuarios_tempo_servico",
-    "procedimentos_por_hora"
+    "procedimentos_por_hora",
     "procedimentos_por_tipo"
 ]
 Model = Union[
