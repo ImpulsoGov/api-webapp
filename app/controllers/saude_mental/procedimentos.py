@@ -367,7 +367,6 @@ def consultar_procedimentos_por_tipo(
                     ProcedimentosPorTipo.id,
                     ProcedimentosPorTipo.unidade_geografica_id_sus,
                     ProcedimentosPorTipo.competencia,
-                    ProcedimentosPorHora.ocupacao,
                     ProcedimentosPorTipo.procedimento,
                     ProcedimentosPorTipo.estabelecimento,
                     ProcedimentosPorTipo.periodo,
