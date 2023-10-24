@@ -120,125 +120,43 @@ def dados_procedimentos_por_tipo(municipio_id_sus: str):
 def consultar_procedimentos_por_hora(
     municipio_id_sus: str,
     estabelecimentos: str,
-    periodos: str
+    periodos: str,
+    ocupacao:str
 ):
     try:
-        if estabelecimentos is not None and periodos is None:
+        query = session.query(
+            ProcedimentosPorHora.id,
+            ProcedimentosPorHora.unidade_geografica_id_sus,
+            ProcedimentosPorHora.competencia,
+            ProcedimentosPorHora.ocupacao,
+            ProcedimentosPorHora.procedimentos_por_hora,
+            ProcedimentosPorHora.estabelecimento,
+            ProcedimentosPorHora.periodo,
+            ProcedimentosPorHora.nome_mes,
+            ProcedimentosPorHora.perc_dif_procedimentos_por_hora_anterior,
+            ProcedimentosPorHora.procedimentos_registrados_raas,
+            ProcedimentosPorHora.procedimentos_registrados_bpa,
+            ProcedimentosPorHora.procedimentos_registrados_total,
+            ProcedimentosPorHora.estabelecimento_linha_idade,
+            ProcedimentosPorHora.estabelecimento_linha_perfil
+        ).filter(ProcedimentosPorHora.unidade_geografica_id_sus == municipio_id_sus)
+
+        if estabelecimentos is not None:
             lista_estabelecimentos = separar_string("-", estabelecimentos)
+            query = query.filter(ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos))
 
-            procedimentos_por_hora = (
-                session.query(
-                    ProcedimentosPorHora.id,
-                    ProcedimentosPorHora.unidade_geografica_id_sus,
-                    ProcedimentosPorHora.competencia,
-                    ProcedimentosPorHora.ocupacao,
-                    ProcedimentosPorHora.procedimentos_por_hora,
-                    ProcedimentosPorHora.estabelecimento,
-                    ProcedimentosPorHora.periodo,
-                    ProcedimentosPorHora.nome_mes,
-                    ProcedimentosPorHora.perc_dif_procedimentos_por_hora_anterior,
-                    ProcedimentosPorHora.procedimentos_registrados_raas,
-                    ProcedimentosPorHora.procedimentos_registrados_bpa,
-                    ProcedimentosPorHora.procedimentos_registrados_total,
-                    ProcedimentosPorHora.estabelecimento_linha_idade,
-                    ProcedimentosPorHora.estabelecimento_linha_perfil
-                )
-                .filter(
-                    ProcedimentosPorHora.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_hora
-
-        if estabelecimentos is None and periodos is not None:
+        if periodos is not None:
             lista_periodos = separar_string("-", periodos)
+            query = query.filter(ProcedimentosPorHora.periodo.in_(lista_periodos))
 
-            procedimentos_por_hora = (
-                session.query(
-                    ProcedimentosPorHora.id,
-                    ProcedimentosPorHora.unidade_geografica_id_sus,
-                    ProcedimentosPorHora.competencia,
-                    ProcedimentosPorHora.ocupacao,
-                    ProcedimentosPorHora.procedimentos_por_hora,
-                    ProcedimentosPorHora.estabelecimento,
-                    ProcedimentosPorHora.periodo,
-                    ProcedimentosPorHora.nome_mes,
-                    ProcedimentosPorHora.perc_dif_procedimentos_por_hora_anterior,
-                    ProcedimentosPorHora.procedimentos_registrados_raas,
-                    ProcedimentosPorHora.procedimentos_registrados_bpa,
-                    ProcedimentosPorHora.procedimentos_registrados_total,
-                    ProcedimentosPorHora.estabelecimento_linha_idade,
-                    ProcedimentosPorHora.estabelecimento_linha_perfil
-                )
-                .filter(
-                    ProcedimentosPorHora.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorHora.periodo.in_(lista_periodos)
-                )
-                .all()
-            )
+        if ocupacao is not None:
+            query = query.filter(ProcedimentosPorHora.ocupacao == ocupacao)
 
-            return procedimentos_por_hora
-
-        if estabelecimentos is not None and periodos is not None:
-            lista_periodos = separar_string("-", periodos)
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-
-            procedimentos_por_hora = (
-                session.query(
-                    ProcedimentosPorHora.id,
-                    ProcedimentosPorHora.unidade_geografica_id_sus,
-                    ProcedimentosPorHora.competencia,
-                    ProcedimentosPorHora.ocupacao,
-                    ProcedimentosPorHora.procedimentos_por_hora,
-                    ProcedimentosPorHora.estabelecimento,
-                    ProcedimentosPorHora.periodo,
-                    ProcedimentosPorHora.nome_mes,
-                    ProcedimentosPorHora.perc_dif_procedimentos_por_hora_anterior,
-                    ProcedimentosPorHora.procedimentos_registrados_raas,
-                    ProcedimentosPorHora.procedimentos_registrados_bpa,
-                    ProcedimentosPorHora.procedimentos_registrados_total,
-                    ProcedimentosPorHora.estabelecimento_linha_idade,
-                    ProcedimentosPorHora.estabelecimento_linha_perfil
-                )
-                .filter(
-                    ProcedimentosPorHora.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorHora.periodo.in_(lista_periodos),
-                    ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_hora
-
-        procedimentos_por_hora = (
-            session.query(
-                    ProcedimentosPorHora.id,
-                    ProcedimentosPorHora.unidade_geografica_id_sus,
-                    ProcedimentosPorHora.competencia,
-                    ProcedimentosPorHora.ocupacao,
-                    ProcedimentosPorHora.procedimentos_por_hora,
-                    ProcedimentosPorHora.estabelecimento,
-                    ProcedimentosPorHora.periodo,
-                    ProcedimentosPorHora.nome_mes,
-                    ProcedimentosPorHora.perc_dif_procedimentos_por_hora_anterior,
-                    ProcedimentosPorHora.procedimentos_registrados_raas,
-                    ProcedimentosPorHora.procedimentos_registrados_bpa,
-                    ProcedimentosPorHora.procedimentos_registrados_total,
-                    ProcedimentosPorHora.estabelecimento_linha_idade,
-                    ProcedimentosPorHora.estabelecimento_linha_perfil
-            )
-            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .all()
-        )
-
+        procedimentos_por_hora = query.all()
         return procedimentos_por_hora
     except (Exception) as error:
         session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
