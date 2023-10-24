@@ -60,13 +60,15 @@ async def obter_procedimentos_por_hora(
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
+    ocupacao: Union[str, None] = None
 ):
     response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
 
     return consultar_procedimentos_por_hora(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
-        periodos=periodos
+        periodos=periodos,
+        ocupacao=ocupacao
     )
 @router.get("/saude-mental/procedimentos-por-tipo")
 async def obter_procedimentos_por_tipo(
