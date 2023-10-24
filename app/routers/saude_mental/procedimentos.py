@@ -54,6 +54,7 @@ async def obter_dados_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus
     )
 
+
 @router.get("/saude-mental/procedimentos-por-hora")
 async def obter_procedimentos_por_hora(
     response: Response,
@@ -68,21 +69,26 @@ async def obter_procedimentos_por_hora(
         estabelecimentos=estabelecimentos,
         periodos=periodos
     )
+
+
 @router.get("/saude-mental/procedimentos-por-tipo")
 async def obter_procedimentos_por_tipo(
     response: Response,
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
+    procedimentos: Union[str, None] = None,
 ):
-    
     response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
 
     return consultar_procedimentos_por_tipo(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
-        periodos=periodos
-    )    
+        procedimentos=procedimentos,
+        periodos=periodos,
+    )
+
+
 @router.get("/saude-mental/procedimentos-por-usuario-tempo")
 async def obter_procedimentos_por_usuario_tempo_servico(
     response: Response,

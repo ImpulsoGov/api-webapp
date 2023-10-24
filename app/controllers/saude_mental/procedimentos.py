@@ -116,20 +116,16 @@ def dados_procedimentos_por_tipo(municipio_id_sus: str):
         media_type="application/json",
     )
 
-def consultar_procedimentos_por_hora( 
+
+def consultar_procedimentos_por_hora(
     municipio_id_sus: str,
     estabelecimentos: str,
     periodos: str
-): 
-     try:
+):
+    try:
         if estabelecimentos is not None and periodos is None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_hora = (
                 session.query(
                     ProcedimentosPorHora.id,
@@ -157,13 +153,8 @@ def consultar_procedimentos_por_hora(
             return procedimentos_por_hora
 
         if estabelecimentos is None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_periodos = separar_string("-", periodos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_hora = (
                 session.query(
                     ProcedimentosPorHora.id,
@@ -191,14 +182,9 @@ def consultar_procedimentos_por_hora(
             return procedimentos_por_hora
 
         if estabelecimentos is not None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_periodos = separar_string("-", periodos)
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_hora = (
                 session.query(
                     ProcedimentosPorHora.id,
@@ -248,7 +234,7 @@ def consultar_procedimentos_por_hora(
         )
 
         return procedimentos_por_hora
-     except (Exception) as error:
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -258,36 +244,34 @@ def consultar_procedimentos_por_hora(
             detail=("Internal Server Error"),
         )
 
-def consultar_procedimentos_por_tipo( 
+
+def consultar_procedimentos_por_tipo(
     municipio_id_sus: str,
     estabelecimentos: str,
-    periodos: str
-): 
-     try:
-        if estabelecimentos is not None and periodos is None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+    procedimentos: str,
+    periodos: str,
+):
+    try:
+        query = session.query(
+            ProcedimentosPorTipo.id,
+            ProcedimentosPorTipo.unidade_geografica_id_sus,
+            ProcedimentosPorTipo.competencia,
+            ProcedimentosPorTipo.procedimento,
+            ProcedimentosPorTipo.estabelecimento,
+            ProcedimentosPorTipo.periodo,
+            ProcedimentosPorTipo.nome_mes,
+            ProcedimentosPorTipo.procedimentos_registrados_raas,
+            ProcedimentosPorTipo.procedimentos_registrados_bpa,
+            ProcedimentosPorTipo.procedimentos_registrados_total,
+            ProcedimentosPorTipo.estabelecimento_linha_idade,
+            ProcedimentosPorTipo.estabelecimento_linha_perfil
+        )
+
+        if estabelecimentos is not None and periodos is None and procedimentos is None:
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_tipo = (
-                session.query(
-                    ProcedimentosPorTipo.id,
-                    ProcedimentosPorTipo.unidade_geografica_id_sus,
-                    ProcedimentosPorTipo.competencia,
-                    ProcedimentosPorTipo.procedimento,
-                    ProcedimentosPorTipo.estabelecimento,
-                    ProcedimentosPorTipo.periodo,
-                    ProcedimentosPorTipo.nome_mes,
-                    ProcedimentosPorTipo.procedimentos_registrados_raas,
-                    ProcedimentosPorTipo.procedimentos_registrados_bpa,
-                    ProcedimentosPorTipo.procedimentos_registrados_total,
-                    ProcedimentosPorTipo.estabelecimento_linha_idade,
-                    ProcedimentosPorTipo.estabelecimento_linha_perfil
-                )
-                .filter(
+                query.filter(
                     ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
                     ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
                 )
@@ -296,30 +280,11 @@ def consultar_procedimentos_por_tipo(
 
             return procedimentos_por_tipo
 
-        if estabelecimentos is None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+        if estabelecimentos is None and procedimentos is None and periodos is not None:
             lista_periodos = separar_string("-", periodos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_tipo = (
-                session.query(
-                    ProcedimentosPorTipo.id,
-                    ProcedimentosPorTipo.unidade_geografica_id_sus,
-                    ProcedimentosPorTipo.competencia,
-                    ProcedimentosPorTipo.procedimento,
-                    ProcedimentosPorTipo.estabelecimento,
-                    ProcedimentosPorTipo.periodo,
-                    ProcedimentosPorTipo.nome_mes,
-                    ProcedimentosPorTipo.procedimentos_registrados_raas,
-                    ProcedimentosPorTipo.procedimentos_registrados_bpa,
-                    ProcedimentosPorTipo.procedimentos_registrados_total,
-                    ProcedimentosPorTipo.estabelecimento_linha_idade,
-                    ProcedimentosPorTipo.estabelecimento_linha_perfil
-                )
-                .filter(
+                query.filter(
                     ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
                     ProcedimentosPorTipo.periodo.in_(lista_periodos)
                 )
@@ -328,31 +293,12 @@ def consultar_procedimentos_por_tipo(
 
             return procedimentos_por_tipo
 
-        if estabelecimentos is not None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
+        if estabelecimentos is not None and periodos is not None and procedimentos is None:
             lista_periodos = separar_string("-", periodos)
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_tipo = (
-                session.query(
-                    ProcedimentosPorTipo.id,
-                    ProcedimentosPorTipo.unidade_geografica_id_sus,
-                    ProcedimentosPorTipo.competencia,
-                    ProcedimentosPorTipo.procedimento,
-                    ProcedimentosPorTipo.estabelecimento,
-                    ProcedimentosPorTipo.periodo,
-                    ProcedimentosPorTipo.nome_mes,
-                    ProcedimentosPorTipo.procedimentos_registrados_raas,
-                    ProcedimentosPorTipo.procedimentos_registrados_bpa,
-                    ProcedimentosPorTipo.procedimentos_registrados_total,
-                    ProcedimentosPorTipo.estabelecimento_linha_idade,
-                    ProcedimentosPorTipo.estabelecimento_linha_perfil
-                )
-                .filter(
+                query.filter(
                     ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
                     ProcedimentosPorTipo.periodo.in_(lista_periodos),
                     ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
@@ -362,27 +308,72 @@ def consultar_procedimentos_por_tipo(
 
             return procedimentos_por_tipo
 
-        procedimentos_por_tipo = (
-            session.query(
-                    ProcedimentosPorTipo.id,
-                    ProcedimentosPorTipo.unidade_geografica_id_sus,
-                    ProcedimentosPorTipo.competencia,
-                    ProcedimentosPorTipo.procedimento,
-                    ProcedimentosPorTipo.estabelecimento,
-                    ProcedimentosPorTipo.periodo,
-                    ProcedimentosPorTipo.nome_mes,
-                    ProcedimentosPorTipo.procedimentos_registrados_raas,
-                    ProcedimentosPorTipo.procedimentos_registrados_bpa,
-                    ProcedimentosPorTipo.procedimentos_registrados_total,
-                    ProcedimentosPorTipo.estabelecimento_linha_idade,
-                    ProcedimentosPorTipo.estabelecimento_linha_perfil
+        if estabelecimentos is None and periodos is None and procedimentos is not None:
+            lista_procedimentos = separar_string("-", procedimentos)
+
+            procedimentos_por_tipo = (
+                query.filter(
+                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
+                )
+                .all()
             )
-            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .all()
+
+            return procedimentos_por_tipo
+
+        if estabelecimentos is None and periodos is not None and procedimentos is not None:
+            lista_periodos = separar_string("-", periodos)
+            lista_procedimentos = separar_string("-", procedimentos)
+
+            procedimentos_por_tipo = (
+                query.filter(
+                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentosPorTipo.periodo.in_(lista_periodos),
+                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_tipo
+
+        if estabelecimentos is not None and periodos is None and procedimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_procedimentos = separar_string("-", procedimentos)
+
+            procedimentos_por_tipo = (
+                query.filter(
+                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos),
+                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_tipo
+
+        if estabelecimentos is not None and periodos is not None and procedimentos is not None:
+            lista_periodos = separar_string("-", periodos)
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_procedimentos = separar_string("-", procedimentos)
+
+            procedimentos_por_tipo = (
+                query.filter(
+                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
+                    ProcedimentosPorTipo.periodo.in_(lista_periodos),
+                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos),
+                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
+                )
+                .all()
+            )
+
+            return procedimentos_por_tipo
+
+        procedimentos_por_tipo = (
+            query.filter_by(unidade_geografica_id_sus=municipio_id_sus).all()
         )
 
         return procedimentos_por_tipo
-     except (Exception) as error:
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -392,6 +383,7 @@ def consultar_procedimentos_por_tipo(
             detail=("Internal Server Error"),
         )
 
+
 def consultar_procedimentos_por_usuario_tempo_servico(
     municipio_id_sus: str,
     estabelecimentos: str,
@@ -399,13 +391,8 @@ def consultar_procedimentos_por_usuario_tempo_servico(
 ):
     try:
         if estabelecimentos is not None and periodos is None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_usuario_por_tempo_servico = (
                 session.query(
                     ProcedimentoPorUsuarioTempoServiço.id,
@@ -427,13 +414,8 @@ def consultar_procedimentos_por_usuario_tempo_servico(
             return procedimentos_por_usuario_por_tempo_servico
 
         if estabelecimentos is None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_periodos = separar_string("-", periodos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_usuario_por_tempo_servico = (
                 session.query(
                     ProcedimentoPorUsuarioTempoServiço.id,
@@ -455,14 +437,9 @@ def consultar_procedimentos_por_usuario_tempo_servico(
             return procedimentos_por_usuario_por_tempo_servico
 
         if estabelecimentos is not None and periodos is not None:
-            # Recebemos uma string de estabelecimentos no formato: estab1-estab2
-            # e separamos essa string por '-' para gerar uma lista de estabelecimentos
             lista_periodos = separar_string("-", periodos)
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            # Filtramos as linhas da tabela buscando todas que tenham o mesmo id_sus do
-            # município recebido e cujo estabelecimento está incluso na lista de
-            # estabelecimentos que recebemos usando o comando IN do SQL para o último caso
             procedimentos_por_usuario_por_tempo_servico = (
                 session.query(
                     ProcedimentoPorUsuarioTempoServiço.id,
