@@ -121,7 +121,7 @@ def consultar_procedimentos_por_hora(
     municipio_id_sus: str,
     estabelecimentos: str,
     periodos: str,
-    ocupacao:str
+    ocupacao: str
 ):
     try:
         query = session.query(
@@ -143,7 +143,9 @@ def consultar_procedimentos_por_hora(
 
         if estabelecimentos is not None:
             lista_estabelecimentos = separar_string("-", estabelecimentos)
-            query = query.filter(ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos))
+            query = query.filter(
+                ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos)
+            )
 
         if periodos is not None:
             lista_periodos = separar_string("-", periodos)
@@ -183,112 +185,32 @@ def consultar_procedimentos_por_tipo(
             ProcedimentosPorTipo.procedimentos_registrados_total,
             ProcedimentosPorTipo.estabelecimento_linha_idade,
             ProcedimentosPorTipo.estabelecimento_linha_perfil
+        ).filter(
+            ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus
         )
 
-        if estabelecimentos is not None and periodos is None and procedimentos is None:
+        if estabelecimentos is not None:
             lista_estabelecimentos = separar_string("-", estabelecimentos)
 
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
+            query = query.filter(
+                ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
             )
 
-            return procedimentos_por_tipo
-
-        if estabelecimentos is None and procedimentos is None and periodos is not None:
+        if periodos is not None:
             lista_periodos = separar_string("-", periodos)
 
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.periodo.in_(lista_periodos)
-                )
-                .all()
+            query = query.filter(
+                ProcedimentosPorTipo.periodo.in_(lista_periodos)
             )
 
-            return procedimentos_por_tipo
-
-        if estabelecimentos is not None and periodos is not None and procedimentos is None:
-            lista_periodos = separar_string("-", periodos)
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.periodo.in_(lista_periodos),
-                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_tipo
-
-        if estabelecimentos is None and periodos is None and procedimentos is not None:
+        if procedimentos is not None:
             lista_procedimentos = separar_string("-", procedimentos)
 
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
-                )
-                .all()
+            query = query.filter(
+                ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
             )
 
-            return procedimentos_por_tipo
-
-        if estabelecimentos is None and periodos is not None and procedimentos is not None:
-            lista_periodos = separar_string("-", periodos)
-            lista_procedimentos = separar_string("-", procedimentos)
-
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.periodo.in_(lista_periodos),
-                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_tipo
-
-        if estabelecimentos is not None and periodos is None and procedimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-            lista_procedimentos = separar_string("-", procedimentos)
-
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos),
-                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_tipo
-
-        if estabelecimentos is not None and periodos is not None and procedimentos is not None:
-            lista_periodos = separar_string("-", periodos)
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-            lista_procedimentos = separar_string("-", procedimentos)
-
-            procedimentos_por_tipo = (
-                query.filter(
-                    ProcedimentosPorTipo.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentosPorTipo.periodo.in_(lista_periodos),
-                    ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos),
-                    ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_tipo
-
-        procedimentos_por_tipo = (
-            query.filter_by(unidade_geografica_id_sus=municipio_id_sus).all()
-        )
+        procedimentos_por_tipo = query.all()
 
         return procedimentos_por_tipo
     except (Exception) as error:
@@ -308,91 +230,36 @@ def consultar_procedimentos_por_usuario_tempo_servico(
     periodos: str
 ):
     try:
-        if estabelecimentos is not None and periodos is None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-
-            procedimentos_por_usuario_por_tempo_servico = (
-                session.query(
-                    ProcedimentoPorUsuarioTempoServiço.id,
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.competencia,
-                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
-                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
-                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
-                    ProcedimentoPorUsuarioTempoServiço.periodo,
-                    ProcedimentoPorUsuarioTempoServiço.nome_mes
-                )
-                .filter(
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_usuario_por_tempo_servico
-
-        if estabelecimentos is None and periodos is not None:
-            lista_periodos = separar_string("-", periodos)
-
-            procedimentos_por_usuario_por_tempo_servico = (
-                session.query(
-                    ProcedimentoPorUsuarioTempoServiço.id,
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.competencia,
-                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
-                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
-                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
-                    ProcedimentoPorUsuarioTempoServiço.periodo,
-                    ProcedimentoPorUsuarioTempoServiço.nome_mes
-                )
-                .filter(
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_usuario_por_tempo_servico
-
-        if estabelecimentos is not None and periodos is not None:
-            lista_periodos = separar_string("-", periodos)
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
-
-            procedimentos_por_usuario_por_tempo_servico = (
-                session.query(
-                    ProcedimentoPorUsuarioTempoServiço.id,
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.competencia,
-                    ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
-                    ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
-                    ProcedimentoPorUsuarioTempoServiço.estabelecimento,
-                    ProcedimentoPorUsuarioTempoServiço.periodo,
-                    ProcedimentoPorUsuarioTempoServiço.nome_mes
-                )
-                .filter(
-                    ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus == municipio_id_sus,
-                    ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos),
-                    ProcedimentoPorUsuarioTempoServiço.estabelecimento.in_(lista_estabelecimentos)
-                )
-                .all()
-            )
-
-            return procedimentos_por_usuario_por_tempo_servico
-
-        procedimentos_por_usuario_por_tempo_servico = (
-            session.query(
-                ProcedimentoPorUsuarioTempoServiço.id,
-                ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
-                ProcedimentoPorUsuarioTempoServiço.competencia,
-                ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
-                ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
-                ProcedimentoPorUsuarioTempoServiço.estabelecimento,
-                ProcedimentoPorUsuarioTempoServiço.periodo,
-                ProcedimentoPorUsuarioTempoServiço.nome_mes
-            )
-            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .all()
+        query = session.query(
+            ProcedimentoPorUsuarioTempoServiço.id,
+            ProcedimentoPorUsuarioTempoServiço.unidade_geografica_id_sus,
+            ProcedimentoPorUsuarioTempoServiço.competencia,
+            ProcedimentoPorUsuarioTempoServiço.tempo_servico_descricao,
+            ProcedimentoPorUsuarioTempoServiço.procedimentos_por_usuario,
+            ProcedimentoPorUsuarioTempoServiço.estabelecimento,
+            ProcedimentoPorUsuarioTempoServiço.periodo,
+            ProcedimentoPorUsuarioTempoServiço.nome_mes
+        ).filter(
+            ProcedimentoPorUsuarioTempoServiço
+            .unidade_geografica_id_sus == municipio_id_sus,
         )
+
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+
+            query = query.filter(
+                ProcedimentoPorUsuarioTempoServiço
+                .estabelecimento.in_(lista_estabelecimentos)
+            )
+
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
+
+            query = query.filter(
+                ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos)
+            )
+
+        procedimentos_por_usuario_por_tempo_servico = query.all()
 
         return procedimentos_por_usuario_por_tempo_servico
     except (Exception) as error:
