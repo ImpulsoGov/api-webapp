@@ -12,7 +12,9 @@ from app.controllers.saude_mental.procedimentos import (
     consultar_procedimentos_por_tipo
 )
 from typing import Union
-quantidade_segundos_48_horas = 60 * 60 * 48
+
+QUANTIDADE_SEGUNDOS_48_HORAS = 60 * 60 * 48
+
 router = APIRouter()
 
 
@@ -63,7 +65,7 @@ async def obter_procedimentos_por_hora(
     periodos: Union[str, None] = None,
     ocupacao: Union[str, None] = None
 ):
-    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_48_HORAS}"
 
     return consultar_procedimentos_por_hora(
         municipio_id_sus=municipio_id_sus,
@@ -81,7 +83,7 @@ async def obter_procedimentos_por_tipo(
     periodos: Union[str, None] = None,
     procedimentos: Union[str, None] = None,
 ):
-    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_48_HORAS}"
 
     return consultar_procedimentos_por_tipo(
         municipio_id_sus=municipio_id_sus,
@@ -98,7 +100,7 @@ async def obter_procedimentos_por_usuario_tempo_servico(
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
 ):
-    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_48_HORAS}"
 
     return consultar_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
