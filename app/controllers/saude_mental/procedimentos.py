@@ -55,7 +55,7 @@ def dados_procedimentos_por_usuario_tempo_servico(municipio_id_sus: str):
     procedimentos_por_usuario_por_tempo_servico = pd.read_parquet(
         f"data/caps_procedimentos_por_usuario_por_tempo_servico_{municipio_id_sus}.parquet",
     ).query(
-        "((estabelecimento_linha_perfil == 'Todos' & estabelecimento_linha_idade == 'Todos')) & competencia > @pd.Timestamp(2022, 11, 1).date()"
+        "competencia > @pd.Timestamp(2022, 11, 1).date()"
     )
 
     if len(procedimentos_por_usuario_por_tempo_servico) == 0:
@@ -101,7 +101,7 @@ def dados_procedimentos_por_tipo(municipio_id_sus: str):
     procedimentos_por_tipo = pd.read_parquet(
         f"data/caps_procedimentos_por_tipo_{municipio_id_sus}.parquet",
     ).query(
-        "((estabelecimento_linha_perfil == 'Todos' & estabelecimento_linha_idade == 'Todos')) & competencia > @pd.Timestamp(2022, 2, 1).date()"
+        "competencia > @pd.Timestamp(2022, 2, 1).date()"
     )
 
     if len(procedimentos_por_tipo) == 0:
