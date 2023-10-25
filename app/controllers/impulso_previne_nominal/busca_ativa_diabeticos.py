@@ -1,12 +1,12 @@
-from app.models import DB_PRODUCAO  
+from app.models import db
 from app.models.impulso_previne_nominal.diabeticos import Diabeticos
 from cachetools import TTLCache
 
-session = DB_PRODUCAO.session
+session = db.session
 
 def diabeticos_equipe(municipio_uf,equipe):
     try:
-        return DB_PRODUCAO.session.query(
+        return session.query(
                 Diabeticos
                 ).filter_by(
                 municipio_uf=municipio_uf,
@@ -23,7 +23,8 @@ def diabeticos_equipe(municipio_uf,equipe):
                     Diabeticos.acs_nome_cadastro,
                     Diabeticos.equipe_ine_cadastro,
                     Diabeticos.equipe_nome_cadastro,
-                    Diabeticos.dt_consulta_mais_recente
+                    Diabeticos.dt_consulta_mais_recente,
+                    Diabeticos.dt_registro_producao_mais_recente
                 ).order_by(
                     Diabeticos.cidadao_nome
                 ).all()
@@ -38,7 +39,7 @@ def diabetes_aps(municipio_uf):
     result = cache_hipertensao_aps.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 Diabeticos).filter_by(
                 municipio_uf=municipio_uf
                 ).with_entities(
@@ -53,7 +54,9 @@ def diabetes_aps(municipio_uf):
                     Diabeticos.acs_nome_cadastro,
                     Diabeticos.equipe_ine_cadastro,
                     Diabeticos.equipe_nome_cadastro,
-                    Diabeticos.dt_consulta_mais_recente
+                    Diabeticos.dt_consulta_mais_recente,
+                    Diabeticos.criacao_data,
+                    Diabeticos.dt_registro_producao_mais_recente
                 ).order_by(
                     Diabeticos.cidadao_nome
                 ).all()

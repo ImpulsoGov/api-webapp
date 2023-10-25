@@ -1,15 +1,15 @@
-from app.models import DB_PRODUCAO  
+from app.models import db  
 from app.models.impulso_previne_nominal.citopatologico import Citopatologico
 from sqlalchemy.sql import func
 from cachetools import TTLCache
-session = DB_PRODUCAO.session
+session = db.session
 
 cache_citopatologico_aps = TTLCache(maxsize=50, ttl=24*60*60)
 def citopatologico_aps(municipio_uf):
     result = cache_citopatologico_aps.get(municipio_uf)
     try:
         if result is None:
-            result = DB_PRODUCAO.session.query(
+            result = session.query(
                 Citopatologico).filter_by(
                 municipio_uf=municipio_uf
                 ).with_entities(
@@ -26,7 +26,8 @@ def citopatologico_aps(municipio_uf):
                     Citopatologico.equipe_ine,
                     Citopatologico.ine_master,
                     Citopatologico.equipe_nome,
-                    Citopatologico.id_status_usuario
+                    Citopatologico.id_status_usuario,
+                    Citopatologico.dt_registro_producao_mais_recente
                 ).order_by(
                     Citopatologico.paciente_nome
                 ).all()
@@ -39,7 +40,7 @@ def citopatologico_aps(municipio_uf):
 
 def citopatologico_equipe(municipio_uf,equipe):
     try:
-        return DB_PRODUCAO.session.query(
+        return session.query(
                     Citopatologico
                 ).filter_by(
                     municipio_uf=municipio_uf,
@@ -58,7 +59,8 @@ def citopatologico_equipe(municipio_uf,equipe):
                     Citopatologico.equipe_ine,
                     Citopatologico.ine_master,
                     Citopatologico.equipe_nome,
-                    Citopatologico.id_status_usuario
+                    Citopatologico.id_status_usuario,
+                    Citopatologico.dt_registro_producao_mais_recente
                 ).order_by(
                     Citopatologico.paciente_nome
                 ).all()

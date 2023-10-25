@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String,DATE, BOOLEAN, DateTime, TIMESTAMP
-from app.models import DB_PRODUCAO
-Base = DB_PRODUCAO.Base
+from app.models import db
+Base = db.Base_impulso_previne_nominal
 
 class Citopatologico(Base):
     __tablename__ = 'painel_citopatologico_lista_nominal'
@@ -21,6 +21,7 @@ class Citopatologico(Base):
     id_faixa_etaria = Column(Integer,nullable=True)
     criacao_data = Column(TIMESTAMP,nullable=True)
     atualizacao_data = Column(TIMESTAMP,nullable=True)
-    __table_args__ = {'schema': 'impulso_previne_dados_nominais'}
+    dt_registro_producao_mais_recente = Column(DATE, nullable=True)
+    __table_args__ = {'schema': 'impulso_previne_dados_nominais_replica'}
 
 #Base.metadata.create_all(db.engine)

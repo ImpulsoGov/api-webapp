@@ -1,7 +1,4 @@
 from sqlalchemy import BOOLEAN, DATE, Column, DateTime, Integer, String
-
-from app.models import DB_PRODUCAO
-
 from app.models import db
 Base = db.Base_impulso_previne_nominal
 
@@ -28,7 +25,7 @@ class Gestantes(Base):
     gestante_dpp = Column(DateTime, nullable=True)
     gestante_quadrimestre = Column(String, nullable=True)
     gestante_consulta_prenatal_data_limite = Column(DateTime, nullable=True)
-    gestante_dpp_dias_para = Column(Integer, nullable=True)
+    gestacao_dpp_dias_para = Column(Integer, nullable=True)
     gestante_consulta_prenatal_total = Column(Integer, nullable=True)
     gestantes_com_6_consultas = Column(String, nullable=True)
     gestante_consulta_prenatal_ultima_data = Column(DateTime, nullable=True)
@@ -43,7 +40,7 @@ class Gestantes(Base):
     possui_registro_parto = Column(String, nullable=True)
     criacao_data = Column(DateTime, nullable=True)
     atualizacao_data = Column(DateTime, nullable=True)
-    __table_args__ = {"schema": "impulso_previne_dados_nominais"}
+    __table_args__ = {"schema": "impulso_previne_dados_nominais_replica"}
 
 
 # Base.metadata.create_all(db.engine)
