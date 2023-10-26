@@ -224,6 +224,27 @@ def consultar_procedimentos_por_tipo(
         )
 
 
+def consultar_nomes_de_procedimentos_por_tipo(municipio_id_sus: str):
+    try:
+        nomes_de_procedimentos = (
+            session.query(ProcedimentosPorTipo.procedimento)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .distinct()
+            .all()
+        )
+
+        return nomes_de_procedimentos
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
 def consultar_procedimentos_por_usuario_tempo_servico(
     municipio_id_sus: str,
     estabelecimentos: str,

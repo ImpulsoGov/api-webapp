@@ -9,7 +9,8 @@ from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_usuario_tempo_servico,
     consultar_procedimentos_por_usuario_tempo_servico,
     consultar_procedimentos_por_hora,
-    consultar_procedimentos_por_tipo
+    consultar_procedimentos_por_tipo,
+    consultar_nomes_de_procedimentos_por_tipo
 )
 from typing import Union
 
@@ -106,4 +107,16 @@ async def obter_procedimentos_por_usuario_tempo_servico(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
         periodos=periodos
+    )
+
+
+@router.get("/saude-mental/procedimentos-por-tipo/procedimentos")
+async def obter_nomes_de_procedimentos_por_tipo(
+    response: Response,
+    municipio_id_sus: str,
+):
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_48_HORAS}"
+
+    return consultar_nomes_de_procedimentos_por_tipo(
+        municipio_id_sus=municipio_id_sus,
     )
