@@ -1,8 +1,8 @@
-from app.models import db  
+from app.models import DB_PRODUCAO  
 from app.models.impulso_previne_nominal.citopatologico import Citopatologico
 from sqlalchemy.sql import func
 from cachetools import TTLCache
-session = db.session
+session = DB_PRODUCAO.session
 
 cache_citopatologico_aps = TTLCache(maxsize=50, ttl=24*60*60)
 def citopatologico_aps(municipio_uf):

@@ -16,11 +16,11 @@ credencial = {
 }
 engine = create_engine(
     "postgresql://{}:{}@{}:{}/{}?".format(
-        credencial["USERNAME"],
-        credencial["PASSWORD"],
-        credencial["HOSTNAME"],
-        int(credencial["PORT"]),
-        credencial["DATABASE"],
+        credencial["USERNAME"].strip(),
+        credencial["PASSWORD"].strip(),
+        credencial["HOSTNAME"].strip(),
+        int(credencial["PORT"].strip()),
+        credencial["DATABASE"].strip(),
     ),
     connect_args={
         "options": "-c statement_timeout=100000000",
@@ -31,3 +31,4 @@ engine = create_engine(
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
+

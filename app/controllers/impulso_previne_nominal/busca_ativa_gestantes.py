@@ -1,9 +1,9 @@
-from app.models import db
+from app.models import DB_PRODUCAO
 from app.models.impulso_previne_nominal.busca_ativa_aps import GestantesCoordenacao
 from app.models.impulso_previne_nominal.busca_ativa_equipe import Gestantes
 from app.models.impulso_previne_nominal.cadastros_duplicados_gestantes import CadastrosDuplicadosGestantes
 
-session = db.session
+session = DB_PRODUCAO.session
 
 
 def consulta_gestantes_equipe(municipio_uf, equipe):

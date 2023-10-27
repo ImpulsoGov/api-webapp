@@ -1,6 +1,6 @@
 from sqlalchemy import BOOLEAN, DATE, Column, DateTime, Integer, String
-from app.models import db
-Base = db.Base_impulso_previne_nominal
+from app.models import DB_PRODUCAO
+Base = DB_PRODUCAO.Base
 
 
 class Gestantes(Base):
@@ -40,7 +40,7 @@ class Gestantes(Base):
     possui_registro_parto = Column(String, nullable=True)
     criacao_data = Column(DateTime, nullable=True)
     atualizacao_data = Column(DateTime, nullable=True)
-    __table_args__ = {"schema": "impulso_previne_dados_nominais_replica"}
+    __table_args__ = {"schema": "impulso_previne_dados_nominais"}
 
 
 # Base.metadata.create_all(db.engine)
