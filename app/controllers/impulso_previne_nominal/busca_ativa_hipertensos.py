@@ -1,7 +1,7 @@
-from app.models import db  
+from app.models import DB_PRODUCAO  
 from app.models.impulso_previne_nominal.hipertensos import Hipertensos
 from cachetools import TTLCache
-session = db.session
+session = DB_PRODUCAO.session
 
 cache_hipertensao_aps = TTLCache(maxsize=38, ttl=24*60*60)
 def hipertensao_aps(municipio_uf):

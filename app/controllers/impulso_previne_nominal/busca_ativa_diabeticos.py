@@ -1,8 +1,8 @@
-from app.models import db
+from app.models import DB_PRODUCAO
 from app.models.impulso_previne_nominal.diabeticos import Diabeticos
 from cachetools import TTLCache
 
-session = db.session
+session = DB_PRODUCAO.session
 
 def diabeticos_equipe(municipio_uf,equipe):
     try:
