@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import Response
 
 from app.controllers.saude_mental.procedimentos import (
@@ -14,8 +14,6 @@ from app.controllers.saude_mental.procedimentos import (
 from typing import Union
 quantidade_segundos_48_horas = 60 * 60 * 48
 router = APIRouter()
-
-
 @router.get("/saude-mental/procedimentos_por_hora")
 async def obter_dados_procedimentos_por_hora(
     municipio_id_sus: str,
@@ -62,14 +60,17 @@ async def obter_procedimentos_por_hora(
     periodos: Union[str, None] = None,
     ocupacao: Union[str, None] = None
 ):
-    response.headers["Cache-Control"] = f"private, max-age={quantidade_segundos_48_horas}"
-
-    return consultar_procedimentos_por_hora(
+    try:
+        consulta = consultar_procedimentos_por_hora(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
         periodos=periodos,
         ocupacao=ocupacao
-    )
+        )
+        response.headers["Cache-Control"] = f"private, no-cache, max-age={quantidade_segundos_48_horas}"
+        return consulta
+    except Exception as error:
+        raise error
 @router.get("/saude-mental/procedimentos-por-tipo")
 async def obter_procedimentos_por_tipo(
     response: Response,

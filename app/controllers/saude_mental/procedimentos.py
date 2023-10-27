@@ -152,6 +152,10 @@ def consultar_procedimentos_por_hora(
             query = query.filter(ProcedimentosPorHora.ocupacao == ocupacao)
 
         procedimentos_por_hora = query.all()
+        # raise HTTPException(
+        #     status_code=500,
+        #     detail=("Internal Server Error"),
+        # )
         return procedimentos_por_hora
    except Exception as error:
         session.rollback()
