@@ -2,10 +2,8 @@ from fastapi import APIRouter
 from fastapi.responses import Response
 from app.models import db
 from app.controllers.saude_mental.ambulatorio import (
-    obter_ambulatorio_atendimento_resumo,
     obter_ambulatorio_atendimento_resumo_ultimo_mes,
     obter_ambulatorio_procedimento_por_profissional,
-    obter_ambulatorio_usuario_perfil,
     consultar_ambulatorio_usuario_perfil,
     consultar_dados_ambulatorio_atendimento_resumo
 )
@@ -15,14 +13,6 @@ from typing import Union
 QUANTIDADE_SEGUNDOS_24_HORAS = 60 * 60 * 24
 
 router = APIRouter()
-
-
-
-@router.get("/saude-mental/ambulatorio/atendimento-resumo")
-async def obter_dados_ambulatorio_atendimento_resumo(
-    municipio_id_sus: str,
-):
-    return obter_ambulatorio_atendimento_resumo(municipio_id_sus=municipio_id_sus)
 
 @router.get("/saude-mental/ambulatorio/atendimento_resumo")
 async def obter_dados_ambulatorio_atendimento_resumo(
@@ -55,13 +45,6 @@ async def obter_dados_ambulatorio_procedimento_por_profissional(
     return obter_ambulatorio_procedimento_por_profissional(
         municipio_id_sus=municipio_id_sus
     )
-
-
-@router.get("/saude-mental/ambulatorio/usuario-perfil")
-async def obter_dados_ambulatorio_usuario_perfil(
-    municipio_id_sus: str,
-):
-    return obter_ambulatorio_usuario_perfil(municipio_id_sus=municipio_id_sus)
 
 @router.get("/saude-mental/ambulatorio/usuario_perfil")
 async def consultar_dados_ambulatorio_usuario_perfil(
