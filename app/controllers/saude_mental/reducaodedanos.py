@@ -63,7 +63,30 @@ def consultar_reducao_de_danos(
         return procedimentos_por_hora
     except (Exception) as error:
         session.rollback()
+
         print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
+def consultar_nomes_de_ocupacoes_reducao_de_danos(municipio_id_sus: str):
+    try:
+        nomes_de_ocupacoes = (
+            session.query(ReducaoDanos.profissional_vinculo_ocupacao)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .distinct()
+            .all()
+        )
+
+        return nomes_de_ocupacoes
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
