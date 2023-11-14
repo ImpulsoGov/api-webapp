@@ -9,23 +9,6 @@ from app.models.saude_mental.ambulatorio import (
 from app.utils.separar_string import separar_string
 
 session = db.session
-def obter_ambulatorio_atendimento_resumo(
-    municipio_id_sus: str,
-):
-    ambulatorio_atendimento_resumo = (
-        session.query(AmbulatorioAtendimentoResumo)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(ambulatorio_atendimento_resumo) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados não encontrados",),
-        )
-
-    return ambulatorio_atendimento_resumo
-
 
 def consultar_dados_ambulatorio_atendimento_resumo(
     municipio_id_sus: str,
@@ -92,23 +75,6 @@ def obter_ambulatorio_procedimento_por_profissional(
         )
 
     return ambulatorio_procedimento_por_profissional
-
-def obter_ambulatorio_usuario_perfil(
-    municipio_id_sus: str,
-):
-    ambulatorio_usuario_perfil = (
-        session.query(AmbulatorioUsuariosPerfil)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(ambulatorio_usuario_perfil) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados não encontrados",),
-        )
-
-    return ambulatorio_usuario_perfil
 
 def consultar_ambulatorio_usuario_perfil(
     municipio_id_sus: str,
