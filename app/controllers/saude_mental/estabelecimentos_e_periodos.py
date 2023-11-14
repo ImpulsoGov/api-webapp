@@ -11,7 +11,8 @@ from app.models.saude_mental.usuariosnovos import UsuarioNovoPorCondicao
 from app.models.saude_mental.procedimentos import ProcedimentoPorUsuarioTempoServiço
 from app.models.saude_mental.procedimentos import ProcedimentosPorHora
 from app.models.saude_mental.procedimentos import ProcedimentosPorTipo
-
+from app.models.saude_mental.ambulatorio import AmbulatorioAtendimentoResumo
+from app.models.saude_mental.ambulatorio import AmbulatorioUsuariosPerfil
 
 entidades = {
     "usuarios_ativos_perfil": UsuarioAtivoPorCondicao,
@@ -20,7 +21,9 @@ entidades = {
     "abandono_perfil": AbandonoPorCID,
     "procedimentos_usuarios_tempo_servico": ProcedimentoPorUsuarioTempoServiço,
     "procedimentos_por_hora": ProcedimentosPorHora,
-    "procedimentos_por_tipo": ProcedimentosPorTipo
+    "procedimentos_por_tipo": ProcedimentosPorTipo,
+    "atendimentos_resumo": AmbulatorioAtendimentoResumo,
+    "usuarios_perfil": AmbulatorioUsuariosPerfil
 }
 
 Entidade = Literal[
@@ -30,7 +33,9 @@ Entidade = Literal[
     "abandono_perfil",
     "procedimentos_usuarios_tempo_servico",
     "procedimentos_por_hora",
-    "procedimentos_por_tipo"
+    "procedimentos_por_tipo",
+    "atendimentos_resumo",
+    "usuarios_perfil"
 ]
 Model = Union[
     UsuarioAtivoPorCondicao,
@@ -39,7 +44,9 @@ Model = Union[
     AbandonoPorCID,
     ProcedimentoPorUsuarioTempoServiço,
     ProcedimentosPorHora,
-    ProcedimentosPorTipo
+    ProcedimentosPorTipo,
+    AmbulatorioAtendimentoResumo,
+    AmbulatorioUsuariosPerfil
 ]
 
 
