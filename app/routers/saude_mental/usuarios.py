@@ -35,6 +35,8 @@ async def obter_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
+    linhas_de_perfil: Union[str, None] = None,
+    linhas_de_idade: Union[str, None] = None,
 ):
     response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_24_HORAS}"
 
@@ -42,6 +44,8 @@ async def obter_usuarios_ativos_por_estabelecimento(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
         periodos=periodos,
+        linhas_de_perfil=linhas_de_perfil,
+        linhas_de_idade=linhas_de_idade
     )
 
 

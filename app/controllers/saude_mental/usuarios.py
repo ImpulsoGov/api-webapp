@@ -42,7 +42,9 @@ def obter_usuarios_perfil_estabelecimento(
 def consultar_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
     estabelecimentos: str,
-    periodos: str
+    periodos: str,
+    linhas_de_perfil: str,
+    linhas_de_idade: str
 ):
     try:
         query = session.query(
@@ -60,8 +62,6 @@ def consultar_usuarios_ativos_por_estabelecimento(
             UsuariosPerfilEstabelecimento.dif_tornandose_inativos_anterior
         ).filter(
             UsuariosPerfilEstabelecimento.unidade_geografica_id_sus == municipio_id_sus,
-            UsuariosPerfilEstabelecimento.estabelecimento_linha_idade == "Todos",
-            UsuariosPerfilEstabelecimento.estabelecimento_linha_perfil == "Todos"
         )
 
         if estabelecimentos is not None:
@@ -74,6 +74,22 @@ def consultar_usuarios_ativos_por_estabelecimento(
             lista_periodos = separar_string("-", periodos)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.periodo.in_(lista_periodos)
+            )
+
+        if linhas_de_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", linhas_de_perfil)
+            query = query.filter(
+                UsuariosPerfilEstabelecimento.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )
+            )
+
+        if linhas_de_idade is not None:
+            lista_linhas_de_idade = separar_string("-", linhas_de_idade)
+            query = query.filter(
+                UsuariosPerfilEstabelecimento.estabelecimento_linha_idade.in_(
+                    lista_linhas_de_idade
+                )
             )
 
         usuarios_ativos = query.all()
