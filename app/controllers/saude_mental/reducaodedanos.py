@@ -7,22 +7,6 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def dados_reducaodedanos(municipio_id_sus: str):
-    dados_reducaodedanos = (
-        session.query(ReducaoDanos)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(dados_reducaodedanos) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Dados de Redução de danos não encontrados",
-        )
-
-    return dados_reducaodedanos
-
-
 def consultar_reducao_de_danos(
     municipio_id_sus: str,
     estabelecimentos: str,
