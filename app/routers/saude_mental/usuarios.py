@@ -13,7 +13,8 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_novos_por_raca,
     obter_usuarios_novos_resumo,
     obter_usuarios_perfil_estabelecimento,
-    consultar_usuarios_ativos_por_estabelecimento
+    consultar_usuarios_ativos_por_estabelecimento,
+    consultar_usuarios_novos_resumo
 )
 
 QUANTIDADE_SEGUNDOS_24_HORAS = 60 * 60 * 24
@@ -49,6 +50,26 @@ async def obter_novos_usuarios_resumo(
     municipio_id_sus: str,
 ):
     return obter_usuarios_novos_resumo(municipio_id_sus=municipio_id_sus)
+
+
+@router.get("/saude-mental/usuarios/novos/resumo")
+async def obter_resumo_usuarios_novos(
+    response: Response,
+    municipio_id_sus: str,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
+    linhas_de_perfil: Union[str, None] = None,
+    linhas_de_idade: Union[str, None] = None,
+):
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_24_HORAS}"
+
+    return consultar_usuarios_novos_resumo(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos,
+        linhas_de_perfil=linhas_de_perfil,
+        linhas_de_idade=linhas_de_idade,
+    )
 
 
 @router.get("/saude-mental/usuarios/perfil/condicao")

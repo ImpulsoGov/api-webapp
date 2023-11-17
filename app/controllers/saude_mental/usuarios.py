@@ -120,6 +120,68 @@ def obter_usuarios_novos_resumo(
         )
 
 
+def consultar_usuarios_novos_resumo(
+    municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str,
+    linhas_de_perfil: str,
+    linhas_de_idade: str
+):
+    try:
+        query = session.query(
+            UsuariosNovosResumo.id,
+            UsuariosNovosResumo.unidade_geografica_id_sus,
+            UsuariosNovosResumo.competencia,
+            UsuariosNovosResumo.estabelecimento,
+            UsuariosNovosResumo.periodo,
+            UsuariosNovosResumo.nome_mes,
+            UsuariosNovosResumo.usuarios_novos,
+            UsuariosNovosResumo.dif_usuarios_novos_anterior,
+            UsuariosNovosResumo.estabelecimento_linha_perfil
+        ).filter(
+            UsuariosNovosResumo.unidade_geografica_id_sus == municipio_id_sus,
+        )
+
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            query = query.filter(
+                UsuariosNovosResumo.estabelecimento.in_(lista_estabelecimentos)
+            )
+
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
+            query = query.filter(
+                UsuariosNovosResumo.periodo.in_(lista_periodos)
+            )
+
+        if linhas_de_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", linhas_de_perfil)
+            query = query.filter(
+                UsuariosNovosResumo.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )
+            )
+
+        if linhas_de_idade is not None:
+            lista_linhas_de_idade = separar_string("-", linhas_de_idade)
+            query = query.filter(
+                UsuariosNovosResumo.estabelecimento_linha_idade.in_(lista_linhas_de_idade)
+            )
+
+        usuarios_novos = query.all()
+
+        return usuarios_novos
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
 def obter_perfil_usuarios_ativos_por_condicao(
     municipio_id_sus: str, estabelecimento: str, periodo: str
 ):
