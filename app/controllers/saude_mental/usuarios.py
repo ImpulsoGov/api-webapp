@@ -39,6 +39,57 @@ def obter_usuarios_perfil_estabelecimento(
     return usuarios_perfil_estabelecimento
 
 
+def consultar_usuarios_ativos_por_estabelecimento(
+    municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str
+):
+    try:
+        query = session.query(
+            UsuariosPerfilEstabelecimento.id,
+            UsuariosPerfilEstabelecimento.unidade_geografica_id_sus,
+            UsuariosPerfilEstabelecimento.competencia,
+            UsuariosPerfilEstabelecimento.estabelecimento,
+            UsuariosPerfilEstabelecimento.periodo,
+            UsuariosPerfilEstabelecimento.nome_mes,
+            UsuariosPerfilEstabelecimento.ativos_mes,
+            UsuariosPerfilEstabelecimento.dif_ativos_mes_anterior,
+            UsuariosPerfilEstabelecimento.ativos_3meses,
+            UsuariosPerfilEstabelecimento.dif_ativos_3meses_anterior,
+            UsuariosPerfilEstabelecimento.tornandose_inativos,
+            UsuariosPerfilEstabelecimento.dif_tornandose_inativos_anterior
+        ).filter(
+            UsuariosPerfilEstabelecimento.unidade_geografica_id_sus == municipio_id_sus,
+            UsuariosPerfilEstabelecimento.estabelecimento_linha_idade == "Todos",
+            UsuariosPerfilEstabelecimento.estabelecimento_linha_perfil == "Todos"
+        )
+
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            query = query.filter(
+                UsuariosPerfilEstabelecimento.estabelecimento.in_(lista_estabelecimentos)
+            )
+
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
+            query = query.filter(
+                UsuariosPerfilEstabelecimento.periodo.in_(lista_periodos)
+            )
+
+        usuarios_ativos = query.all()
+
+        return usuarios_ativos
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
+
 def obter_usuarios_novos_resumo(
     municipio_id_sus: str,
 ):

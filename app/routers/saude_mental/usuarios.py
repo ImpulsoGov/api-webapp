@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+from fastapi.responses import Response
+from typing import Union
 
 from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_ativos_por_cid,
@@ -11,7 +13,10 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_novos_por_raca,
     obter_usuarios_novos_resumo,
     obter_usuarios_perfil_estabelecimento,
+    consultar_usuarios_ativos_por_estabelecimento
 )
+
+QUANTIDADE_SEGUNDOS_24_HORAS = 60 * 60 * 24
 
 router = APIRouter()
 
@@ -21,6 +26,22 @@ async def obter_perfil_usuarios_estabelecimento(
     municipio_id_sus: str,
 ):
     return obter_usuarios_perfil_estabelecimento(municipio_id_sus=municipio_id_sus)
+
+
+@router.get("/saude-mental/usuarios/perfil/por-estabelecimento")
+async def obter_usuarios_ativos_por_estabelecimento(
+    response: Response,
+    municipio_id_sus: str,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
+):
+    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_24_HORAS}"
+
+    return consultar_usuarios_ativos_por_estabelecimento(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos,
+    )
 
 
 @router.get("/saude-mental/usuarios/novosresumo")
