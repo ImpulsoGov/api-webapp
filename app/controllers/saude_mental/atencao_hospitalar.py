@@ -13,19 +13,25 @@ session = db.session
 def obter_acolhimento_noturno(
     municipio_id_sus: str,
 ):
-    acolhimento_noturno = (
-        session.query(AcolhimentoNoturno)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(acolhimento_noturno) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados não encontrados",),
+    try:
+        acolhimento_noturno = (
+            session.query(AcolhimentoNoturno)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .all()
         )
 
-    return acolhimento_noturno
+        return acolhimento_noturno
+    except (Exception) as erro:
+        session.rollback()
+
+        error = str(erro)
+
+        print({"error": error})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
 
 
 def obter_internacoes_resumo_admissoes(
