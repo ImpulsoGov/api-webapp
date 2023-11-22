@@ -14,20 +14,50 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def dados_procedimentos_por_usuario_estabelecimento(municipio_id_sus: str):
-    ProcedimentoPorUsuarioEstabelecimento_dados = (
-        session.query(ProcedimentoPorUsuarioEstabelecimento)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(ProcedimentoPorUsuarioEstabelecimento_dados) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Matriciamentos CAPS no último ano " "do município não encontrados"),
+def consultar_dados_procedimentos_por_usuario_estabelecimento(
+    municipio_id_sus: str,
+    estabelecimento: str,
+    periodo: str,
+    estabelecimento_linha_idade: str,
+    estabelecimento_linha_perfil: str
+    ):
+    try:
+        query = session.query(
+            ProcedimentoPorUsuarioEstabelecimento
+        ).filter(
+            ProcedimentoPorUsuarioEstabelecimento.unidade_geografica_id_sus == municipio_id_sus
         )
 
-    return ProcedimentoPorUsuarioEstabelecimento_dados
+        if estabelecimento is not None:
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento == estabelecimento
+            )
+
+        if periodo is not None:
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.periodo == periodo
+            )
+
+        if estabelecimento_linha_idade is not None:
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_idade == estabelecimento_linha_idade
+            )
+        if estabelecimento_linha_perfil is not None:
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_perfil == estabelecimento_linha_perfil
+            )
+        procedimentos_por_usuario_por_estabelecimento = query.all()
+
+        return procedimentos_por_usuario_por_estabelecimento
+
+    except (Exception) as error:
+        session.rollback()
+        print({"error": str(error)})
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
 
 
 def dados_procedimentos_por_usuario_resumo(municipio_id_sus: str):
