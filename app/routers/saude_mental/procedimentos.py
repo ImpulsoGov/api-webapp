@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from app.controllers.saude_mental.procedimentos import (
     dados_procedimentos_por_hora,
     dados_procedimentos_por_tipo,
-    dados_procedimentos_por_usuario_estabelecimento,
+    consultar_dados_procedimentos_por_usuario_estabelecimento,
     dados_procedimentos_por_usuario_resumo,
     dados_procedimentos_por_usuario_tempo_servico,
     consultar_procedimentos_por_usuario_tempo_servico,
@@ -36,9 +36,17 @@ async def obter_dados_procedimentos_por_tipo(
 @router.get("/saude-mental/procedimentos_por_usuario_estabelecimentos")
 async def obter_dados_procedimentos_por_usuario_estabelecimento(
     municipio_id_sus: str,
+    estabelecimento: Union[str, None] = None,
+    periodo: Union[str, None] = None,
+    estabelecimento_linha_idade: Union[str, None] = None,
+    estabelecimento_linha_perfil: Union[str, None] = None
 ):
-    return dados_procedimentos_por_usuario_estabelecimento(
-        municipio_id_sus=municipio_id_sus
+    return consultar_dados_procedimentos_por_usuario_estabelecimento(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimento=estabelecimento,
+        periodo=periodo,
+        estabelecimento_linha_idade=estabelecimento_linha_idade,
+        estabelecimento_linha_perfil=estabelecimento_linha_perfil
     )
 
 
