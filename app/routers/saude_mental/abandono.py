@@ -1,5 +1,5 @@
-from fastapi import APIRouter,  Request, Depends, Response
-QUANTIDADE_SEGUNDOS_24_HORAS = 60 * 60 * 24
+from fastapi import APIRouter
+
 from app.controllers.saude_mental.abandono import (
     dados_caps_adesao_evasao_coortes_resumo,
     dados_caps_adesao_evasao_mensal,
@@ -7,17 +7,8 @@ from app.controllers.saude_mental.abandono import (
     obter_perfil_evadiram_no_mes_por_cid,
     obter_perfil_evadiram_no_mes_por_genero_e_idade,
 )
-async def custom_middleware(request: Request, response: Response):
-    response.headers["X-Custom-Header"] = "Added by middleware"
-    return response
-async def adiciona_cache_header(request: Request, response: Response):
-    response.headers["Cache-Control"] = f"private, max-age={QUANTIDADE_SEGUNDOS_24_HORAS}"
-    return response
 
-router = APIRouter(dependencies=[
-    Depends(adiciona_cache_header),
-    Depends(custom_middleware)
-])
+router = APIRouter()
 
 
 @router.get("/saude-mental/abandono/coortes")
