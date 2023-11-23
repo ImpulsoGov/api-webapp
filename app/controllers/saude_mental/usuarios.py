@@ -59,7 +59,9 @@ def consultar_usuarios_ativos_por_estabelecimento(
             UsuariosPerfilEstabelecimento.ativos_3meses,
             UsuariosPerfilEstabelecimento.dif_ativos_3meses_anterior,
             UsuariosPerfilEstabelecimento.tornandose_inativos,
-            UsuariosPerfilEstabelecimento.dif_tornandose_inativos_anterior
+            UsuariosPerfilEstabelecimento.dif_tornandose_inativos_anterior,
+            UsuariosPerfilEstabelecimento.sexo_predominante,
+            UsuariosPerfilEstabelecimento.usuarios_idade_media,
         ).filter(
             UsuariosPerfilEstabelecimento.unidade_geografica_id_sus == municipio_id_sus,
         )
