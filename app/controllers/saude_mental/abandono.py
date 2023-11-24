@@ -1,5 +1,4 @@
-import pandas as pd
-from fastapi import HTTPException, Response
+from fastapi import HTTPException
 from sqlalchemy import exc
 
 from app.models import db
@@ -12,7 +11,6 @@ from app.models.saude_mental.abandono import (
 from app.utils.separar_string import separar_string
 
 session = db.session
-
 
 def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
     # dados_caps_adesao_usuarios_perfil = (
@@ -73,24 +71,7 @@ def consultar_dados_caps_adesao_evasao_coortes_resumo(
             status_code = 500,
             detail=("Internal Server Error"),
         )   
-            
-
-def dados_caps_adesao_evasao_coortes_resumo(municipio_id_sus: str):
-    dados_caps_adesao_evasao_coortes_resumo = (
-        session.query(AbandonoCoortes)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(dados_caps_adesao_evasao_coortes_resumo) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados de Abandono Coortes não encontrados",),
-        )
-
-    return dados_caps_adesao_evasao_coortes_resumo
-
-
+          
 def dados_caps_adesao_evasao_mensal(municipio_id_sus: str):
     dados_caps_adesao_evasao_mensal = (
         session.query(AbandonoMensal)

@@ -1,5 +1,4 @@
-import pandas as pd
-from fastapi import HTTPException, Response
+from fastapi import HTTPException
 from sqlalchemy import exc
 
 from app.models import db
@@ -67,31 +66,6 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
             status_code = 500,
             detail = ("Internal Server Error")
         )
-
-def obter_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
-    # perfil_usuarios_caps = (
-    #     session.query(PerfilUsuariosAtendimentosIndividuaisCaps)
-    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-    #     .all()
-    # )
-
-    perfil_usuarios_caps = pd.read_parquet(
-        f"data/caps_usuarios_atendimentos_individuais_perfil_{municipio_id_sus}.parquet",
-    ).query(
-        "(estabelecimento_linha_perfil == 'Todos' & estabelecimento_linha_idade == 'Todos') | estabelecimento == 'Todos'"
-    )
-
-    if len(perfil_usuarios_caps) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Dados de perfil de usuários CAPS " "do município não encontrados",
-        )
-
-    return Response(
-        perfil_usuarios_caps.to_json(orient="records"),
-        media_type="application/json",
-    )
-
 
 def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
     resumo_perfil_usuarios_caps = (
