@@ -43,8 +43,8 @@ def consultar_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
     estabelecimentos: str,
     periodos: str,
-    linhas_de_perfil: str,
-    linhas_de_idade: str
+    estabelecimento_linha_perfil: str,
+    estabelecimento_linha_idade: str
 ):
     try:
         query = session.query(
@@ -78,16 +78,16 @@ def consultar_usuarios_ativos_por_estabelecimento(
                 UsuariosPerfilEstabelecimento.periodo.in_(lista_periodos)
             )
 
-        if linhas_de_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", linhas_de_perfil)
+        if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
                 )
             )
 
-        if linhas_de_idade is not None:
-            lista_linhas_de_idade = separar_string("-", linhas_de_idade)
+        if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.estabelecimento_linha_idade.in_(
                     lista_linhas_de_idade
@@ -142,8 +142,8 @@ def consultar_usuarios_novos_resumo(
     municipio_id_sus: str,
     estabelecimentos: str,
     periodos: str,
-    linhas_de_perfil: str,
-    linhas_de_idade: str
+    estabelecimento_linha_perfil: str,
+    estabelecimento_linha_idade: str
 ):
     try:
         query = session.query(
@@ -172,16 +172,16 @@ def consultar_usuarios_novos_resumo(
                 UsuariosNovosResumo.periodo.in_(lista_periodos)
             )
 
-        if linhas_de_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", linhas_de_perfil)
+        if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
             query = query.filter(
                 UsuariosNovosResumo.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
                 )
             )
 
-        if linhas_de_idade is not None:
-            lista_linhas_de_idade = separar_string("-", linhas_de_idade)
+        if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
             query = query.filter(
                 UsuariosNovosResumo.estabelecimento_linha_idade.in_(lista_linhas_de_idade)
             )
