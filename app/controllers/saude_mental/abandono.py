@@ -34,10 +34,12 @@ def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
         media_type="application/json",
     )
 
+
 def consultar_dados_caps_adesao_evasao_coortes_resumo(
     municipio_id_sus: str,
-    estabelecimento: str,
-    periodo: str):
+    estabelecimentos: str,
+    periodos: str):
+
     try:
         query = session.query(
             AbandonoCoortes.id,
@@ -53,25 +55,28 @@ def consultar_dados_caps_adesao_evasao_coortes_resumo(
             AbandonoCoortes.maior_taxa_estabelecimento
         ).filter(
             AbandonoCoortes.unidade_geografica_id_sus == municipio_id_sus
-            )
-        if estabelecimento is not None:
+        )
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
             query = query.filter(
-                AbandonoCoortes.estabelecimento == estabelecimento
+                AbandonoCoortes.estabelecimento.in_(lista_estabelecimentos)
             )
-        if periodo is not None:
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
             query = query.filter(
-                AbandonoCoortes.periodo == periodo
+                AbandonoCoortes.periodo.in_(lista_periodos)
             )
         abandono_coortes = query.all()
         return abandono_coortes
-    except(Exception) as error:
+    except (Exception) as error:
         session.rollback()
         print({"error": str(error)})
         raise HTTPException(
-            status_code = 500,
+            status_code=500,
             detail=("Internal Server Error"),
-        )   
-          
+        )  
+
+
 def dados_caps_adesao_evasao_mensal(municipio_id_sus: str):
     dados_caps_adesao_evasao_mensal = (
         session.query(AbandonoMensal)
