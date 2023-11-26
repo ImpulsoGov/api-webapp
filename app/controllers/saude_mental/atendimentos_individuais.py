@@ -16,8 +16,8 @@ session = db.session
 
 def obter_atendimentos_individuais_por_caps_de_municipio(
     municipio_id_sus: str,
-    periodo: str,
-    estabelecimento: str,
+    periodos: str,
+    estabelecimentos: str,
     estabelecimento_linha_idade: str,
     estabelecimento_linha_perfil: str
     ):
@@ -37,25 +37,33 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
             AtendimentosIndividuaisPorCaps.unidade_geografica_id_sus == municipio_id_sus
         )
 
-        if estabelecimento is not None:
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
             query = query.filter(
-                AtendimentosIndividuaisPorCaps.estabelecimento == estabelecimento
+                AtendimentosIndividuaisPorCaps.estabelecimento.in_(lista_estabelecimentos)
             )
 
-        if periodo is not None:
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
             query = query.filter(
-                AtendimentosIndividuaisPorCaps.periodo == periodo
+                AtendimentosIndividuaisPorCaps.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
             query = query.filter(
-                AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade == estabelecimento_linha_idade
+                AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade.in_(
+                    lista_linhas_de_idade
+                )
             )
 
         if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
             query = query.filter(
-                AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil == estabelecimento_linha_perfil
-            )    
+                AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )
+            )        
         atendimentos_individuais_caps = query.all()
         return atendimentos_individuais_caps
     except (exc.SQLAlchemyError, Exception) as error:
@@ -63,8 +71,8 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
 
         print({"error": str(error)})
         raise HTTPException(
-            status_code = 500,
-            detail = ("Internal Server Error")
+            status_code=500,
+            detail=("Internal Server Error")
         )
 
 def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
