@@ -2,10 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import Response
 
 from app.controllers.saude_mental.procedimentos import (
-    dados_procedimentos_por_hora,
-    dados_procedimentos_por_tipo,
     consultar_dados_procedimentos_por_usuario_estabelecimento,
-    dados_procedimentos_por_usuario_estabelecimento,
     dados_procedimentos_por_usuario_resumo,
     consultar_procedimentos_por_usuario_tempo_servico,
     consultar_procedimentos_por_hora,
@@ -22,15 +19,15 @@ router = APIRouter()
 @router.get("/saude-mental/procedimentos_por_usuario_estabelecimentos")
 async def obter_dados_procedimentos_por_usuario_estabelecimento(
     municipio_id_sus: str,
-    estabelecimento: Union[str, None] = None,
-    periodo: Union[str, None] = None,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
     estabelecimento_linha_idade: Union[str, None] = None,
     estabelecimento_linha_perfil: Union[str, None] = None
 ):
     return consultar_dados_procedimentos_por_usuario_estabelecimento(
         municipio_id_sus=municipio_id_sus,
-        estabelecimento=estabelecimento,
-        periodo=periodo,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos,
         estabelecimento_linha_idade=estabelecimento_linha_idade,
         estabelecimento_linha_perfil=estabelecimento_linha_perfil
     )

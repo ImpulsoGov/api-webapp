@@ -15,11 +15,11 @@ session = db.session
 
 def consultar_dados_procedimentos_por_usuario_estabelecimento(
     municipio_id_sus: str,
-    estabelecimento: str,
-    periodo: str,
+    estabelecimentos: str,
+    periodos: str,
     estabelecimento_linha_idade: str,
     estabelecimento_linha_perfil: str
-    ):
+):
     try:
         query = session.query(
             ProcedimentoPorUsuarioEstabelecimento
@@ -27,23 +27,33 @@ def consultar_dados_procedimentos_por_usuario_estabelecimento(
             ProcedimentoPorUsuarioEstabelecimento.unidade_geografica_id_sus == municipio_id_sus
         )
 
-        if estabelecimento is not None:
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
             query = query.filter(
-                ProcedimentoPorUsuarioEstabelecimento.estabelecimento == estabelecimento
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento.in_(
+                    lista_estabelecimentos
+                )
             )
 
-        if periodo is not None:
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
             query = query.filter(
-                ProcedimentoPorUsuarioEstabelecimento.periodo == periodo
+                ProcedimentoPorUsuarioEstabelecimento.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
             query = query.filter(
-                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_idade == estabelecimento_linha_idade
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_idade.in_(
+                    lista_linhas_de_idade
+                )
             )
         if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
             query = query.filter(
-                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_perfil == estabelecimento_linha_perfil
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )  
             )
         procedimentos_por_usuario_por_estabelecimento = query.all()
 
