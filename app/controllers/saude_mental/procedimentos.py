@@ -70,13 +70,13 @@ def consultar_procedimentos_por_hora(
         ).filter(ProcedimentosPorHora.unidade_geografica_id_sus == municipio_id_sus)
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 ProcedimentosPorHora.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(ProcedimentosPorHora.periodo.in_(lista_periodos))
 
         if ocupacao is not None:
@@ -118,21 +118,21 @@ def consultar_procedimentos_por_tipo(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
 
             query = query.filter(
                 ProcedimentosPorTipo.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
 
             query = query.filter(
                 ProcedimentosPorTipo.periodo.in_(lista_periodos)
             )
 
         if procedimentos is not None:
-            lista_procedimentos = separar_string("-", procedimentos)
+            lista_procedimentos = separar_string(",", procedimentos)
 
             query = query.filter(
                 ProcedimentosPorTipo.procedimento.in_(lista_procedimentos)
@@ -194,7 +194,7 @@ def consultar_procedimentos_por_usuario_tempo_servico(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
 
             query = query.filter(
                 ProcedimentoPorUsuarioTempoServiço
@@ -202,7 +202,7 @@ def consultar_procedimentos_por_usuario_tempo_servico(
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
 
             query = query.filter(
                 ProcedimentoPorUsuarioTempoServiço.periodo.in_(lista_periodos)
