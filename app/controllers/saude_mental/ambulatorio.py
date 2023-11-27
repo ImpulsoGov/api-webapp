@@ -22,13 +22,13 @@ def consultar_dados_ambulatorio_atendimento_resumo(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 AmbulatorioAtendimentoResumo.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(AmbulatorioAtendimentoResumo.periodo.in_(lista_periodos))    
 
         ambulatorio_atendimento_resumo = query.all()
@@ -97,13 +97,13 @@ def consultar_ambulatorio_usuario_perfil(
         ).filter(AmbulatorioUsuariosPerfil.unidade_geografica_id_sus == municipio_id_sus)
 
         if estabelecimentos is not None:
-                lista_estabelecimentos = separar_string("-", estabelecimentos)
-                query = query.filter(
-                    AmbulatorioUsuariosPerfil.estabelecimento.in_(lista_estabelecimentos)
-                )
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
+            query = query.filter(
+                AmbulatorioUsuariosPerfil.estabelecimento.in_(lista_estabelecimentos)
+            )
         if periodos is not None:
-                lista_periodos = separar_string("-", periodos)
-                query = query.filter(AmbulatorioUsuariosPerfil.periodo.in_(lista_periodos))
+            lista_periodos = separar_string(",", periodos)
+            query = query.filter(AmbulatorioUsuariosPerfil.periodo.in_(lista_periodos))
 
         ambulatorio_usuario_perfil = query.all()
         return ambulatorio_usuario_perfil
