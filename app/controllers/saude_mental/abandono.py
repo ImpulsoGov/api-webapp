@@ -16,7 +16,8 @@ session = db.session
 def consultar_dados_caps_adesao_evasao_coortes_resumo(
     municipio_id_sus: str,
     estabelecimentos: str,
-    periodos: str):
+    periodos: str
+):
 
     try:
         query = session.query(

@@ -20,7 +20,7 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
     estabelecimentos: str,
     estabelecimento_linha_idade: str,
     estabelecimento_linha_perfil: str
-    ):
+):
     try:
         query = session.query(
             AtendimentosIndividuaisPorCaps.perc_apenas_atendimentos_individuais,
