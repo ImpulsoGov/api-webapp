@@ -12,28 +12,6 @@ from app.utils.separar_string import separar_string
 
 session = db.session
 
-def dados_caps_adesao_usuarios_perfil(municipio_id_sus: str):
-    # dados_caps_adesao_usuarios_perfil = (
-    #     session.query(AbandonoPerfil)
-    #     .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-    #     .all()
-    # )
-
-    dados_caps_adesao_usuarios_perfil = pd.read_parquet(
-        f"data/caps_adesao_usuarios_perfil_{municipio_id_sus}.parquet",
-    )
-
-    if len(dados_caps_adesao_usuarios_perfil) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Dados de Caps Adesão usuarios perfil não encontrado",
-        )
-
-    return Response(
-        dados_caps_adesao_usuarios_perfil.to_json(orient="records"),
-        media_type="application/json",
-    )
-
 
 def consultar_dados_caps_adesao_evasao_coortes_resumo(
     municipio_id_sus: str,
@@ -52,7 +30,8 @@ def consultar_dados_caps_adesao_evasao_coortes_resumo(
             AbandonoCoortes.ate_ano,
             AbandonoCoortes.periodo,
             AbandonoCoortes.estabelecimento,
-            AbandonoCoortes.maior_taxa_estabelecimento
+            AbandonoCoortes.maior_taxa_estabelecimento,
+            AbandonoCoortes.nome_mes
         ).filter(
             AbandonoCoortes.unidade_geografica_id_sus == municipio_id_sus
         )
