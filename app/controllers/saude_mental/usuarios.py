@@ -67,19 +67,19 @@ def consultar_usuarios_ativos_por_estabelecimento(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
@@ -87,7 +87,7 @@ def consultar_usuarios_ativos_por_estabelecimento(
             )
 
         if estabelecimento_linha_idade is not None:
-            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
             query = query.filter(
                 UsuariosPerfilEstabelecimento.estabelecimento_linha_idade.in_(
                     lista_linhas_de_idade
@@ -161,19 +161,19 @@ def consultar_usuarios_novos_resumo(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 UsuariosNovosResumo.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(
                 UsuariosNovosResumo.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
             query = query.filter(
                 UsuariosNovosResumo.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
@@ -181,7 +181,7 @@ def consultar_usuarios_novos_resumo(
             )
 
         if estabelecimento_linha_idade is not None:
-            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
             query = query.filter(
                 UsuariosNovosResumo.estabelecimento_linha_idade.in_(lista_linhas_de_idade)
             )
