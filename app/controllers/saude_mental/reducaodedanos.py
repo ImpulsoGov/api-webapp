@@ -29,17 +29,17 @@ def consultar_reducao_de_danos(
         ).filter(ReducaoDanos.unidade_geografica_id_sus == municipio_id_sus)
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 ReducaoDanos.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(ReducaoDanos.periodo.in_(lista_periodos))
 
         if ocupacoes is not None:
-            lista_ocupacoes = separar_string("-", ocupacoes)
+            lista_ocupacoes = separar_string(",", ocupacoes)
             query = query.filter(ReducaoDanos.profissional_vinculo_ocupacao.in_(lista_ocupacoes))
 
         procedimentos_por_hora = query.all()
