@@ -38,19 +38,19 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 AtendimentosIndividuaisPorCaps.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(
                 AtendimentosIndividuaisPorCaps.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_idade is not None:
-            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
             query = query.filter(
                 AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade.in_(
                     lista_linhas_de_idade
@@ -58,7 +58,7 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
             )
 
         if estabelecimento_linha_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
             query = query.filter(
                 AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil

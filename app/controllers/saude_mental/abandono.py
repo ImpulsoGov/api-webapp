@@ -37,12 +37,12 @@ def consultar_dados_caps_adesao_evasao_coortes_resumo(
             AbandonoCoortes.unidade_geografica_id_sus == municipio_id_sus
         )
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 AbandonoCoortes.estabelecimento.in_(lista_estabelecimentos)
             )
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(
                 AbandonoCoortes.periodo.in_(lista_periodos)
             )

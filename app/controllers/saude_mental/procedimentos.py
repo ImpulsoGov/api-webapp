@@ -28,7 +28,7 @@ def consultar_dados_procedimentos_por_usuario_estabelecimento(
         )
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 ProcedimentoPorUsuarioEstabelecimento.estabelecimento.in_(
                     lista_estabelecimentos
@@ -36,20 +36,20 @@ def consultar_dados_procedimentos_por_usuario_estabelecimento(
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(
                 ProcedimentoPorUsuarioEstabelecimento.periodo.in_(lista_periodos)
             )
 
         if estabelecimento_linha_idade is not None:
-            lista_linhas_de_idade = separar_string("-", estabelecimento_linha_idade)
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
             query = query.filter(
                 ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_idade.in_(
                     lista_linhas_de_idade
                 )
             )
         if estabelecimento_linha_perfil is not None:
-            lista_linhas_de_perfil = separar_string("-", estabelecimento_linha_perfil)
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
             query = query.filter(
                 ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
