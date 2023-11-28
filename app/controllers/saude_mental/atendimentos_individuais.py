@@ -14,22 +14,66 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def obter_atendimentos_individuais_por_caps_de_municipio(municipio_id_sus: str):
-    atendimentos_individuais_caps = (
-        session.query(AtendimentosIndividuaisPorCaps)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(atendimentos_individuais_caps) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail="Dados de atendimentos individuais CAPS "
-            "do município não encontrados",
+def obter_atendimentos_individuais_por_caps_de_municipio(
+    municipio_id_sus: str,
+    periodos: str,
+    estabelecimentos: str,
+    estabelecimento_linha_idade: str,
+    estabelecimento_linha_perfil: str
+):
+    try:
+        query = session.query(
+            AtendimentosIndividuaisPorCaps.perc_apenas_atendimentos_individuais,
+            AtendimentosIndividuaisPorCaps.id,
+            AtendimentosIndividuaisPorCaps.periodo,
+            AtendimentosIndividuaisPorCaps.estabelecimento,
+            AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade,
+            AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil,
+            AtendimentosIndividuaisPorCaps.nome_mes,
+            AtendimentosIndividuaisPorCaps.maior_taxa,
+            AtendimentosIndividuaisPorCaps.perc_apenas_atendimentos_individuais_anterior,
+            AtendimentosIndividuaisPorCaps.dif_perc_apenas_atendimentos_individuais
+        ).filter(
+            AtendimentosIndividuaisPorCaps.unidade_geografica_id_sus == municipio_id_sus
         )
 
-    return atendimentos_individuais_caps
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
+            query = query.filter(
+                AtendimentosIndividuaisPorCaps.estabelecimento.in_(lista_estabelecimentos)
+            )
 
+        if periodos is not None:
+            lista_periodos = separar_string(",", periodos)
+            query = query.filter(
+                AtendimentosIndividuaisPorCaps.periodo.in_(lista_periodos)
+            )
+
+        if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
+            query = query.filter(
+                AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade.in_(
+                    lista_linhas_de_idade
+                )
+            )
+
+        if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
+            query = query.filter(
+                AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )
+            )        
+        atendimentos_individuais_caps = query.all()
+        return atendimentos_individuais_caps
+    except (exc.SQLAlchemyError, Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error")
+        )
 
 def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
     resumo_perfil_usuarios_caps = (

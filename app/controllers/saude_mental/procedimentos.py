@@ -13,20 +13,60 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def dados_procedimentos_por_usuario_estabelecimento(municipio_id_sus: str):
-    ProcedimentoPorUsuarioEstabelecimento_dados = (
-        session.query(ProcedimentoPorUsuarioEstabelecimento)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(ProcedimentoPorUsuarioEstabelecimento_dados) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Matriciamentos CAPS no último ano " "do município não encontrados"),
+def consultar_dados_procedimentos_por_usuario_estabelecimento(
+    municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str,
+    estabelecimento_linha_idade: str,
+    estabelecimento_linha_perfil: str
+):
+    try:
+        query = session.query(
+            ProcedimentoPorUsuarioEstabelecimento
+        ).filter(
+            ProcedimentoPorUsuarioEstabelecimento.unidade_geografica_id_sus == municipio_id_sus
         )
 
-    return ProcedimentoPorUsuarioEstabelecimento_dados
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento.in_(
+                    lista_estabelecimentos
+                )
+            )
+
+        if periodos is not None:
+            lista_periodos = separar_string(",", periodos)
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.periodo.in_(lista_periodos)
+            )
+
+        if estabelecimento_linha_idade is not None:
+            lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_idade.in_(
+                    lista_linhas_de_idade
+                )
+            )
+        if estabelecimento_linha_perfil is not None:
+            lista_linhas_de_perfil = separar_string(",", estabelecimento_linha_perfil)
+            query = query.filter(
+                ProcedimentoPorUsuarioEstabelecimento.estabelecimento_linha_perfil.in_(
+                    lista_linhas_de_perfil
+                )  
+            )
+        procedimentos_por_usuario_por_estabelecimento = query.all()
+
+        return procedimentos_por_usuario_por_estabelecimento
+
+    except (Exception) as error:
+        session.rollback()
+        print({"error": str(error)})
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+
 
 
 def dados_procedimentos_por_usuario_resumo(municipio_id_sus: str):
