@@ -1,5 +1,4 @@
 from fastapi import HTTPException
-
 from app.models import db
 from app.models.saude_mental.ambulatorio import (
     AmbulatorioAtendimentoResumo,
@@ -7,26 +6,39 @@ from app.models.saude_mental.ambulatorio import (
     AmbulatorioProcedimentosPorProfissional,
     AmbulatorioUsuariosPerfil,
 )
+from app.utils.separar_string import separar_string
 
 session = db.session
 
-
-def obter_ambulatorio_atendimento_resumo(
+def consultar_dados_ambulatorio_atendimento_resumo(
     municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str
 ):
-    ambulatorio_atendimento_resumo = (
-        session.query(AmbulatorioAtendimentoResumo)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(ambulatorio_atendimento_resumo) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados não encontrados",),
+    try:
+        query = session.query(AmbulatorioAtendimentoResumo).filter(
+            AmbulatorioAtendimentoResumo.unidade_geografica_id_sus == municipio_id_sus
         )
 
-    return ambulatorio_atendimento_resumo
+        if estabelecimentos is not None:
+            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            query = query.filter(
+                AmbulatorioAtendimentoResumo.estabelecimento.in_(lista_estabelecimentos)
+            )
+
+        if periodos is not None:
+            lista_periodos = separar_string("-", periodos)
+            query = query.filter(AmbulatorioAtendimentoResumo.periodo.in_(lista_periodos))    
+
+        ambulatorio_atendimento_resumo = query.all()
+        return ambulatorio_atendimento_resumo
+    except (Exception) as error:
+        session.rollback()
+        print({"error": str(error)})
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
 
 
 def obter_ambulatorio_atendimento_resumo_ultimo_mes(
@@ -64,20 +76,32 @@ def obter_ambulatorio_procedimento_por_profissional(
 
     return ambulatorio_procedimento_por_profissional
 
-
-def obter_ambulatorio_usuario_perfil(
+def consultar_ambulatorio_usuario_perfil(
     municipio_id_sus: str,
+    estabelecimentos: str,
+    periodos: str,
 ):
-    ambulatorio_usuario_perfil = (
-        session.query(AmbulatorioUsuariosPerfil)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
+    try:
+        query = session.query(
+            AmbulatorioUsuariosPerfil
+        ).filter(AmbulatorioUsuariosPerfil.unidade_geografica_id_sus == municipio_id_sus)
 
-    if len(ambulatorio_usuario_perfil) == 0:
+        if estabelecimentos is not None:
+                lista_estabelecimentos = separar_string("-", estabelecimentos)
+                query = query.filter(
+                    AmbulatorioUsuariosPerfil.estabelecimento.in_(lista_estabelecimentos)
+                )
+        if periodos is not None:
+                lista_periodos = separar_string("-", periodos)
+                query = query.filter(AmbulatorioUsuariosPerfil.periodo.in_(lista_periodos))        
+
+        ambulatorio_usuario_perfil = query.all()
+        return ambulatorio_usuario_perfil
+
+    except (Exception) as error:
+        session.rollback()
+        print({"error": str(error)})
         raise HTTPException(
-            status_code=404,
-            detail=("Dados não encontrados",),
+            status_code=500,
+            detail=("Internal Server Error"),
         )
-
-    return ambulatorio_usuario_perfil
