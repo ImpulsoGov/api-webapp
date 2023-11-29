@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from ..dependencies import adiciona_cache_header
+from ...dependencies import adiciona_cache_header
 from app.routers.saude_mental import (
     abandono,
     ambulatorio,
