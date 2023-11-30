@@ -29,17 +29,17 @@ def consultar_reducao_de_danos(
         ).filter(ReducaoDanos.unidade_geografica_id_sus == municipio_id_sus)
 
         if estabelecimentos is not None:
-            lista_estabelecimentos = separar_string("-", estabelecimentos)
+            lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
                 ReducaoDanos.estabelecimento.in_(lista_estabelecimentos)
             )
 
         if periodos is not None:
-            lista_periodos = separar_string("-", periodos)
+            lista_periodos = separar_string(",", periodos)
             query = query.filter(ReducaoDanos.periodo.in_(lista_periodos))
 
         if ocupacoes is not None:
-            lista_ocupacoes = separar_string("-", ocupacoes)
+            lista_ocupacoes = separar_string(",", ocupacoes)
             query = query.filter(ReducaoDanos.profissional_vinculo_ocupacao.in_(lista_ocupacoes))
 
         procedimentos_por_hora = query.all()
@@ -80,16 +80,20 @@ def consultar_nomes_de_ocupacoes_reducao_de_danos(municipio_id_sus: str):
 def dados_reducaodedanos_12meses(
     municipio_id_sus: str,
 ):
-    dados_reducaodedanos_12meses = (
-        session.query(ReducaoDanos12meses)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(dados_reducaodedanos_12meses) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dados de Redução de danos dos 12 meses não encontrados",),
+    try:
+        dados_reducaodedanos_12meses = (
+            session.query(ReducaoDanos12meses)
+            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
+            .all()
         )
 
-    return dados_reducaodedanos_12meses
+        return dados_reducaodedanos_12meses
+    except (Exception) as error:
+        session.rollback()
+
+        print({"error": str(error)})
+
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
