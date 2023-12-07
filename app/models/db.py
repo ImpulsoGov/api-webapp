@@ -147,6 +147,7 @@ Session.configure(
         Base_PRODUCAO: engine_PRODUCAO,
         Base_saude_mental: engine_saude_mental,
         Base_impulso_previne_publico: engine_impulso_previne_publico,
+        Base_impulso_previne_nominal: engine_impulso_previne_nominal,
     }
 )
 session = Session()
