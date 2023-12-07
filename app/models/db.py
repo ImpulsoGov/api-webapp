@@ -141,9 +141,12 @@ Base_impulso_previne_nominal.metadata.create_all(bind=engine_impulso_previne_nom
 
 ### CRIADOR DE SESSÃO ###
 Session = sessionmaker(twophase=True)
-Session.configure(binds={Base_usuarios: engine_usuarios, 
-                         Base_PRODUCAO: engine_PRODUCAO,
-                         Base_saude_mental: engine_saude_mental,
-                         Base_impulso_previne_publico:engine_impulso_previne_publico,
-                         Base_impulso_previne_nominal:engine_impulso_previne_nominal})
+Session.configure(
+    binds={
+        Base_usuarios: engine_usuarios,
+        Base_PRODUCAO: engine_PRODUCAO,
+        Base_saude_mental: engine_saude_mental,
+        Base_impulso_previne_publico: engine_impulso_previne_publico,
+    }
+)
 session = Session()
