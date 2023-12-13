@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DATE, BOOLEAN, DateTime, TIMESTAMP
-from app.models import DB_PRODUCAO
+from app.models import db
 
-Base = DB_PRODUCAO.Base
+Base = db.Base_PRODUCAO_APLICACOES
 
 
 class Citopatologico(Base):

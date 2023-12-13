@@ -1,7 +1,7 @@
 from sqlalchemy import BOOLEAN, DATE, TIMESTAMP, Column, Integer, String
-from app.models import DB_PRODUCAO
+from app.models import db
 
-Base = DB_PRODUCAO.Base
+Base = db.Base_PRODUCAO_APLICACOES
 
 
 class Diabeticos(Base):
