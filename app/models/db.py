@@ -102,20 +102,6 @@ engine_impulso_previne_publico = create_engine(
     echo=True,
 )
 
-engine_impulso_previne_nominal = create_engine(
-    "postgresql://{}:{}@{}:{}/{}?".format(
-        credencial["impulso_previne_nominal"]["USERNAME"].strip(),
-        credencial["impulso_previne_nominal"]["PASSWORD"].strip(),
-        credencial["impulso_previne_nominal"]["HOSTNAME"].strip(),
-        int(credencial["impulso_previne_nominal"]["PORT"].strip()),
-        credencial["impulso_previne_nominal"]["DATABASE"].strip(),
-    ),
-    connect_args={
-        "options": "-c statement_timeout=100000000",
-    },
-    echo=True,
-)
-
 
 ### CRIA AS BASES DE CADA UM DOS MODELOS ###
 Base_usuarios = declarative_base()
@@ -134,16 +120,14 @@ Base_impulso_previne_publico = declarative_base()
 Base_impulso_previne_publico.metadata.drop_all(bind=engine_impulso_previne_publico)
 Base_impulso_previne_publico.metadata.create_all(bind=engine_impulso_previne_publico)
 
-Base_impulso_previne_nominal = declarative_base()
-Base_impulso_previne_nominal.metadata.drop_all(bind=engine_impulso_previne_nominal)
-Base_impulso_previne_nominal.metadata.create_all(bind=engine_impulso_previne_nominal)
-
-
 ### CRIADOR DE SESSÃO ###
 Session = sessionmaker(twophase=True)
-Session.configure(binds={Base_usuarios: engine_usuarios, 
-                         Base_PRODUCAO: engine_PRODUCAO,
-                         Base_saude_mental: engine_saude_mental,
-                         Base_impulso_previne_publico:engine_impulso_previne_publico,
-                         Base_impulso_previne_nominal:engine_impulso_previne_nominal})
+Session.configure(
+    binds={
+        Base_usuarios: engine_usuarios,
+        Base_PRODUCAO: engine_PRODUCAO,
+        Base_saude_mental: engine_saude_mental,
+        Base_impulso_previne_publico: engine_impulso_previne_publico,
+    }
+)
 session = Session()

@@ -1,9 +1,7 @@
 from sqlalchemy import BOOLEAN, DATE, TIMESTAMP, Column, Integer, String
-
 from app.models import DB_PRODUCAO
 
-from app.models import db
-Base = db.Base_impulso_previne_nominal
+Base = DB_PRODUCAO.Base
 
 
 class Diabeticos(Base):
@@ -50,7 +48,7 @@ class Diabeticos(Base):
     criacao_data = Column(TIMESTAMP, nullable=True)
     atualizacao_data = Column(TIMESTAMP, nullable=True)
     dt_registro_producao_mais_recente = Column(DATE, nullable=True)
-    __table_args__ = {"schema": "impulso_previne_dados_nominais_replica"}
+    __table_args__ = {"schema": "impulso_previne_dados_nominais"}
 
 
 # Base.metadata.create_all(db.engine)

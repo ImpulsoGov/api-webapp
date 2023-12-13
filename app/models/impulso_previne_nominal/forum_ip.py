@@ -7,8 +7,9 @@ from sqlalchemy.orm import relation
 from app.models import db
 from app.models.usuarios.usuarios import Usuario
 
-from app.models import db
-Base = db.Base_impulso_previne_nominal
+from app.models import DB_PRODUCAO
+
+Base = DB_PRODUCAO.Base
 
 
 class Forum_ip(Base):

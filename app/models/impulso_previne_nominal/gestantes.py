@@ -1,10 +1,12 @@
 from sqlalchemy import DATE, Column, Integer, String, TIMESTAMP
-from app.models import db
-Base = db.Base_impulso_previne_nominal
+from app.models import DB_PRODUCAO
+
+Base = DB_PRODUCAO.Base
+
 
 class Gestantes(Base):
     __tablename__ = "painel_gestantes_lista_nominal"
-    chave_id_gestacao = Column(String,primary_key=True, nullable=True)
+    chave_id_gestacao = Column(String, primary_key=True, nullable=True)
     municipio_id_sus = Column(String, nullable=True)
     equipe_ine = Column(String, nullable=True)
     equipe_nome = Column(String, nullable=True)
@@ -22,11 +24,11 @@ class Gestantes(Base):
     id_registro_parto = Column(Integer, nullable=True)
     id_registro_aborto = Column(Integer, nullable=True)
     acs_nome = Column(String, nullable=True)
-    atualizacao_data  = Column(TIMESTAMP, nullable=True)
+    atualizacao_data = Column(TIMESTAMP, nullable=True)
     criacao_data = Column(DATE, nullable=True)
     municipio_uf = Column(String, nullable=True)
     dt_registro_producao_mais_recente = Column(DATE, nullable=True)
-    __table_args__ = {"schema": "impulso_previne_dados_nominais_replica"}
+    __table_args__ = {"schema": "impulso_previne_dados_nominais"}
 
 
 # Base.metadata.create_all(db.engine)
