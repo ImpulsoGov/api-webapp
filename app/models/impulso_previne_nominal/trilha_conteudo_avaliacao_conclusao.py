@@ -3,7 +3,8 @@ from sqlalchemy import TIMESTAMP, Boolean, Column, Integer, String
 from app.models import db
 
 from app.models import db
-Base = db.Base_impulso_previne_nominal
+
+Base = db.Base_PRODUCAO
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
@@ -29,7 +30,9 @@ class AvaliacaoConclusaoConteudo(Base):
         nullable=True,
         comment="Avaliação do usuario do conteudo 1 a 5 estrelas",
     )
-    concluido = Column(Boolean, nullable=True, comment="Conteudo concluido pelo usuario")
+    concluido = Column(
+        Boolean, nullable=True, comment="Conteudo concluido pelo usuario"
+    )
     criacao_data = Column(TIMESTAMP, nullable=False, comment="Data de Criação")
     atualizacao_data = Column(TIMESTAMP, nullable=False, comment="Data de Atualização")
     __table_args__ = {"schema": "impulso_previne"}
