@@ -42,13 +42,6 @@ async def obter_usuarios_ativos_por_estabelecimento(
     )
 
 
-@router.get("/saude-mental/usuarios/novosresumo")
-async def obter_novos_usuarios_resumo(
-    municipio_id_sus: str,
-):
-    return obter_usuarios_novos_resumo(municipio_id_sus=municipio_id_sus)
-
-
 @router.get("/saude-mental/usuarios/novos/resumo")
 async def obter_resumo_usuarios_novos(
     response: Response,

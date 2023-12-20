@@ -90,36 +90,6 @@ def consultar_usuarios_ativos_por_estabelecimento(
         )
 
 
-def obter_usuarios_novos_resumo(
-    municipio_id_sus: str,
-):
-    try:
-        usuarios_novos_resumo = (
-            session.query(UsuariosNovosResumo)
-            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .all()
-        )
-
-        if len(usuarios_novos_resumo) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados usuarios resumo novos não encontrados."),
-            )
-
-        return usuarios_novos_resumo
-    except exc.SQLAlchemyError as e:
-        session.rollback()
-
-        error = str(e)
-
-        print({"error": error})
-
-        raise HTTPException(
-            status_code=500,
-            detail=("Internal Server Error"),
-        )
-
-
 def consultar_usuarios_novos_resumo(
     municipio_id_sus: str,
     estabelecimentos: str,
