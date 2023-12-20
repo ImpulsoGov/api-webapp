@@ -21,24 +21,6 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def obter_usuarios_perfil_estabelecimento(
-    municipio_id_sus: str,
-):
-    usuarios_perfil_estabelecimento = (
-        session.query(UsuariosPerfilEstabelecimento)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(usuarios_perfil_estabelecimento) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dado perfil estabelecimento não encontrado."),
-        )
-
-    return usuarios_perfil_estabelecimento
-
-
 def consultar_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
     estabelecimentos: str,
