@@ -11,8 +11,6 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_novos_por_condicao,
     obter_perfil_usuarios_novos_por_genero_e_idade,
     obter_perfil_usuarios_novos_por_raca,
-    obter_usuarios_novos_resumo,
-    obter_usuarios_perfil_estabelecimento,
     consultar_usuarios_ativos_por_estabelecimento,
     consultar_usuarios_novos_resumo
 )
