@@ -8,8 +8,6 @@ from app.controllers.saude_mental.ambulatorio import (
 )
 
 
-QUANTIDADE_SEGUNDOS_24_HORAS = 60 * 60 * 24
-
 router = APIRouter()
 
 
