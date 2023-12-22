@@ -1,5 +1,5 @@
 from app.models import DB_PRODUCAO  
-from app.models.hipertensos import Hipertensos
+from app.models.impulso_previne_nominal.hipertensos import Hipertensos
 from cachetools import TTLCache
 session = DB_PRODUCAO.session
 

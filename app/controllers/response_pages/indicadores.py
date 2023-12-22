@@ -1,4 +1,4 @@
-content=""""
+content = """"
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -452,6 +452,7 @@ content=""""
 </body>
 </html>
 """
+
 
 def html():
     return content

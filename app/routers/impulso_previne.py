@@ -13,7 +13,7 @@ from app.controllers import (
 from fastapi import APIRouter, Depends,Form
 from typing import Optional, List
 from pydantic import BaseModel
-from app.controllers.auth import get_current_user,Usuario
+from app.controllers.usuarios.auth import get_current_user,Usuario
 
 router = APIRouter()
 

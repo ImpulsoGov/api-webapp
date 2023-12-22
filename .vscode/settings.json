@@ -1,0 +1,20 @@
+{
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
+    },
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "-l",
+        "90"
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length",
+        "90"
+    ],
+    "python.testing.pytestEnabled": true,
+}

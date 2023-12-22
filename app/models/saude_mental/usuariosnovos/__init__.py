@@ -1,0 +1,7 @@
+# flake8: noqa: F401
+from .caps_usuarios_novos_perfil import UsuariosNovosPerfil
+from .caps_usuarios_novos_perfil_cid import UsuarioNovoPorCID
+from .caps_usuarios_novos_perfil_condicao import UsuarioNovoPorCondicao
+from .caps_usuarios_novos_perfil_genero_idade import UsuarioNovoPorGeneroEIdade
+from .caps_usuarios_novos_perfil_raca import UsuarioNovoPorRaca
+from .caps_usuarios_novos_resumo import UsuariosNovosResumo
