@@ -21,24 +21,6 @@ from app.utils.separar_string import separar_string
 session = db.session
 
 
-def obter_usuarios_perfil_estabelecimento(
-    municipio_id_sus: str,
-):
-    usuarios_perfil_estabelecimento = (
-        session.query(UsuariosPerfilEstabelecimento)
-        .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-        .all()
-    )
-
-    if len(usuarios_perfil_estabelecimento) == 0:
-        raise HTTPException(
-            status_code=404,
-            detail=("Dado perfil estabelecimento não encontrado."),
-        )
-
-    return usuarios_perfil_estabelecimento
-
-
 def consultar_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
     estabelecimentos: str,
@@ -101,36 +83,6 @@ def consultar_usuarios_ativos_por_estabelecimento(
         session.rollback()
 
         print({"error": str(error)})
-
-        raise HTTPException(
-            status_code=500,
-            detail=("Internal Server Error"),
-        )
-
-
-def obter_usuarios_novos_resumo(
-    municipio_id_sus: str,
-):
-    try:
-        usuarios_novos_resumo = (
-            session.query(UsuariosNovosResumo)
-            .filter_by(unidade_geografica_id_sus=municipio_id_sus)
-            .all()
-        )
-
-        if len(usuarios_novos_resumo) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=("Dados usuarios resumo novos não encontrados."),
-            )
-
-        return usuarios_novos_resumo
-    except exc.SQLAlchemyError as e:
-        session.rollback()
-
-        error = str(e)
-
-        print({"error": error})
 
         raise HTTPException(
             status_code=500,
