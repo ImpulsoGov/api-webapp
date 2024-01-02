@@ -17,14 +17,14 @@ async def obter_atendimentos_caps(
     estabelecimentos: Union[str, None] = None,
     periodos: Union[str, None] = None,
     estabelecimento_linha_idade: Union[str, None] = None,
-    estabelecimento_linha_perfil: Union[str, None] = None
+    estabelecimento_linha_perfil: Union[str, None] = None,
 ):
     return obter_atendimentos_individuais_por_caps_de_municipio(
         municipio_id_sus=municipio_id_sus,
         estabelecimentos=estabelecimentos,
         periodos=periodos,
         estabelecimento_linha_perfil=estabelecimento_linha_perfil,
-        estabelecimento_linha_idade=estabelecimento_linha_idade
+        estabelecimento_linha_idade=estabelecimento_linha_idade,
     )
 
 
@@ -32,7 +32,9 @@ async def obter_atendimentos_caps(
 async def obter_resumo_perfil_usuarios_caps(
     municipio_id_sus: str,
 ):
-    return obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus=municipio_id_sus)
+    return obter_resumo_perfil_usuarios_caps_por_id_sus(
+        municipio_id_sus=municipio_id_sus
+    )
 
 
 @router.get("/saude-mental/atendimentosindividuais/cid")

@@ -4,7 +4,7 @@ from app.controllers.saude_mental.abandono import (
     dados_caps_adesao_evasao_mensal,
     obter_perfil_evadiram_no_mes_por_cid,
     obter_perfil_evadiram_no_mes_por_genero_e_idade,
-    consultar_dados_caps_adesao_evasao_coortes_resumo
+    consultar_dados_caps_adesao_evasao_coortes_resumo,
 )
 
 router = APIRouter()
@@ -14,13 +14,13 @@ router = APIRouter()
 async def obter_dados_caps_adesao_evasao_coortes_resumo(
     municipio_id_sus: str,
     estabelecimentos: Union[str, None] = None,
-    periodos: Union[str, None] = None
+    periodos: Union[str, None] = None,
 ):
     return consultar_dados_caps_adesao_evasao_coortes_resumo(
         municipio_id_sus=municipio_id_sus,
         periodos=periodos,
-        estabelecimentos=estabelecimentos
-        )
+        estabelecimentos=estabelecimentos,
+    )
 
 
 @router.get("/saude-mental/abandono/mensal")
