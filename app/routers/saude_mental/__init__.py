@@ -17,7 +17,7 @@ from app.routers.saude_mental import (
 )
 
 router = APIRouter(
-    dependencies = [Depends(adiciona_cache_header)]
+    # dependencies = [Depends(adiciona_cache_header)]
 )
 
 router.include_router(encaminhamentos.router)
