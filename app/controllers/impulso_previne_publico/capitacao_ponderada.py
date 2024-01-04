@@ -8,34 +8,21 @@ from cachetools import TTLCache
 
 session = db.session
 
-cache_capitacao_ponderada_cadastros_por_equipe = TTLCache(maxsize=38, ttl=24*60*60)
-def capitacao_ponderada_cadastros_por_equipe(
-        municipio_uf:str,
-        ):
-    result = cache_capitacao_ponderada_cadastros_por_equipe.get(municipio_uf)
+def capitacao_ponderada_cadastros_por_equipe(municipio_uf:str):
     try:
-        if result is None:
-            result = session.query(
-                CadastrosEquipes
-                ).filter_by(
-                municipio_uf=municipio_uf,
+        return session.query(
+            CadastrosEquipes
+            ).filter_by(
+            municipio_uf=municipio_uf,
 
-                ).with_entities(
-                    CadastrosEquipes.equipe_id_ine,
-                    CadastrosEquipes.equipe_nome,
-                    CadastrosEquipes.equipe_status,
-                    CadastrosEquipes.data_inicio,
-                    CadastrosEquipes.cnes_nome,
-                    CadastrosEquipes.equipe_id_ine,
-                    CadastrosEquipes.cadastro_total,
-                    CadastrosEquipes.cadastros_com_pontuacao,
-                    CadastrosEquipes.municipio_ultimo_parametro,
-                    CadastrosEquipes.municipio_ultimo_parametro
-                ).order_by(
-                    CadastrosEquipes.data_inicio
-                ).all()
-            cache_capitacao_ponderada_cadastros_por_equipe[municipio_uf] = result
-        return result
+            ).with_entities(
+                CadastrosEquipes.equipe_status,
+                CadastrosEquipes.cadastro_total,
+                CadastrosEquipes.cadastros_com_pontuacao,
+                CadastrosEquipes.municipio_ultimo_parametro,
+            ).order_by(
+                CadastrosEquipes.data_inicio
+            ).all()
     except Exception as error:
         session.rollback()
         print({"erros": [error]})

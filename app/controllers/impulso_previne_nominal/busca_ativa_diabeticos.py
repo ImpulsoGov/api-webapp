@@ -1,15 +1,16 @@
 from app.models import DB_PRODUCAO
 from app.models.impulso_previne_nominal.diabeticos import Diabeticos
+from fastapi import HTTPException, status
 from cachetools import TTLCache
 
 session = DB_PRODUCAO.session
 
-def diabeticos_equipe(municipio_uf,equipe):
+def diabeticos_equipe(municipio_id_sus,equipe):
     try:
         return session.query(
                 Diabeticos
                 ).filter_by(
-                municipio_uf=municipio_uf,
+                municipio_id_sus=municipio_id_sus,
                 equipe_ine_cadastro=equipe
                 ).with_entities(
                     Diabeticos.cidadao_nome,
@@ -30,18 +31,20 @@ def diabeticos_equipe(municipio_uf,equipe):
                 ).all()
     except Exception as error:
         session.rollback()
-        print({"erros" : [error]})
-        return error
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error)
+        )
 
 
 cache_hipertensao_aps = TTLCache(maxsize=38, ttl=24*60*60)
-def diabetes_aps(municipio_uf):
-    result = cache_hipertensao_aps.get(municipio_uf)
+def diabetes_aps(municipio_id_sus):
+    result = cache_hipertensao_aps.get(municipio_id_sus)
     try:
         if result is None:
             result = session.query(
                 Diabeticos).filter_by(
-                municipio_uf=municipio_uf
+                municipio_id_sus=municipio_id_sus
                 ).with_entities(
                     Diabeticos.cidadao_nome,
                     Diabeticos.cidadao_cpf_dt_nascimento,
@@ -60,10 +63,12 @@ def diabetes_aps(municipio_uf):
                 ).order_by(
                     Diabeticos.cidadao_nome
                 ).all()
-            cache_hipertensao_aps[municipio_uf] = result
+            cache_hipertensao_aps[municipio_id_sus] = result
         return result
     except Exception as error:
         session.rollback()
-        print({"erros" : [error]})
-        return error
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(error)
+        )
 

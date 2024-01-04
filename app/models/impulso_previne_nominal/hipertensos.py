@@ -1,6 +1,8 @@
 from sqlalchemy import BOOLEAN, DATE, TIMESTAMP, Column, DateTime, Integer, String
-from app.models import DB_PRODUCAO
-Base = DB_PRODUCAO.Base
+from app.models import db
+
+Base = db.Base_PRODUCAO_APLICACOES
+
 
 class Hipertensos(Base):
     __tablename__ = "painel_enfermeiras_lista_nominal_hipertensos"

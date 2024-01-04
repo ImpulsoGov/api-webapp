@@ -3,7 +3,10 @@ import uuid
 from datetime import datetime
 
 from app.models import db
-from app.models.impulso_previne_nominal import trilha_conteudo_avaliacao_conclusao, trilhas_acessos
+from app.models.impulso_previne_nominal import (
+    trilha_conteudo_avaliacao_conclusao,
+    trilhas_acessos,
+)
 from sqlalchemy import func
 from fastapi import HTTPException, status
 
@@ -46,7 +49,8 @@ def avaliacao_conteudo(usuario_id: str, codigo_conteudo: str, avaliacao: int):
     atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def avaliacao_check(avaliacao):
-        if avaliacao in range(1,6) : return int(avaliacao)
+        if avaliacao in range(1, 6):
+            return int(avaliacao)
         return False
 
     if avaliacao_check(avaliacao) == False:
@@ -137,63 +141,79 @@ def conclusao_conteudo(usuario_id: str, codigo_conteudo: str, concluido: bool):
             session.rollback()
             return {"error": error}
 
-def trilha_acesso(usuario_id : str):
-        try:
-            res = session.query(trilhas_acessos.Trilhas_acesso).with_entities(
-                trilhas_acessos.Trilhas_acesso.trilha_id
-            ).filter_by(usuario_id=usuario_id).all()
-            return res 
-        except Exception as error:
-            session.rollback()
-            print({"erros" : [error]})
-            return error
 
-def trilha_modulos_acesso(usuario_id : str, trilha_id : str):
-        try:
-            res = session.query(trilhas_acessos.Trilhas_acesso).filter_by(
-                usuario_id=usuario_id,trilha_id=trilha_id
-            ).with_entities(
+def trilha_acesso(usuario_id: str):
+    try:
+        res = (
+            session.query(trilhas_acessos.Trilhas_acesso)
+            .with_entities(trilhas_acessos.Trilhas_acesso.trilha_id)
+            .filter_by(usuario_id=usuario_id)
+            .all()
+        )
+        return res
+    except Exception as error:
+        session.rollback()
+        print({"erros": [error]})
+        return HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error,
+        )
+
+
+def trilha_modulos_acesso(usuario_id: str, trilha_id: str):
+    try:
+        res = (
+            session.query(trilhas_acessos.Trilhas_acesso)
+            .filter_by(usuario_id=usuario_id, trilha_id=trilha_id)
+            .with_entities(
                 trilhas_acessos.Trilhas_acesso.trilha_id,
                 func.array_agg(trilhas_acessos.Trilhas_acesso.modulo).label("modulos"),
-            ).group_by(
+            )
+            .group_by(
                 trilhas_acessos.Trilhas_acesso.modulo,
-                trilhas_acessos.Trilhas_acesso.trilha_id
-            ).all()
-            return res
-        except Exception as error:
-            session.rollback()
-            print({"erros" : [error]})
-            return error
+                trilhas_acessos.Trilhas_acesso.trilha_id,
+            )
+            .all()
+        )
+        return res
+    except Exception as error:
+        session.rollback()
+        print({"erros": [error]})
+        return error
 
-def trilha_modulos_liberados(usuario_id : str, trilha_id : str, modulo : int):
-        try:
-            res = session.query(trilhas_acessos.Trilhas_acesso).filter_by(
-                usuario_id=usuario_id,
-                trilha_id=trilha_id,
-                modulo = modulo
-            ).with_entities(
+
+def trilha_modulos_liberados(usuario_id: str, trilha_id: str, modulo: int):
+    try:
+        res = (
+            session.query(trilhas_acessos.Trilhas_acesso)
+            .filter_by(usuario_id=usuario_id, trilha_id=trilha_id, modulo=modulo)
+            .with_entities(
                 trilhas_acessos.Trilhas_acesso.trilha_id,
                 func.array_agg(trilhas_acessos.Trilhas_acesso.modulo).label("modulos"),
-            ).group_by(
+            )
+            .group_by(
                 trilhas_acessos.Trilhas_acesso.modulo,
-                trilhas_acessos.Trilhas_acesso.trilha_id
-            ).all()
-            return res
-        except Exception as error:
-            session.rollback()
-            print({"erros" : [error]})
-            return error
+                trilhas_acessos.Trilhas_acesso.trilha_id,
+            )
+            .all()
+        )
+        return res
+    except Exception as error:
+        session.rollback()
+        print({"erros": [error]})
+        return error
 
 
-def trilha_modulos_acesso_add(usuario_id : str, trilha_id : str, modulo : int):
+def trilha_modulos_acesso_add(usuario_id: str, trilha_id: str, modulo: int):
     modulo_existente = HTTPException(
-        status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         detail="Modulo liberado anteriormente",
     )
-    if len(trilha_modulos_liberados(usuario_id,trilha_id,modulo))!=0 : raise modulo_existente
+    if len(trilha_modulos_liberados(usuario_id, trilha_id, modulo)) != 0:
+        raise modulo_existente
     try:
         liberar_modulo = trilhas_acessos.Trilhas_acesso(
-            id = str(uuid.uuid4()),
+            id=str(uuid.uuid4()),
             usuario_id=usuario_id,
             trilha_id=trilha_id,
             modulo=modulo,
@@ -201,8 +221,8 @@ def trilha_modulos_acesso_add(usuario_id : str, trilha_id : str, modulo : int):
         )
         session.add(liberar_modulo)
         session.commit()
-        return {"mensagem":"dados cadastrados com sucesso","error":None}
+        return {"mensagem": "dados cadastrados com sucesso", "error": None}
 
     except:
         session.rollback()
-        return {"mensagem":"Inserção dos dados falhou","error":True}
+        return {"mensagem": "Inserção dos dados falhou", "error": True}
