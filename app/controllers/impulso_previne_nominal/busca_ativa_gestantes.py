@@ -1,8 +1,10 @@
 from fastapi import HTTPException, status
 from app.models import db
 from app.models.impulso_previne_nominal.gestantes import Gestantes
+from app.models import DB_PRODUCAO
+from app.models.impulso_previne_nominal.busca_ativa_equipe import Gestantes
 
-session = db.session
+session = DB_PRODUCAO.session
 
 
 def consulta_gestantes_equipe(municipio_id_sus, equipe):

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Date, Float, Integer, Text
-from sqlalchemy.dialects.postgresql import UUID, VARCHAR
+from sqlalchemy.dialects.postgresql import UUID, VARCHAR, TIMESTAMP
 from app.models.saude_mental.schema import SCHEMA_SAUDE_MENTAL
 
 from app.models import db
@@ -23,4 +23,5 @@ class UsuariosNovosResumo(Base):
     usuarios_novos = Column(Integer)
     usuarios_novos_anterior = Column(Integer)
     dif_usuarios_novos_anterior = Column(Integer)
+    atualizacao_data = Column(TIMESTAMP(timezone=True))
     __table_args__ = {"schema": SCHEMA_SAUDE_MENTAL}
