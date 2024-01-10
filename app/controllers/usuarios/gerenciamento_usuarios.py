@@ -243,7 +243,7 @@ def validar_perfis_conflitantes(novo_perfil: int, perfis_cadastrados: set) -> No
         raise HTTPException(
             status_code=400,
             detail=f"""
-            O perfil {novo_perfil} não foi adicionado pois os perfis
+            O perfil {novo_perfil} não pode ser adicionado pois os perfis
             conflitantes {conflitos} já estão cadastrados
             """
         )
