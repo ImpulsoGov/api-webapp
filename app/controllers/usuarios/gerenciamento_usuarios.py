@@ -710,11 +710,13 @@ def listar_usuarios_cadastrados_ip():
                 Usuarios.mail,
                 Usuarios.cpf,
                 Usuarios.nome_usuario,
+                Usuarios.perfil_ativo,
                 UsuariosIP.id_usuario,
                 UsuariosIP.municipio,
                 UsuariosIP.cargo,
                 UsuariosIP.telefone,
                 UsuariosIP.equipe,
+
                 func.array_agg(func.distinct(Perfil_lista.descricao)).label(
                     "autorizacoes"
                 ),
@@ -724,6 +726,7 @@ def listar_usuarios_cadastrados_ip():
                 Usuarios.mail,
                 Usuarios.cpf,
                 Usuarios.nome_usuario,
+                Usuarios.perfil_ativo,
                 UsuariosIP.id_usuario,
                 UsuariosIP.municipio,
                 UsuariosIP.cargo,
@@ -837,6 +840,7 @@ def atualizar_cadastro_geral_e_ip(
             nome=dados_usuario["nome_usuario"],
             cpf=dados_usuario["cpf"],
             mail=dados_usuario["mail"],
+            perfiAtivo = dados_usuario["perfiAtivo"],
         )
         usuario_ip_atualizado = atualizar_cadastro_ip(
             id=dados_usuario["id"],
@@ -853,6 +857,7 @@ def atualizar_cadastro_geral_e_ip(
             "nome_usuario": usuario_atualizado.nome_usuario,
             "cpf": usuario_atualizado.cpf,
             "mail": usuario_atualizado.mail,
+            "perfiAtivo": usuario_atualizado.perfi_ativo,
             "municipio": usuario_ip_atualizado.municipio,
             "equipe": usuario_ip_atualizado.equipe,
             "cargo": usuario_ip_atualizado.cargo,
