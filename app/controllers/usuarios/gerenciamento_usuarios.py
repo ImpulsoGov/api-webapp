@@ -195,7 +195,7 @@ def dados_usuarios(id_cod, id, username, acesso):
                 Usuarios.cpf,
                 Usuarios.id,
                 Usuarios.nome_usuario,
-                Usuarios.perfil_ativo,
+                Usuarios.perfil_ativo, 
                 Usuarios.criacao_data,
                 Usuarios.atualizacao_data,
             )
