@@ -249,28 +249,29 @@ def validar_perfis_conflitantes(novo_perfil: int, perfis_cadastrados: set) -> No
         )
 
 
+# TODO MELHORIA: checar se o perfil recebido é um dos perfis válidos
 def add_perfil(id_cod, id, perfil, username, acesso):
     """Adiciona novo perfil a um usuário já cadastrado
 
     Parameters
     ----------
     id_cod : int
-        número que define como o usuário que receberá um novo perfil será encontrado.
+        Número que define como o usuário que receberá um novo perfil será encontrado.
         Número 1 para encontrar o usuário pelo email ou
         número 2 para encontrar o usuário pelo cpf
     id : str
-        identificador único (email ou cpf) do usuário que receberá um novo perfil.
+        Identificador único (email ou cpf) do usuário que receberá um novo perfil.
         Se id_cod for igual a 1, o id deve receber o email do usuário.
         Se id_cod for igual a 2, o id deve receber o cpf do usuário
     perfil : int
-        número do perfil que será adicionado ao usuário
+        Número do perfil que será adicionado ao usuário
     username : list[int]
-        lista de perfis já cadastrados do usuário que está usando o endpoint
+        Lista de perfis já cadastrados do usuário que está usando o endpoint
         para adicionar um perfil a outro usuário. Este dado é necessário para
         saber se quem está usando o endpoint tem permissão para modificar a
         lista de perfis de outra pessoa.
     acesso : int
-        perfil que tem permissão para gerir dados de outros usuários
+        Perfil que tem permissão para gerir dados de outros usuários
 
     Returns
     -------
