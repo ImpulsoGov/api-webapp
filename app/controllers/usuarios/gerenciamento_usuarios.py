@@ -57,6 +57,7 @@ class UsuarioIPAtualizado(BaseModel):
     equipe: str
     cargo: str
     telefone: str
+    perfil_ativo: str
 
 
 def lista_usuarios_sem_liberacao(username, acesso):
@@ -72,6 +73,7 @@ def lista_usuarios_sem_liberacao(username, acesso):
                 Usuarios.mail,
                 Usuarios.cpf,
                 Usuarios.id,
+                Usuarios.perfil_ativo
             )
             .filter_by(perfil_ativo=None)
             .all()
@@ -124,12 +126,14 @@ def cargo_nome(id_cod,id):
             func.array_agg(func.distinct(Perfil_lista.perfil)).label("perfis"),
             Usuarios.nome_usuario.label("nome"),
             Usuarios.id,
+            Usuarios.perfil_ativo,
             UsuariosIP.cargo,
             UsuariosIP.municipio,
             UsuariosIP.equipe
         ).group_by(
             Usuarios.nome_usuario,
             Usuarios.id,
+            Usuarios.perfil_ativo,
             UsuariosIP.cargo,
             UsuariosIP.municipio,
             UsuariosIP.equipe
