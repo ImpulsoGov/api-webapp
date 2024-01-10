@@ -9,6 +9,7 @@ import re
 import uuid
 from datetime import datetime
 from typing import List, NoReturn, Union
+from collections.abc import Iterable
 
 from email_validator import EmailNotValidError, validate_email
 from fastapi import HTTPException
@@ -210,22 +211,19 @@ def dados_usuarios(id_cod, id, username, acesso):
         return error
 
 
-# TODO TESTE UNITÁRIO: argumentos não são passados
-# TODO TESTE UNITÁRIO: argumentos são passados com os tipos incorretos
-# TODO TESTE UNITÁRIO: perfis_cadastrados é um set vazio ou set com None -> não há perfis cadastrados e segue com cadastro do novo_perfil
-# TODO TESTE UNITÁRIO: novo_perfil não possui chave na relacao_de_conflitos -> segue com cadastro do novo_perfil
-# TODO TESTE UNITÁRIO: novo_perfil possui chave na relacao_de_conflitos mas não possui conflitos -> segue com cadastro do novo_perfil
-# TODO TESTE UNITÁRIO: novo_perfil possui chave na relacao_de_conflitos e possui conflitos -> erro é levantado
-# TODO MELHORIA: tipar perfis_cadastrados como iterável e converter pra set dentro da função
-def validar_perfis_conflitantes(novo_perfil: int, perfis_cadastrados: set) -> None:
+def validar_perfis_conflitantes(
+    novo_perfil: int = None,
+    perfis_cadastrados: Iterable[int] = None
+) -> None:
     """Levanta um erro se houver perfis cadastrados que conflitam com o novo perfil
 
     Parameters
     ----------
-    novo_perfil : int
-        Novo perfil para adicionar a um usuário
-    perfis_cadastrados : set
-        Perfis já cadastrados do usuário que receberá um novo perfil
+    novo_perfil : int, optional
+        Número do novo perfil para adicionar a um usuário, por padrão None
+    perfis_cadastrados : Iterable[int], optional
+        Iterável com números dos perfis já cadastrados do usuário que
+        receberá um novo perfil, por padrão None
 
     Raises
     ------
@@ -237,7 +235,7 @@ def validar_perfis_conflitantes(novo_perfil: int, perfis_cadastrados: set) -> No
     """
     relacao_de_conflitos = {8: set([9]), 9: set([8])}
     perfis_conflitantes = relacao_de_conflitos.get(novo_perfil, set())
-    conflitos = perfis_cadastrados.intersection(perfis_conflitantes)
+    conflitos = set(perfis_cadastrados).intersection(perfis_conflitantes)
 
     if conflitos:
         raise HTTPException(
@@ -313,7 +311,7 @@ def add_perfil(id_cod, id, perfil, username, acesso):
         if resultado["perfil"] == perfil:
             return {"mensagem": "Usuário já possui perfil informado"}
 
-    perfis_cadastrados_de_usuario_encontrado = {linha["perfil"] for linha in res}
+    perfis_cadastrados_de_usuario_encontrado = [linha["perfil"] for linha in res]
 
     validar_perfis_conflitantes(
         novo_perfil=perfil,
