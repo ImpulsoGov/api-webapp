@@ -227,12 +227,20 @@ def validar_perfis_conflitantes(
 
     Raises
     ------
+    TypeError
+        Lança um TypeError quando qualquer argumento não é passado
     HTTPException
         Lança uma HTTPException com status 400 (Bad Request),
         indicando que o usuário já possui cadastrados perfis
         conflitantes com o novo perfil a ser adicionado,
         interrompendo o processo de atualização de perfil
     """
+    if novo_perfil is None:
+        raise TypeError("O parâmetro novo_perfil é obrigatório")
+
+    if perfis_cadastrados is None:
+        raise TypeError("O parâmetro perfis_cadastrados é obrigatório")
+
     relacao_de_conflitos = {8: set([9]), 9: set([8])}
     perfis_conflitantes = relacao_de_conflitos.get(novo_perfil, set())
     conflitos = set(perfis_cadastrados).intersection(perfis_conflitantes)
@@ -247,7 +255,7 @@ def validar_perfis_conflitantes(
         )
 
 
-# TODO MELHORIA: checar se o perfil recebido é um dos perfis válidos
+# TODO checar se o perfil recebido é um dos perfis válidos
 def add_perfil(id_cod, id, perfil, username, acesso):
     """Adiciona novo perfil a um usuário já cadastrado
 
