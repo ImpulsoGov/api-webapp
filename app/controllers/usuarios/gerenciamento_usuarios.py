@@ -210,6 +210,45 @@ def dados_usuarios(id_cod, id, username, acesso):
         return error
 
 
+# TODO TESTE UNITÁRIO: argumentos não são passados
+# TODO TESTE UNITÁRIO: argumentos são passados com os tipos incorretos
+# TODO TESTE UNITÁRIO: perfis_cadastrados é um set vazio ou set com None -> não há perfis cadastrados e segue com cadastro do novo_perfil
+# TODO TESTE UNITÁRIO: novo_perfil não possui chave na relacao_de_conflitos -> segue com cadastro do novo_perfil
+# TODO TESTE UNITÁRIO: novo_perfil possui chave na relacao_de_conflitos mas não possui conflitos -> segue com cadastro do novo_perfil
+# TODO TESTE UNITÁRIO: novo_perfil possui chave na relacao_de_conflitos e possui conflitos -> erro é levantado
+# TODO MELHORIA: tipar perfis_cadastrados como iterável e converter pra set dentro da função
+def validar_perfis_conflitantes(novo_perfil: int, perfis_cadastrados: set) -> None:
+    """Levanta um erro se houver perfis cadastrados que conflitam com o novo perfil
+
+    Parameters
+    ----------
+    novo_perfil : int
+        Novo perfil para adicionar a um usuário
+    perfis_cadastrados : set
+        Perfis já cadastrados do usuário que receberá um novo perfil
+
+    Raises
+    ------
+    HTTPException
+        Lança uma HTTPException com status 400 (Bad Request),
+        indicando que o usuário já possui cadastrados perfis
+        conflitantes com o novo perfil a ser adicionado,
+        interrompendo o processo de atualização de perfil
+    """
+    relacao_de_conflitos = {8: set([9]), 9: set([8])}
+    perfis_conflitantes = relacao_de_conflitos.get(novo_perfil, set())
+    conflitos = perfis_cadastrados.intersection(perfis_conflitantes)
+
+    if conflitos:
+        raise HTTPException(
+            status_code=400,
+            detail=f"""
+            O perfil {novo_perfil} não foi adicionado pois os perfis
+            conflitantes {conflitos} já estão cadastrados
+            """
+        )
+
+
 def add_perfil(id_cod, id, perfil, username, acesso):
     """Adiciona novo perfil a um usuário já cadastrado
 
@@ -272,6 +311,14 @@ def add_perfil(id_cod, id, perfil, username, acesso):
     for resultado in res:
         if resultado["perfil"] == perfil:
             return {"mensagem": "Usuário já possui perfil informado"}
+
+    perfis_cadastrados_de_usuario_encontrado = {linha["perfil"] for linha in res}
+
+    validar_perfis_conflitantes(
+        novo_perfil=perfil,
+        perfis_cadastrados=perfis_cadastrados_de_usuario_encontrado
+    )
+
     try:
         query = db.session.query(Perfil_lista).filter_by(perfil=perfil).all()
         query_perfil_id = query[0].id
