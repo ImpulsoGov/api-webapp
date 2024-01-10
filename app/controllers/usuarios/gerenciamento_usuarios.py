@@ -9,7 +9,7 @@ import re
 import uuid
 from datetime import datetime
 from typing import List, NoReturn, Union
-from collections.abc import Iterable
+from typing import Iterable
 
 from email_validator import EmailNotValidError, validate_email
 from fastapi import HTTPException
