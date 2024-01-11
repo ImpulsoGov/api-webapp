@@ -9,7 +9,6 @@ import re
 import uuid
 from datetime import datetime
 from typing import List, NoReturn, Union
-from typing import Iterable
 
 from email_validator import EmailNotValidError, validate_email
 from fastapi import HTTPException
@@ -27,6 +26,10 @@ from app.models.usuarios import (
     usuarios,
     usuarios_ip,
     usuarios_sm,
+)
+from app.controllers.usuarios.validacao_perfis_conflitantes import (
+    ValidationError,
+    validar_perfis_conflitantes
 )
 
 session = db.session
@@ -211,50 +214,6 @@ def dados_usuarios(id_cod, id, username, acesso):
         return error
 
 
-def validar_perfis_conflitantes(
-    novo_perfil: int = None,
-    perfis_cadastrados: Iterable[int] = None
-) -> None:
-    """Levanta um erro se houver perfis cadastrados que conflitam com o novo perfil
-
-    Parameters
-    ----------
-    novo_perfil : int, optional
-        Número do novo perfil para adicionar a um usuário, por padrão None
-    perfis_cadastrados : Iterable[int], optional
-        Iterável com números dos perfis já cadastrados do usuário que
-        receberá um novo perfil, por padrão None
-
-    Raises
-    ------
-    TypeError
-        Lança um TypeError quando qualquer argumento não é passado
-    HTTPException
-        Lança uma HTTPException com status 400 (Bad Request),
-        indicando que o usuário já possui cadastrados perfis
-        conflitantes com o novo perfil a ser adicionado,
-        interrompendo o processo de atualização de perfil
-    """
-    if novo_perfil is None:
-        raise TypeError("O parâmetro novo_perfil é obrigatório")
-
-    if perfis_cadastrados is None:
-        raise TypeError("O parâmetro perfis_cadastrados é obrigatório")
-
-    relacao_de_conflitos = {8: set([9]), 9: set([8])}
-    perfis_conflitantes = relacao_de_conflitos.get(novo_perfil, set())
-    conflitos = set(perfis_cadastrados).intersection(perfis_conflitantes)
-
-    if conflitos:
-        raise HTTPException(
-            status_code=400,
-            detail=f"""
-            O perfil {novo_perfil} não pode ser adicionado pois os perfis
-            conflitantes {conflitos} já estão cadastrados
-            """
-        )
-
-
 # TODO checar se o perfil recebido é um dos perfis válidos
 def add_perfil(id_cod, id, perfil, username, acesso):
     """Adiciona novo perfil a um usuário já cadastrado
@@ -321,10 +280,16 @@ def add_perfil(id_cod, id, perfil, username, acesso):
 
     perfis_cadastrados_de_usuario_encontrado = [linha["perfil"] for linha in res]
 
-    validar_perfis_conflitantes(
-        novo_perfil=perfil,
-        perfis_cadastrados=perfis_cadastrados_de_usuario_encontrado
-    )
+    try:
+        validar_perfis_conflitantes(
+            novo_perfil=perfil,
+            perfis_cadastrados=perfis_cadastrados_de_usuario_encontrado
+        )
+    except ValidationError as erro:
+        raise HTTPException(status_code=400, detail=str(erro))
+    except Exception as erro:
+        print({"erro": str(erro)})
+        raise HTTPException(status_code=500, detail="Internal server error")
 
     try:
         query = db.session.query(Perfil_lista).filter_by(perfil=perfil).all()
