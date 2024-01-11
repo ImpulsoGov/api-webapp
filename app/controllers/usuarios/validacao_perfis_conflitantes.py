@@ -34,7 +34,7 @@ def validar_perfis_conflitantes(
     conflitos = set(perfis_cadastrados).intersection(perfis_conflitantes)
 
     if conflitos:
-        raise ValidationError(f"""
-        O perfil {novo_perfil} não pode ser adicionado pois os perfis
-        conflitantes {conflitos} já estão cadastrados
-        """)
+        raise ValidationError(
+            f"O perfil {novo_perfil} não pode ser adicionado pois os perfis "
+            f"conflitantes {conflitos} já estão cadastrados"
+        )
