@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -12,7 +13,7 @@ from app.routers import (
 )
 
 sentry_sdk.init(
-    dsn="https://2bf90390fba62a2238c1b372df068142@o4506520445517824.ingest.sentry.io/4506537208250368",
+    dsn=os.getenv("SENTRY_DSN"),
     traces_sample_rate=1.0,
     profiles_sample_rate=1.0,
 )
