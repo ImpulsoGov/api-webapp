@@ -431,6 +431,7 @@ async def atualizar_dados_usuario(
     equipe: str = Form(...),
     cargo: str = Form(...),
     telefone: str = Form(...),
+    municipio_id_sus: str = Form(...)
 ):
     return gerenciamento_usuarios.atualizar_cadastro_geral_e_ip(
         {
@@ -442,6 +443,7 @@ async def atualizar_dados_usuario(
             "equipe": equipe,
             "cargo": cargo,
             "telefone": telefone,
+            "municipio_id_sus": municipio_id_sus
         }
     )
 

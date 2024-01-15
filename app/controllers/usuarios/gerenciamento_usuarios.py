@@ -57,6 +57,7 @@ class UsuarioIPAtualizado(BaseModel):
     equipe: str
     cargo: str
     telefone: str
+    municipio_id_sus: str
 
 
 def lista_usuarios_sem_liberacao(username, acesso):
@@ -816,14 +817,16 @@ def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuario
     return usuario_encontrado
 
 
+# TODO validar municipio_id_sus e municipio
 def atualizar_cadastro_ip(
-    id: str, municipio: str, equipe: str, cargo: str, telefone: str
+    id: str, municipio: str, equipe: str, cargo: str, telefone: str, municipio_id_sus: str
 ) -> usuarios_ip.UsuarioIP:
     validar_telefone(telefone=telefone)
 
     usuario_encontrado = encontrar_usuario_ip_por_id(id=id)
 
     usuario_encontrado.municipio = municipio
+    usuario_encontrado.municipio_id_sus = municipio_id_sus
     usuario_encontrado.equipe = equipe
     usuario_encontrado.cargo = cargo
     usuario_encontrado.telefone = telefone
@@ -848,6 +851,7 @@ def atualizar_cadastro_geral_e_ip(
             equipe=dados_usuario["equipe"],
             cargo=dados_usuario["cargo"],
             telefone=dados_usuario["telefone"],
+            municipio_id_sus=dados_usuario["municipio_id_sus"]
         )
 
         session.commit()
