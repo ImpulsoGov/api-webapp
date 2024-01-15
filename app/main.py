@@ -1,13 +1,21 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
+import sentry_sdk
 from app.routers import (
     impulso_previne_publico,
     impulso_previne_nominal,
     saude_mental,
     territorios,
     usuarios,
+)
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
 )
 
 app = FastAPI()
