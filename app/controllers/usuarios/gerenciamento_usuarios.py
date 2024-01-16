@@ -981,6 +981,7 @@ class CadastroUsuarioIP(BaseModel):
     telefone: str
     equipe: str
     whatsapp: bool
+    municipio_id_sus: str
 
 
 def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
@@ -988,6 +989,7 @@ def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
         id=uuid.uuid4(),
         id_usuario=dados_cadastro["id_usuario"],
         municipio=dados_cadastro["municipio"],
+        municipio_id_sus=dados_cadastro["municipio_id_sus"],
         cargo=dados_cadastro["cargo"],
         telefone=dados_cadastro["telefone"],
         equipe=dados_cadastro["equipe"],
@@ -1008,6 +1010,7 @@ class DadosCadastro(BaseModel):
     telefone: str
     equipe: str
     whatsapp: str
+    municipio_id_sus: str
 
 
 def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
@@ -1028,6 +1031,7 @@ def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
             {
                 "id_usuario": novo_usuario.id,
                 "municipio": dados_cadastro["municipio"],
+                "municipio_id_sus": dados_cadastro["municipio_id_sus"],
                 "cargo": dados_cadastro["cargo"],
                 "telefone": dados_cadastro["telefone"],
                 "equipe": dados_cadastro["equipe"],

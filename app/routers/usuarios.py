@@ -474,6 +474,7 @@ async def cadastrar_usuario_ip(
     telefone: str = Form(...),
     equipe: str = Form(...),
     whatsapp: str = Form(...),
+    municipio_id_sus: str = Form(...)
 ):
     return gerenciamento_usuarios.cadastrar_usuario_geral_e_ip(
         {
@@ -485,5 +486,6 @@ async def cadastrar_usuario_ip(
             "telefone": telefone,
             "equipe": equipe,
             "whatsapp": whatsapp,
+            "municipio_id_sus": municipio_id_sus
         }
     )
