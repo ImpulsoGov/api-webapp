@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Form
 from fastapi.security import OAuth2PasswordRequestForm
@@ -421,29 +421,35 @@ async def listar_usuarios_cadastrados():
     return gerenciamento_usuarios.listar_usuarios_cadastrados_ip()
 
 
+class DadosAtualizacaoUsuarioIP(BaseModel):
+    nome_usuario: str
+    cpf: str
+    mail: str
+    municipio: str
+    equipe: str
+    cargo: str
+    telefone: str
+    municipio_id_sus: str
+    perfil_ativo: Union[bool, None]
+
+
 @router.put("/suporte/ger_usuarios/usuarios-ip/{id}")
 async def atualizar_dados_usuario(
     id: str,
-    nome_usuario: str = Form(...),
-    mail: str = Form(...),
-    cpf: str = Form(...),
-    municipio: str = Form(...),
-    equipe: str = Form(...),
-    cargo: str = Form(...),
-    telefone: str = Form(...),
-    municipio_id_sus: str = Form(...)
+    dados_usuario: DadosAtualizacaoUsuarioIP
 ):
     return gerenciamento_usuarios.atualizar_cadastro_geral_e_ip(
         {
             "id": id,
-            "nome_usuario": nome_usuario,
-            "mail": mail,
-            "cpf": cpf,
-            "municipio": municipio,
-            "equipe": equipe,
-            "cargo": cargo,
-            "telefone": telefone,
-            "municipio_id_sus": municipio_id_sus
+            "nome_usuario": dados_usuario.nome_usuario,
+            "mail": dados_usuario.mail,
+            "cpf": dados_usuario.cpf,
+            "municipio": dados_usuario.municipio,
+            "equipe": dados_usuario.equipe,
+            "cargo": dados_usuario.cargo,
+            "telefone": dados_usuario.telefone,
+            "municipio_id_sus": dados_usuario.municipio_id_sus,
+            "perfil_ativo": dados_usuario.perfil_ativo
         }
     )
 

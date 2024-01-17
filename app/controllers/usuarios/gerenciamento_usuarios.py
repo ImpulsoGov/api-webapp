@@ -58,6 +58,7 @@ class UsuarioIPAtualizado(BaseModel):
     cargo: str
     telefone: str
     municipio_id_sus: str
+    perfil_ativo: Union[bool, None]
 
 
 def lista_usuarios_sem_liberacao(username, acesso):
@@ -802,7 +803,13 @@ def validar_telefone(telefone: str) -> Union[None, NoReturn]:
         raise HTTPException(status_code=400, detail="Formato de telefone inválido")
 
 
-def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuarios.Usuario:
+def atualizar_cadastro_geral(
+    id: str,
+    nome: str,
+    cpf: str,
+    mail: str,
+    perfil_ativo: Union[bool, None] = None
+) -> usuarios.Usuario:
     validar_email(email=mail)
     checar_se_novo_email_existe(email=mail)
     validar_cpf(cpf=cpf)
@@ -813,6 +820,9 @@ def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuario
     usuario_encontrado.cpf = cpf
     usuario_encontrado.mail = mail
     usuario_encontrado.atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if usuario_encontrado.perfil_ativo is not None:
+        usuario_encontrado.perfil_ativo = perfil_ativo
 
     return usuario_encontrado
 
@@ -844,6 +854,7 @@ def atualizar_cadastro_geral_e_ip(
             nome=dados_usuario["nome_usuario"],
             cpf=dados_usuario["cpf"],
             mail=dados_usuario["mail"],
+            perfil_ativo=dados_usuario["perfil_ativo"]
         )
         usuario_ip_atualizado = atualizar_cadastro_ip(
             id=dados_usuario["id"],
@@ -865,6 +876,7 @@ def atualizar_cadastro_geral_e_ip(
             "equipe": usuario_ip_atualizado.equipe,
             "cargo": usuario_ip_atualizado.cargo,
             "telefone": usuario_ip_atualizado.telefone,
+            "perfil_ativo": usuario_atualizado.perfil_ativo
         }
     except HTTPException as error:
         session.rollback()
@@ -984,6 +996,7 @@ class CadastroUsuarioIP(BaseModel):
     municipio_id_sus: str
 
 
+# TODO validar municipio_id_sus e municipio
 def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
     novo_usuario_ip = UsuariosIP(
         id=uuid.uuid4(),
