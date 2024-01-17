@@ -20,6 +20,9 @@ def capitacao_ponderada_cadastros_por_equipe(municipio_uf:str):
                 CadastrosEquipes.cadastro_total,
                 CadastrosEquipes.cadastros_com_pontuacao,
                 CadastrosEquipes.municipio_ultimo_parametro,
+                CadastrosEquipes.data_inicio,
+                CadastrosEquipes.cnes_nome,
+                CadastrosEquipes.equipe_nome,
             ).order_by(
                 CadastrosEquipes.data_inicio
             ).all()
