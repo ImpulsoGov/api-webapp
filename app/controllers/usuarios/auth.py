@@ -58,7 +58,6 @@ def get_user(mail: str):
         res = db.session.query(usuarios.Usuario).filter_by(mail=mail).all()
         return res[0]
     except Exception as error:
-        db.session.rollback()
         print({"error": error})
         return None
 
@@ -93,7 +92,6 @@ def get_perfil(mail: str):
         }
         return user
     except Exception as error:
-        db.session.rollback()
         print({"erros": [error]})
         return {"erros": [error]}
 
@@ -153,7 +151,9 @@ def controle_perfil(perfil_usuario, perfil_rota):
     return (
         True
         if perfil_rota in perfil_usuario
-        else {"mensagem": "Perfil de usuário com Privilégio insuficiente para essa rota"}
+        else {
+            "mensagem": "Perfil de usuário com Privilégio insuficiente para essa rota"
+        }
     )
 
 
