@@ -720,6 +720,7 @@ def listar_usuarios_cadastrados_ip():
                 UsuariosIP.cargo,
                 UsuariosIP.telefone,
                 UsuariosIP.equipe,
+                UsuariosIP.municipio_id_sus,
                 func.array_agg(func.distinct(Perfil_lista.descricao)).label(
                     "autorizacoes"
                 ),
@@ -735,6 +736,7 @@ def listar_usuarios_cadastrados_ip():
                 UsuariosIP.cargo,
                 UsuariosIP.telefone,
                 UsuariosIP.equipe,
+                UsuariosIP.municipio_id_sus,
             )
             .all()
         )
@@ -876,7 +878,9 @@ def atualizar_cadastro_geral_e_ip(
             "equipe": usuario_ip_atualizado.equipe,
             "cargo": usuario_ip_atualizado.cargo,
             "telefone": usuario_ip_atualizado.telefone,
-            "perfil_ativo": usuario_atualizado.perfil_ativo
+            "perfil_ativo": usuario_atualizado.perfil_ativo,
+            "municipio_id_sus": usuario_ip_atualizado.municipio_id_sus,
+            "whatsapp": usuario_ip_atualizado.whatsapp
         }
     except HTTPException as error:
         session.rollback()
@@ -1062,10 +1066,12 @@ def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
             "cpf": novo_usuario.cpf,
             "mail": novo_usuario.mail,
             "municipio": novo_usuario_ip.municipio,
+            "municipio_id_sus": novo_usuario_ip.municipio_id_sus,
             "equipe": novo_usuario_ip.equipe,
             "cargo": novo_usuario_ip.cargo,
             "telefone": novo_usuario_ip.telefone,
             "whatsapp": novo_usuario_ip.whatsapp,
+            "perfil_ativo": novo_usuario.perfil_ativo
         }
 
     except HTTPException as error:
