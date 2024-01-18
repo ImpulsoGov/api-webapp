@@ -417,8 +417,12 @@ async def avaliacao_nps(
 
 
 @router.get("/suporte/ger_usuarios/usuarios-ip")
-async def listar_usuarios_cadastrados():
-    return gerenciamento_usuarios.listar_usuarios_cadastrados_ip()
+async def listar_usuarios_cadastrados(
+    usuario_autenticado=Depends(auth.get_current_user)
+):
+    return gerenciamento_usuarios.listar_usuarios_cadastrados_ip(
+        perfis_usuario_autenticado=usuario_autenticado["perfil"]
+    )
 
 
 class DadosAtualizacaoUsuarioIP(BaseModel):
@@ -436,10 +440,11 @@ class DadosAtualizacaoUsuarioIP(BaseModel):
 @router.put("/suporte/ger_usuarios/usuarios-ip/{id}")
 async def atualizar_dados_usuario(
     id: str,
-    dados_usuario: DadosAtualizacaoUsuarioIP
+    dados_usuario: DadosAtualizacaoUsuarioIP,
+    usuario_autenticado=Depends(auth.get_current_user),
 ):
     return gerenciamento_usuarios.atualizar_cadastro_geral_e_ip(
-        {
+        dados_usuario={
             "id": id,
             "nome_usuario": dados_usuario.nome_usuario,
             "mail": dados_usuario.mail,
@@ -450,7 +455,8 @@ async def atualizar_dados_usuario(
             "telefone": dados_usuario.telefone,
             "municipio_id_sus": dados_usuario.municipio_id_sus,
             "perfil_ativo": dados_usuario.perfil_ativo
-        }
+        },
+        perfis_usuario_autenticado=usuario_autenticado["perfil"]
     )
 
 
@@ -459,15 +465,25 @@ class PerfisIds(BaseModel):
 
 
 @router.put("/suporte/ger_usuarios/perfil-usuario/{usuario_id}")
-async def atualizar_perfis_usuario(usuario_id: str, perfis: PerfisIds):
+async def atualizar_perfis_usuario(
+    usuario_id: str,
+    perfis: PerfisIds,
+    usuario_autenticado=Depends(auth.get_current_user),
+):
     return gerenciamento_usuarios.atualizar_perfis_usuario(
-        usuario_id=usuario_id, perfis_ids=perfis.perfis_ids
+        usuario_id=usuario_id,
+        perfis_ids=perfis.perfis_ids,
+        perfis_usuario_autenticado=usuario_autenticado["perfil"]
     )
 
 
 @router.get("/suporte/ger_usuarios/perfis")
-async def listar_perfis():
-    return gerenciamento_usuarios.listar_perfis_de_acesso()
+async def listar_perfis(
+    usuario_autenticado=Depends(auth.get_current_user),
+):
+    return gerenciamento_usuarios.listar_perfis_de_acesso(
+        perfis_usuario_autenticado=usuario_autenticado["perfil"]
+    )
 
 
 @router.post("/suporte/ger_usuarios/usuarios-ip")
@@ -480,10 +496,11 @@ async def cadastrar_usuario_ip(
     telefone: str = Form(...),
     equipe: str = Form(...),
     whatsapp: str = Form(...),
-    municipio_id_sus: str = Form(...)
+    municipio_id_sus: str = Form(...),
+    usuario_autenticado=Depends(auth.get_current_user),
 ):
     return gerenciamento_usuarios.cadastrar_usuario_geral_e_ip(
-        {
+        dados_cadastro={
             "nome_usuario": nome_usuario,
             "mail": mail,
             "cpf": cpf,
@@ -493,5 +510,6 @@ async def cadastrar_usuario_ip(
             "equipe": equipe,
             "whatsapp": whatsapp,
             "municipio_id_sus": municipio_id_sus
-        }
+        },
+        perfis_usuario_autenticado=usuario_autenticado["perfil"]
     )
