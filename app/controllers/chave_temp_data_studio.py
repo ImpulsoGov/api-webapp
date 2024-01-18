@@ -57,6 +57,5 @@ def val_chave_temp(chave: str):
             return {"access_token": False, "mensagem": "Chave Invalida"}
         return {"access_token": True, "mensagem": "Chave Valida"}
     except Exception as error:
-        db.session.rollback()
         print(error)
         return {"mensagem": "Validação não efetuada"}

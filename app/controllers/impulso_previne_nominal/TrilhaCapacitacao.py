@@ -21,7 +21,6 @@ def consulta_avaliacao_conclusao(usuario_id, codigo_conteudo):
         res = query.all()
         return {"data": res, "error": None}
     except Exception as error:
-        session.rollback()
         print(error)
         return {"mensagem": "Operação não efetuada", "error": error}
 
@@ -34,7 +33,6 @@ def consulta_avaliacao_conclusao_por_usuario(usuario_id):
         res = query.all()
         return {"data": res, "error": None}
     except Exception as error:
-        session.rollback()
         print(error)
         return {"mensagem": "Operação não efetuada", "error": error}
 
@@ -152,7 +150,6 @@ def trilha_acesso(usuario_id: str):
         )
         return res
     except Exception as error:
-        session.rollback()
         print({"erros": [error]})
         return HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -177,7 +174,6 @@ def trilha_modulos_acesso(usuario_id: str, trilha_id: str):
         )
         return res
     except Exception as error:
-        session.rollback()
         print({"erros": [error]})
         return error
 
@@ -199,7 +195,6 @@ def trilha_modulos_liberados(usuario_id: str, trilha_id: str, modulo: int):
         )
         return res
     except Exception as error:
-        session.rollback()
         print({"erros": [error]})
         return error
 
