@@ -845,7 +845,6 @@ def atualizar_cadastro_geral(
     return usuario_encontrado
 
 
-# TODO validar municipio_id_sus e municipio
 def atualizar_cadastro_ip(
     id: str, municipio: str, equipe: str, cargo: str, telefone: str, municipio_id_sus: str
 ) -> usuarios_ip.UsuarioIP:
@@ -1041,7 +1040,6 @@ class CadastroUsuarioIP(BaseModel):
     municipio_id_sus: str
 
 
-# TODO validar municipio_id_sus e municipio
 def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
     novo_usuario_ip = UsuariosIP(
         id=uuid.uuid4(),
