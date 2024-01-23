@@ -836,7 +836,10 @@ def atualizar_cadastro_geral(
     usuario_encontrado.mail = mail
     usuario_encontrado.atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if usuario_encontrado.perfil_ativo is not None:
+    # Só atualiza o campo perfil_ativo se o usuário já realizou primeiro acesso
+    # (possui perfil_ativo diferente de None) e o perfil_ativo recebido para
+    # atualizar é diferente de None
+    if usuario_encontrado.perfil_ativo is not None and perfil_ativo is not None:
         usuario_encontrado.perfil_ativo = perfil_ativo
 
     return usuario_encontrado
