@@ -434,6 +434,10 @@ class DadosAtualizacaoUsuarioIP(BaseModel):
     cargo: str
     telefone: str
     municipio_id_sus: str
+    # O campo perfil_ativo poder ser:
+    # True: perfil está ativo
+    # False: perfil está inativo
+    # None: usuário ainda não realizou primeiro acesso para ativar perfil
     perfil_ativo: Union[bool, None]
 
 
