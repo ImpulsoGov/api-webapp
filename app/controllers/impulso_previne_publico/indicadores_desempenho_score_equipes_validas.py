@@ -14,6 +14,7 @@ def consultar_indicadores_desempenho(municipio_uf):
         return (
             session.query(IndicadoresDesempenho)
             .filter_by(municipio_uf=municipio_uf)
+            .order_by(IndicadoresDesempenho.periodo_codigo)
             .all()
         )
     except Exception as error:
