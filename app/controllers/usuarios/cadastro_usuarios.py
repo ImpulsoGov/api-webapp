@@ -180,7 +180,6 @@ def cadastrar_usuario_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
     wp = True if whatsapp == "1" else False
     try:
         id_usuario = obter_id(mail)
-        print(id_usuario)
         # validar municipio
         # validar cargo
         # formato telefone
@@ -229,8 +228,6 @@ def cadastro_impulso(nome, mail, senha, cpf):
             return verifica_mail(mail)
         if consulta_mail(mail) != True:
             return consulta_mail(mail)
-        print(consulta_cpf(cpf) != True)
-        print(consulta_cpf(cpf))
         if consulta_cpf(cpf) != True:
             return {"mensagem": "CPF invalido", "error": True}
 
@@ -264,8 +261,6 @@ def cadastro_impulso_sem_ativacao(nome, mail, cpf):
             return verifica_mail(mail)
         if consulta_mail(mail) != True:
             return consulta_mail(mail)
-        print(consulta_cpf(cpf) != True)
-        print(consulta_cpf(cpf))
         if consulta_cpf(cpf) != True:
             return {"mensagem": "CPF invalido", "error": True}
 
@@ -361,11 +356,7 @@ def liberar_acesso(id_cod, id, perfil):
     # informar perfil liberado
     try:
         id_db = {"mail": id} if id_cod == 1 else {"cpf": id}
-        print("-----------------00000000000000000000000")
-        print(id_cod, id, perfil)
         res = session.query(usuarios.Usuario).filter_by(**id_db).all()
-        print("-------------------------")
-        print(res)
     except InternalError as error:
         if "municipio_id_sus" in error._message():
             raise ValidationError(
@@ -377,7 +368,6 @@ def liberar_acesso(id_cod, id, perfil):
         print({"error": error})
         return error
     try:
-        print("---------------------------------------------------------")
         if res[0].perfil_ativo != None:
             return {"mensagem": "Usuário já passou pela primeira liberação de perfil"}
         usuario_id = session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
@@ -451,7 +441,6 @@ def cadastrar_em_lote(
     if controle != True:
         return controle
     cad_impulso = cadastro_impulso(nome, mail, senha, cpf)
-    print(cad_impulso)
     etapas = []
     if cad_impulso["error"] == None:
         cad_ip = cadastro_ip(municipio_uf, cargo, telefone, whatsapp, mail, equipe)
