@@ -156,6 +156,7 @@ async def cadastro_lotes(
     projeto: Optional[str] = Form("IP"),
     unidade_saude: Optional[str] = Form(None),
     municipio_id_ibge: Optional[str] = Form(None),
+    municipio_id_sus: Optional[str] = Form(None),
     username: Usuario = Depends(auth.get_current_user),
 ):
     return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(
@@ -173,6 +174,7 @@ async def cadastro_lotes(
         projeto=projeto,
         unidade_saude=unidade_saude,
         municipio_id_ibge=municipio_id_ibge,
+        municipio_id_sus=municipio_id_sus,
     )
 
 

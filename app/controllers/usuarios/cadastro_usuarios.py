@@ -1,5 +1,7 @@
 import uuid
 from datetime import datetime
+from sqlalchemy.exc import InternalError
+from fastapi import HTTPException
 
 from passlib.context import CryptContext
 from validate_docbr import CPF
@@ -13,7 +15,9 @@ from app.models.usuarios import (
     perfil_acesso,
     perfil_usuario,
     usuarios_ip,
-    usuarios_sm)
+    usuarios_sm,
+)
+from app.utils.exceptions import ValidationError
 
 from .auth import controle_perfil
 
@@ -273,7 +277,7 @@ def cadastro_impulso_sem_ativacao(nome, mail, cpf):
 
 
 # cadastrar usuario IP
-def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
+def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe, municipio_id_sus):
     try:
         criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -296,6 +300,7 @@ def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
             equipe=equipe,
             criacao_data=criacao_data,
             atualizacao_data=atualizacao_data,
+            municipio_id_sus=municipio_id_sus,
         )
         session.add(usuario_dados)
         return {"mensagem": "dados cadastrados com sucesso", "error": None}
@@ -357,6 +362,12 @@ def liberar_acesso(id_cod, id, perfil):
         res = session.query(usuarios.Usuario).filter_by(**id_db).all()
         print("-------------------------")
         print(res)
+    except InternalError as error:
+        if "municipio_id_sus" in error._message():
+            raise ValidationError(
+                "Campo municipio_id_sus não corresponde a um dos municípios existentes"
+            )
+        raise error
     except Exception as error:
         session.rollback()
         print({"error": error})
@@ -484,6 +495,7 @@ def cadastrar_em_lote_sem_ativacao(
     unidade_saude=None,
     municipio_id_ibge=None,
     municipio_uf=None,
+    municipio_id_sus=None,
 ):
     # controle de acesso
     controle = controle_perfil(username, acesso)
@@ -500,6 +512,7 @@ def cadastrar_em_lote_sem_ativacao(
             "whatsapp": whatsapp,
             "mail": mail,
             "equipe": equipe,
+            "municipio_id_sus": municipio_id_sus,
         },
         "SM": {
             "municipio_id_ibge": municipio_id_ibge,
@@ -518,7 +531,10 @@ def cadastrar_em_lote_sem_ativacao(
 
     if cad_proj["error"] == None:
         etapas.append("Cadastro IP realizado com sucesso")
-        lib_acess = liberar_acesso(1, mail, perfil)
+        try:
+            lib_acess = liberar_acesso(1, mail, perfil)
+        except ValidationError as error:
+            raise HTTPException(status_code=400, detail=str(error))
     else:
         return cad_proj
     if lib_acess["error"] == None:
