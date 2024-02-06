@@ -6,10 +6,7 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from validate_docbr import CPF
 
-from app.models import (
-    db,
-    municipios
-)
+from app.models import db, municipios
 from app.models.usuarios import (
     usuarios,
     perfil_acesso,
@@ -30,15 +27,22 @@ session = db.session
 
 
 def validar_senha(senha):
-    restricoes =[]
-    if len(senha)<8: restricoes.append({"mensagem1":"Senha deve conter ao menos 8 caracteres"})
-    if len(re.findall('[a-z]', senha))==0: restricoes.append({"mensagem2":"Senha deve conter letras minusculas"})
-    if len(re.findall('[A-Z]', senha))==0: restricoes.append({"mensagem3":"Senha deve conter letras maiusculas"})
-    if len(re.findall('[0-9]', senha))==0: restricoes.append({"mensagem4":"Senha deve conter numeros"})
-    if len(re.findall('\W', senha))==0: restricoes.append({"mensagem4":"Senha deve conter caracteres especiais"})
-    if len(re.findall('\s', senha))!=0: restricoes.append({"mensagem4":"Senha não deve conter espaços e quebras"})
-    validacao=True if len(restricoes)==0 else False
-    return restricoes,validacao
+    restricoes = []
+    if len(senha) < 8:
+        restricoes.append({"mensagem1": "Senha deve conter ao menos 8 caracteres"})
+    if len(re.findall("[a-z]", senha)) == 0:
+        restricoes.append({"mensagem2": "Senha deve conter letras minusculas"})
+    if len(re.findall("[A-Z]", senha)) == 0:
+        restricoes.append({"mensagem3": "Senha deve conter letras maiusculas"})
+    if len(re.findall("[0-9]", senha)) == 0:
+        restricoes.append({"mensagem4": "Senha deve conter numeros"})
+    if len(re.findall("\W", senha)) == 0:
+        restricoes.append({"mensagem4": "Senha deve conter caracteres especiais"})
+    if len(re.findall("\s", senha)) != 0:
+        restricoes.append({"mensagem4": "Senha não deve conter espaços e quebras"})
+    validacao = True if len(restricoes) == 0 else False
+    return restricoes, validacao
+
 
 def consulta_mail(email):
     try:
@@ -418,9 +422,7 @@ def ativar_perfil(id_cod, id):
         session.query(usuarios.Usuario).filter_by(**id_db).update(
             {
                 "perfil_ativo": True,
-                "atualizacao_data": datetime.now().strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                ),
+                "atualizacao_data": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
         )
         session.commit()
