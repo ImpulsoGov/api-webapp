@@ -553,7 +553,3 @@ def cadastrar_em_lote_sem_ativacao(
     except ValidationError as error:
         session.rollback()
         raise HTTPException(status_code=400, detail=str(error))
-    except Exception as error:
-        session.rollback()
-        print({"error": str(error)})
-        raise HTTPException(status_code=500, detail="Internal Server Error")
