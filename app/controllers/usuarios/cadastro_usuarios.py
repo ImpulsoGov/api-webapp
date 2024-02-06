@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy.exc import InternalError
+from sqlalchemy import func
 from fastapi import HTTPException
 
 from passlib.context import CryptContext
@@ -108,6 +108,26 @@ def validar_municipio_id_ibge(municipio_id_ibge):
         )
     except:
         return {"mensagem": "Internal server error", "error": True}
+
+
+def validar_se_municipio_corresponde_ao_id_sus(nome_uf: str, id_sus: str):
+    municipio = (
+        db.session.query(municipios.Municipios)
+        .filter(
+            func.concat(
+                municipios.Municipios.municipio_nome,
+                " - ",
+                municipios.Municipios.estado_sigla,
+            ).__eq__(nome_uf),
+            municipios.Municipios.municipio_id_sus == id_sus,
+        )
+        .first()
+    )
+
+    if municipio is None:
+        raise ValidationError(
+            "Nome - UF do município e municipio_id_sus não são correspondentes"
+        )
 
 
 def validar_cargo(cargo):
@@ -277,12 +297,12 @@ def cadastro_impulso_sem_ativacao(nome, mail, cpf):
 
 # cadastrar usuario IP
 def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe, municipio_id_sus):
+    validar_se_municipio_corresponde_ao_id_sus(nome_uf=municipio, id_sus=municipio_id_sus)
     try:
         criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         wp = True if whatsapp == "1" else False
         id_usuario = obter_id(mail)
-        # validar municipio
         # validar cargo
         # formato telefone
     except:
@@ -357,12 +377,6 @@ def liberar_acesso(id_cod, id, perfil):
     try:
         id_db = {"mail": id} if id_cod == 1 else {"cpf": id}
         res = session.query(usuarios.Usuario).filter_by(**id_db).all()
-    except InternalError as error:
-        if "municipio_id_sus" in error._message():
-            raise ValidationError(
-                "Campo municipio_id_sus não corresponde a um dos municípios existentes"
-            )
-        raise error
     except Exception as error:
         session.rollback()
         print({"error": error})
@@ -482,57 +496,60 @@ def cadastrar_em_lote_sem_ativacao(
     username,
     acesso,
     perfil,
+    municipio_id_sus,
     projeto="IP",
     unidade_saude=None,
-    municipio_id_ibge=None,
     municipio_uf=None,
-    municipio_id_sus=None,
 ):
-    # controle de acesso
-    controle = controle_perfil(username, acesso)
-    if controle != True:
-        return controle
-    cad_impulso = cadastro_impulso_sem_ativacao(nome, mail, cpf)
-    etapas = []
-    cadastros_projetos = {"IP": cadastro_ip, "SM": cadastro_sm}
-    proj_args = {
-        "IP": {
-            "municipio": municipio_uf,
-            "cargo": cargo,
-            "telefone": telefone,
-            "whatsapp": whatsapp,
-            "mail": mail,
-            "equipe": equipe,
-            "municipio_id_sus": municipio_id_sus,
-        },
-        "SM": {
-            "municipio_id_ibge": municipio_id_ibge,
-            "cargo": cargo,
-            "telefone": telefone,
-            "whatsapp": whatsapp,
-            "mail": mail,
-            "unidade_saude": unidade_saude,
-        },
-    }
-    if cad_impulso["error"] == None:
-        cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
-        etapas.append("Cadastro Impulso realizado com sucesso")
-    else:
-        return cad_impulso
+    try:
+        # controle de acesso
+        controle = controle_perfil(username, acesso)
+        if controle != True:
+            return controle
+        cad_impulso = cadastro_impulso_sem_ativacao(nome, mail, cpf)
+        etapas = []
+        cadastros_projetos = {"IP": cadastro_ip, "SM": cadastro_sm}
+        proj_args = {
+            "IP": {
+                "municipio": municipio_uf,
+                "cargo": cargo,
+                "telefone": telefone,
+                "whatsapp": whatsapp,
+                "mail": mail,
+                "equipe": equipe,
+                "municipio_id_sus": municipio_id_sus,
+            },
+            "SM": {
+                "municipio_id_ibge": municipio_id_sus,
+                "cargo": cargo,
+                "telefone": telefone,
+                "whatsapp": whatsapp,
+                "mail": mail,
+                "unidade_saude": unidade_saude,
+            },
+        }
+        if cad_impulso["error"] == None:
+            cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
+            etapas.append("Cadastro Impulso realizado com sucesso")
+        else:
+            return cad_impulso
 
-    if cad_proj["error"] == None:
-        etapas.append("Cadastro IP realizado com sucesso")
-        try:
-            lib_acess = liberar_acesso(1, mail, perfil)
-        except ValidationError as error:
-            raise HTTPException(status_code=400, detail=str(error))
-    else:
-        return cad_proj
-    if lib_acess["error"] == None:
-        etapas.append("Liberação de perfil realizada com sucesso")
-        if len(etapas) == 3:
-            session.commit()
-            print("commit realizado com sucesso")
-            return etapas
-    else:
-        return lib_acess
+        if cad_proj["error"] == None:
+            etapas.append("Cadastro IP realizado com sucesso")
+            try:
+                lib_acess = liberar_acesso(1, mail, perfil)
+            except ValidationError as error:
+                raise HTTPException(status_code=400, detail=str(error))
+        else:
+            return cad_proj
+        if lib_acess["error"] == None:
+            etapas.append("Liberação de perfil realizada com sucesso")
+            if len(etapas) == 3:
+                session.commit()
+                print("commit realizado com sucesso")
+                return etapas
+        else:
+            return lib_acess
+    except ValidationError as error:
+        session.rollback()
+        raise HTTPException(status_code=400, detail=str(error))
