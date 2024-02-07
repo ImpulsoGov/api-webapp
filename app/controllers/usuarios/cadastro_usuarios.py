@@ -118,15 +118,17 @@ def validar_se_municipio_corresponde_ao_id_sus(nome_uf: str, id_sus: str):
                 municipios.Municipios.municipio_nome,
                 " - ",
                 municipios.Municipios.estado_sigla,
-            ).__eq__(nome_uf),
-            municipios.Municipios.municipio_id_sus == id_sus,
+            ).__eq__(nome_uf)
         )
         .first()
     )
 
     if municipio is None:
+        raise ValidationError(f"Município {nome_uf} não existe na base de dados")
+
+    if municipio.municipio_id_sus != id_sus:
         raise ValidationError(
-            "Nome - UF do município e municipio_id_sus não são correspondentes"
+            f"Município {nome_uf} e ID SUS {id_sus} não são correspondentes"
         )
 
 
