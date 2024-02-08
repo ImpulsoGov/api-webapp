@@ -17,6 +17,10 @@ from sqlalchemy import exc, func
 from validate_docbr import CPF
 
 from app.controllers.usuarios import auth, cadastro_usuarios, recuperação_senha
+from app.controllers.usuarios.validacao_permissao import (
+    PermissionError,
+    validar_permissao
+)
 from app.models import db
 from app.models.usuarios import (
     ativar_usuario,
@@ -47,6 +51,8 @@ from dotenv import load_dotenv
 env_path = os.path.dirname(os.path.realpath(__file__)) + "/.env"
 load_dotenv(dotenv_path=env_path)
 
+PERFIL_PERMITIDO_PARA_GERIR_USUARIOS = 2
+
 
 class UsuarioIPAtualizado(BaseModel):
     id: str
@@ -57,6 +63,8 @@ class UsuarioIPAtualizado(BaseModel):
     equipe: str
     cargo: str
     telefone: str
+    municipio_id_sus: str
+    perfil_ativo: Union[bool, None]
 
 
 def lista_usuarios_sem_liberacao(username, acesso):
@@ -701,8 +709,13 @@ def senha_primeiro_acesso(mail, codigo, senha):
         return {"erros": [error]}
 
 
-def listar_usuarios_cadastrados_ip():
+def listar_usuarios_cadastrados_ip(perfis_usuario_autenticado: list):
     try:
+        validar_permissao(
+            perfis_usuario=perfis_usuario_autenticado,
+            perfil_permitido=PERFIL_PERMITIDO_PARA_GERIR_USUARIOS
+        )
+
         usuarios_cadastrados = (
             session.query(Usuarios)
             .join(UsuariosIP)
@@ -712,11 +725,13 @@ def listar_usuarios_cadastrados_ip():
                 Usuarios.mail,
                 Usuarios.cpf,
                 Usuarios.nome_usuario,
+                Usuarios.perfil_ativo,
                 UsuariosIP.id_usuario,
                 UsuariosIP.municipio,
                 UsuariosIP.cargo,
                 UsuariosIP.telefone,
                 UsuariosIP.equipe,
+                UsuariosIP.municipio_id_sus,
                 func.array_agg(func.distinct(Perfil_lista.descricao)).label(
                     "autorizacoes"
                 ),
@@ -726,17 +741,21 @@ def listar_usuarios_cadastrados_ip():
                 Usuarios.mail,
                 Usuarios.cpf,
                 Usuarios.nome_usuario,
+                Usuarios.perfil_ativo,
                 UsuariosIP.id_usuario,
                 UsuariosIP.municipio,
                 UsuariosIP.cargo,
                 UsuariosIP.telefone,
                 UsuariosIP.equipe,
+                UsuariosIP.municipio_id_sus,
             )
             .all()
         )
 
         return usuarios_cadastrados
-    except (exc.SQLAlchemyError, Exception) as error:
+    except (PermissionError) as error:
+        raise HTTPException(status_code=403, detail=(str(error)))
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -799,7 +818,13 @@ def validar_telefone(telefone: str) -> Union[None, NoReturn]:
         raise HTTPException(status_code=400, detail="Formato de telefone inválido")
 
 
-def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuarios.Usuario:
+def atualizar_cadastro_geral(
+    id: str,
+    nome: str,
+    cpf: str,
+    mail: str,
+    perfil_ativo: Union[bool, None] = None
+) -> usuarios.Usuario:
     validar_email(email=mail)
     checar_se_novo_email_existe(email=mail)
     validar_cpf(cpf=cpf)
@@ -811,17 +836,24 @@ def atualizar_cadastro_geral(id: str, nome: str, cpf: str, mail: str) -> usuario
     usuario_encontrado.mail = mail
     usuario_encontrado.atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    # Só atualiza o campo perfil_ativo se o usuário já realizou primeiro acesso
+    # (possui perfil_ativo diferente de None) e o perfil_ativo recebido para
+    # atualizar é diferente de None
+    if usuario_encontrado.perfil_ativo is not None and perfil_ativo is not None:
+        usuario_encontrado.perfil_ativo = perfil_ativo
+
     return usuario_encontrado
 
 
 def atualizar_cadastro_ip(
-    id: str, municipio: str, equipe: str, cargo: str, telefone: str
+    id: str, municipio: str, equipe: str, cargo: str, telefone: str, municipio_id_sus: str
 ) -> usuarios_ip.UsuarioIP:
     validar_telefone(telefone=telefone)
 
     usuario_encontrado = encontrar_usuario_ip_por_id(id=id)
 
     usuario_encontrado.municipio = municipio
+    usuario_encontrado.municipio_id_sus = municipio_id_sus
     usuario_encontrado.equipe = equipe
     usuario_encontrado.cargo = cargo
     usuario_encontrado.telefone = telefone
@@ -832,13 +864,20 @@ def atualizar_cadastro_ip(
 
 def atualizar_cadastro_geral_e_ip(
     dados_usuario: UsuarioIPAtualizado,
+    perfis_usuario_autenticado: list
 ):
     try:
+        validar_permissao(
+            perfis_usuario=perfis_usuario_autenticado,
+            perfil_permitido=PERFIL_PERMITIDO_PARA_GERIR_USUARIOS
+        )
+
         usuario_atualizado = atualizar_cadastro_geral(
             id=dados_usuario["id"],
             nome=dados_usuario["nome_usuario"],
             cpf=dados_usuario["cpf"],
             mail=dados_usuario["mail"],
+            perfil_ativo=dados_usuario["perfil_ativo"]
         )
         usuario_ip_atualizado = atualizar_cadastro_ip(
             id=dados_usuario["id"],
@@ -846,6 +885,7 @@ def atualizar_cadastro_geral_e_ip(
             equipe=dados_usuario["equipe"],
             cargo=dados_usuario["cargo"],
             telefone=dados_usuario["telefone"],
+            municipio_id_sus=dados_usuario["municipio_id_sus"]
         )
 
         session.commit()
@@ -859,12 +899,17 @@ def atualizar_cadastro_geral_e_ip(
             "equipe": usuario_ip_atualizado.equipe,
             "cargo": usuario_ip_atualizado.cargo,
             "telefone": usuario_ip_atualizado.telefone,
+            "perfil_ativo": usuario_atualizado.perfil_ativo,
+            "municipio_id_sus": usuario_ip_atualizado.municipio_id_sus,
+            "whatsapp": usuario_ip_atualizado.whatsapp
         }
+    except (PermissionError) as error:
+        raise HTTPException(status_code=403, detail=(str(error)))
     except HTTPException as error:
         session.rollback()
 
         raise error
-    except (exc.SQLAlchemyError, Exception) as error:
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -887,8 +932,17 @@ def adicionar_novo_perfil_para_usuario(perfil_id: str, usuario_id: str):
     session.add(novo_perfil)
 
 
-def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
+def atualizar_perfis_usuario(
+    usuario_id: str,
+    perfis_ids: List[str],
+    perfis_usuario_autenticado: list
+):
     try:
+        validar_permissao(
+            perfis_usuario=perfis_usuario_autenticado,
+            perfil_permitido=PERFIL_PERMITIDO_PARA_GERIR_USUARIOS
+        )
+
         perfis_cadastrados = (
             session.query(Perfil.perfil_id).filter_by(usuario_id=usuario_id).all()
         )
@@ -921,8 +975,9 @@ def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
             .filter(Perfil_lista.id.in_(perfis_ids))
             .all()
         )
-
-    except (exc.SQLAlchemyError, Exception) as error:
+    except (PermissionError) as error:
+        raise HTTPException(status_code=403, detail=(str(error)))
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -933,12 +988,19 @@ def atualizar_perfis_usuario(usuario_id: str, perfis_ids: List[str]):
         )
 
 
-def listar_perfis_de_acesso():
+def listar_perfis_de_acesso(perfis_usuario_autenticado: list):
     try:
+        validar_permissao(
+            perfis_usuario=perfis_usuario_autenticado,
+            perfil_permitido=PERFIL_PERMITIDO_PARA_GERIR_USUARIOS
+        )
+
         perfis_de_acesso = session.query(Perfil_lista.id, Perfil_lista.descricao).all()
 
         return perfis_de_acesso
-    except (exc.SQLAlchemyError, Exception) as error:
+    except (PermissionError) as error:
+        raise HTTPException(status_code=403, detail=(str(error)))
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
@@ -975,6 +1037,7 @@ class CadastroUsuarioIP(BaseModel):
     telefone: str
     equipe: str
     whatsapp: bool
+    municipio_id_sus: str
 
 
 def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
@@ -982,6 +1045,7 @@ def criar_usuario_ip(dados_cadastro: CadastroUsuarioIP):
         id=uuid.uuid4(),
         id_usuario=dados_cadastro["id_usuario"],
         municipio=dados_cadastro["municipio"],
+        municipio_id_sus=dados_cadastro["municipio_id_sus"],
         cargo=dados_cadastro["cargo"],
         telefone=dados_cadastro["telefone"],
         equipe=dados_cadastro["equipe"],
@@ -1002,10 +1066,18 @@ class DadosCadastro(BaseModel):
     telefone: str
     equipe: str
     whatsapp: str
+    municipio_id_sus: str
 
 
-def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
+def cadastrar_usuario_geral_e_ip(
+    dados_cadastro: DadosCadastro,
+    perfis_usuario_autenticado: list
+):
     try:
+        validar_permissao(
+            perfis_usuario=perfis_usuario_autenticado,
+            perfil_permitido=PERFIL_PERMITIDO_PARA_GERIR_USUARIOS
+        )
         validar_email(dados_cadastro["mail"])
         validar_cpf(dados_cadastro["cpf"])
         validar_telefone(dados_cadastro["telefone"])
@@ -1022,6 +1094,7 @@ def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
             {
                 "id_usuario": novo_usuario.id,
                 "municipio": dados_cadastro["municipio"],
+                "municipio_id_sus": dados_cadastro["municipio_id_sus"],
                 "cargo": dados_cadastro["cargo"],
                 "telefone": dados_cadastro["telefone"],
                 "equipe": dados_cadastro["equipe"],
@@ -1039,17 +1112,20 @@ def cadastrar_usuario_geral_e_ip(dados_cadastro: DadosCadastro):
             "cpf": novo_usuario.cpf,
             "mail": novo_usuario.mail,
             "municipio": novo_usuario_ip.municipio,
+            "municipio_id_sus": novo_usuario_ip.municipio_id_sus,
             "equipe": novo_usuario_ip.equipe,
             "cargo": novo_usuario_ip.cargo,
             "telefone": novo_usuario_ip.telefone,
             "whatsapp": novo_usuario_ip.whatsapp,
+            "perfil_ativo": novo_usuario.perfil_ativo
         }
-
+    except (PermissionError) as error:
+        raise HTTPException(status_code=403, detail=(str(error)))
     except HTTPException as error:
         session.rollback()
 
         raise error
-    except (exc.SQLAlchemyError, Exception) as error:
+    except (Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
