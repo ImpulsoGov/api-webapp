@@ -30,7 +30,6 @@ def diabeticos_equipe(municipio_id_sus, equipe):
             .all()
         )
     except Exception as error:
-        session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
         )
@@ -68,7 +67,6 @@ def diabetes_aps(municipio_id_sus):
             cache_hipertensao_aps[municipio_id_sus] = result
         return result
     except Exception as error:
-        session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
         )

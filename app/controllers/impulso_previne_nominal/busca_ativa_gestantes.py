@@ -38,7 +38,6 @@ def consulta_gestantes_equipe(municipio_id_sus, equipe):
             .all()
         )
     except Exception as error:
-        session.rollback()
         print(error)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
@@ -78,7 +77,6 @@ def consulta_gestantes_coordenacao(municipio_id_sus):
             .all()
         )
     except Exception as error:
-        session.rollback()
         return HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(error),

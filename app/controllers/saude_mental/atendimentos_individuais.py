@@ -19,7 +19,7 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
     periodos: str,
     estabelecimentos: str,
     estabelecimento_linha_idade: str,
-    estabelecimento_linha_perfil: str
+    estabelecimento_linha_perfil: str,
 ):
     try:
         query = session.query(
@@ -27,12 +27,13 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
             AtendimentosIndividuaisPorCaps.id,
             AtendimentosIndividuaisPorCaps.periodo,
             AtendimentosIndividuaisPorCaps.estabelecimento,
+            AtendimentosIndividuaisPorCaps.competencia,
             AtendimentosIndividuaisPorCaps.estabelecimento_linha_idade,
             AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil,
             AtendimentosIndividuaisPorCaps.nome_mes,
             AtendimentosIndividuaisPorCaps.maior_taxa,
             AtendimentosIndividuaisPorCaps.perc_apenas_atendimentos_individuais_anterior,
-            AtendimentosIndividuaisPorCaps.dif_perc_apenas_atendimentos_individuais
+            AtendimentosIndividuaisPorCaps.dif_perc_apenas_atendimentos_individuais,
         ).filter(
             AtendimentosIndividuaisPorCaps.unidade_geografica_id_sus == municipio_id_sus
         )
@@ -40,7 +41,9 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
         if estabelecimentos is not None:
             lista_estabelecimentos = separar_string(",", estabelecimentos)
             query = query.filter(
-                AtendimentosIndividuaisPorCaps.estabelecimento.in_(lista_estabelecimentos)
+                AtendimentosIndividuaisPorCaps.estabelecimento.in_(
+                    lista_estabelecimentos
+                )
             )
 
         if periodos is not None:
@@ -63,17 +66,15 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
                 AtendimentosIndividuaisPorCaps.estabelecimento_linha_perfil.in_(
                     lista_linhas_de_perfil
                 )
-            )        
+            )
         atendimentos_individuais_caps = query.all()
         return atendimentos_individuais_caps
     except (exc.SQLAlchemyError, Exception) as error:
         session.rollback()
 
         print({"error": str(error)})
-        raise HTTPException(
-            status_code=500,
-            detail=("Internal Server Error")
-        )
+        raise HTTPException(status_code=500, detail=("Internal Server Error"))
+
 
 def obter_resumo_perfil_usuarios_caps_por_id_sus(municipio_id_sus: str):
     resumo_perfil_usuarios_caps = (
