@@ -60,7 +60,6 @@ def consultar_dados_procedimentos_por_usuario_estabelecimento(
         return procedimentos_por_usuario_por_estabelecimento
 
     except (Exception) as error:
-        session.rollback()
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
@@ -125,7 +124,6 @@ def consultar_procedimentos_por_hora(
         procedimentos_por_hora = query.all()
         return procedimentos_por_hora
     except (Exception) as error:
-        session.rollback()
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
@@ -182,10 +180,7 @@ def consultar_procedimentos_por_tipo(
 
         return procedimentos_por_tipo
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -203,10 +198,7 @@ def consultar_nomes_de_procedimentos_por_tipo(municipio_id_sus: str):
 
         return nomes_de_procedimentos
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -252,10 +244,7 @@ def consultar_procedimentos_por_usuario_tempo_servico(
 
         return procedimentos_por_usuario_por_tempo_servico
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

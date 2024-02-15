@@ -65,10 +65,9 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
                 )
             )        
         atendimentos_individuais_caps = query.all()
+
         return atendimentos_individuais_caps
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
@@ -106,10 +105,7 @@ def obter_perfil_atendimentos_individuais_por_cid(
 
         return atendimentos_individuais_por_cid
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -131,10 +127,7 @@ def obter_perfil_atendimentos_individuais_por_genero_e_idade(
 
         return atendimentos_individuais_por_genero_e_idade
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -156,10 +149,7 @@ def obter_perfil_atendimentos_individuais_por_raca(
 
         return atendimentos_individuais_por_raca
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

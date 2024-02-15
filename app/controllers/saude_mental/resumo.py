@@ -21,14 +21,9 @@ def obter_resumo_totais_por_id_sus(municipio_id_sus: str):
 
         return resumo_municipio
     except HTTPException as error:
-        session.rollback()
-
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

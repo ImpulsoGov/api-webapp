@@ -21,13 +21,9 @@ def obter_acolhimento_noturno(
         )
 
         return acolhimento_noturno
-    except (Exception) as erro:
-        session.rollback()
-
-        error = str(erro)
-
+    except (Exception) as error:
+        error = str(error)
         print({"error": error})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

@@ -19,10 +19,7 @@ def dados_consultorionarua_atendimentos(municipio_id_sus: str):
 
         return dados_consultorionarua_atendimentos
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -41,10 +38,7 @@ def dados_consultorionarua_atendimentos_12meses(
 
         return dados_consultorionarua_atendimentos_12meses
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
