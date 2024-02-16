@@ -53,16 +53,16 @@ def senha_hash(senha):
     return pwd_context.hash(senha)
 
 
-def get_user(mail: str):
+def get_user(cpf: str):
     try:
-        res = db.session.query(usuarios.Usuario).filter_by(mail=mail).all()
+        res = db.session.query(usuarios.Usuario).filter_by(cpf=cpf).all()
         return res[0]
     except Exception as error:
         print({"error": error})
         return None
 
 
-def get_perfil(mail: str):
+def get_perfil(cpf: str):
     try:
         res = (
             db.session.query(Perfil)
@@ -76,7 +76,7 @@ def get_perfil(mail: str):
                 Usuarios.nome_usuario,
                 Perfil_lista.perfil,
             )
-            .filter_by(mail=mail)
+            .filter_by(cpf=cpf)
             .all()
         )
         perfil = []
@@ -96,20 +96,19 @@ def get_perfil(mail: str):
         return {"erros": [error]}
 
 
-def autenticar(mail: str, senha: str):
-    usuario = get_user(mail)
-    print(mail, usuario)
-    if usuario == None or usuario.mail != mail:
+def autenticar(cpf: str, senha: str):
+    usuario = get_user(cpf)
+    print(cpf, usuario)
+    if usuario == None or usuario.cpf != cpf:
         return 1
     if usuario.perfil_ativo == False or usuario.perfil_ativo == None:
         return 3
     if not verificar_senha(senha, usuario.hash_senha):
         return 2
-    return usuario.mail
+    return usuario.cpf
 
 
 def criar_token(data: dict, expires_delta: Optional[timedelta] = None):
-    print(data)
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -134,7 +133,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(mail=token_data.username)
+    user = get_user(cpf=token_data.username)
     if user is None:
         raise credentials_exception
     if user.perfil_ativo == False:
@@ -144,7 +143,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
         return user_exception
-    return get_perfil(user.mail)
+    return get_perfil(user.cpf)
 
 
 def controle_perfil(perfil_usuario, perfil_rota):
@@ -158,13 +157,13 @@ def controle_perfil(perfil_usuario, perfil_rota):
 
 
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    mail = autenticar(form_data.username, form_data.password)
-    if mail != form_data.username:
-        if mail == 1:
-            erro = "E-mail Incorreto"
-        elif mail == 2:
+    cpf = autenticar(form_data.username, form_data.password)
+    if cpf != form_data.username:
+        if cpf == 1:
+            erro = "CPF Incorreto"
+        elif cpf == 2:
             erro = "Senha Inválida"
-        elif mail == 3:
+        elif cpf == 3:
             erro = "Usuário Inativo"
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -172,5 +171,5 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = criar_token(data={"sub": mail}, expires_delta=access_token_expires)
+    access_token = criar_token(data={"sub": cpf}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
