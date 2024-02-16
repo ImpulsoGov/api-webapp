@@ -1,23 +1,19 @@
-from sqlalchemy import Column, Integer, String, Float, Numeric, DATE,PrimaryKeyConstraint
-# 
-# Base = db.Base_impulso_previne_publico
-
+from sqlalchemy import Column, Integer, String, Float, Numeric, DATE
 from app.models import db
+Base = db.Base_impulso_previne_publico
 
-
-class IndicadoresDesempenho(db.Base_impulso_previne_publico):
-    """Modelo da tabela indicadores_desempenho_score_equipes_validas que alimenta os gráficos e tabelas do painel Indicadores de Desempenho"""
+class IndicadoresDesempenho(Base):
     __tablename__ = 'indicadores_desempenho_score_equipes_validas'
     municipio_id_ibge = Column(String)
     municipio_id_sus = Column(String,primary_key=True)
     municipio_nome = Column(String)
     municipio_uf = Column(String)
     periodo_codigo = Column(String)
-    periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio',primary_key=True)
+    periodo_data_inicio = Column(DATE,nullable=False,comment='Data de inicio')
     periodo_data_fim = Column(DATE,nullable=False,comment='Data de finalizacao')
     indicador_ordem = Column(String)
     indicador_prioridade = Column(Integer)
-    indicador_nome = Column(String,primary_key=True)
+    indicador_nome = Column(String)
     indicador_peso = Column(Float)
     indicador_validade_resultado = Column(Float)
     indicador_acoes_por_usuario = Column(Float)
@@ -37,10 +33,9 @@ class IndicadoresDesempenho(db.Base_impulso_previne_publico):
     delta_formatado = Column(String)
     indicador_usuarios_100_porcento_meta = Column(Numeric)
     indicador_usuarios_cadastrados_sem_atendimento = Column(Numeric)
+    indicador_usuarios_cadastrar_para_meta = Column(Numeric)
     indicador_score = Column(Integer)
     criacao_data = Column(DATE,nullable=False,comment='Data de Criação')
     atualizacao_data = Column(DATE,nullable=False,comment='Data de Atualizacao')
     indicador_denominador_informado =  Column(Integer)
-    __table_args__ = (
-        {'schema': 'impulso_previne_dados_abertos_replica'}
-    )
+    __table_args__ = {'schema': 'impulso_previne'}
