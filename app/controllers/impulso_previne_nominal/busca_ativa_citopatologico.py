@@ -31,6 +31,7 @@ def citopatologico_aps(municipio_id_sus):
                     Citopatologico.equipe_nome,
                     Citopatologico.id_status_usuario,
                     Citopatologico.dt_registro_producao_mais_recente,
+                    Citopatologico.atualizacao_data,
                 )
                 .order_by(Citopatologico.paciente_nome)
                 .all()
@@ -64,6 +65,7 @@ def citopatologico_equipe(municipio_id_sus, equipe):
                 Citopatologico.equipe_nome,
                 Citopatologico.id_status_usuario,
                 Citopatologico.dt_registro_producao_mais_recente,
+                Citopatologico.atualizacao_data,
             )
             .order_by(Citopatologico.paciente_nome)
             .all()
