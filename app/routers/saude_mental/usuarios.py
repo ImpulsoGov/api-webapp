@@ -1,7 +1,6 @@
+from typing import Union
 from fastapi import APIRouter
-
 from app.controllers.saude_mental.usuarios import (
-    obter_estabelecimentos_por_id_sus,
     obter_perfil_usuarios_ativos_por_cid,
     obter_perfil_usuarios_ativos_por_condicao,
     obter_perfil_usuarios_ativos_por_genero_e_idade,
@@ -10,42 +9,45 @@ from app.controllers.saude_mental.usuarios import (
     obter_perfil_usuarios_novos_por_condicao,
     obter_perfil_usuarios_novos_por_genero_e_idade,
     obter_perfil_usuarios_novos_por_raca,
-    obter_periodos_por_id_sus,
-    obter_usuarios_novos,
-    obter_usuarios_novos_resumo,
-    obter_usuarios_perfil,
-    obter_usuarios_perfil_estabelecimento,
+    consultar_usuarios_ativos_por_estabelecimento,
+    consultar_usuarios_novos_resumo,
 )
 
 router = APIRouter()
 
 
-@router.get("/saude-mental/usuarios/perfil")
-async def obter_perfil_usuarios(
+@router.get("/saude-mental/usuarios/perfil/por-estabelecimento")
+async def obter_usuarios_ativos_por_estabelecimento(
     municipio_id_sus: str,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
+    estabelecimento_linha_perfil: Union[str, None] = None,
+    estabelecimento_linha_idade: Union[str, None] = None,
 ):
-    return obter_usuarios_perfil(municipio_id_sus=municipio_id_sus)
+    return consultar_usuarios_ativos_por_estabelecimento(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos,
+        estabelecimento_linha_perfil=estabelecimento_linha_perfil,
+        estabelecimento_linha_idade=estabelecimento_linha_idade,
+    )
 
 
-@router.get("/saude-mental/usuarios/perfilestabelecimento")
-async def obter_perfil_usuarios_estabelecimento(
+@router.get("/saude-mental/usuarios/novos/resumo")
+async def obter_resumo_usuarios_novos(
     municipio_id_sus: str,
+    estabelecimentos: Union[str, None] = None,
+    periodos: Union[str, None] = None,
+    estabelecimento_linha_perfil: Union[str, None] = None,
+    estabelecimento_linha_idade: Union[str, None] = None,
 ):
-    return obter_usuarios_perfil_estabelecimento(municipio_id_sus=municipio_id_sus)
-
-
-@router.get("/saude-mental/usuarios/novos")
-async def obter_novos_usuarios(
-    municipio_id_sus: str,
-):
-    return obter_usuarios_novos(municipio_id_sus=municipio_id_sus)
-
-
-@router.get("/saude-mental/usuarios/novosresumo")
-async def obter_novos_usuarios_resumo(
-    municipio_id_sus: str,
-):
-    return obter_usuarios_novos_resumo(municipio_id_sus=municipio_id_sus)
+    return consultar_usuarios_novos_resumo(
+        municipio_id_sus=municipio_id_sus,
+        estabelecimentos=estabelecimentos,
+        periodos=periodos,
+        estabelecimento_linha_perfil=estabelecimento_linha_perfil,
+        estabelecimento_linha_idade=estabelecimento_linha_idade,
+    )
 
 
 @router.get("/saude-mental/usuarios/perfil/condicao")
@@ -89,20 +91,6 @@ async def obter_cid_usuarios_ativos(
         municipio_id_sus,
         estabelecimento,
         periodo,
-    )
-
-
-@router.get("/saude-mental/usuarios/perfil/estabelecimentos")
-async def obter_estabelecimentos(municipio_id_sus: str):
-    return obter_estabelecimentos_por_id_sus(
-        municipio_id_sus,
-    )
-
-
-@router.get("/saude-mental/usuarios/perfil/periodos")
-async def obter_periodos(municipio_id_sus: str):
-    return obter_periodos_por_id_sus(
-        municipio_id_sus,
     )
 
 

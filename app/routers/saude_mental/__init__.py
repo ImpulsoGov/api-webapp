@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-
+from fastapi import APIRouter, Depends
+from ...dependencies import adiciona_cache_header
 from app.routers.saude_mental import (
     abandono,
     ambulatorio,
@@ -16,7 +16,9 @@ from app.routers.saude_mental import (
     usuarios,
 )
 
-router = APIRouter()
+router = APIRouter(
+    dependencies = [Depends(adiciona_cache_header)]
+)
 
 router.include_router(encaminhamentos.router)
 router.include_router(matriciamentos.router)

@@ -11,7 +11,7 @@ class AbandonoCoortes(Base):
     __tablename__ = "caps_adesao_evasao_coortes_resumo"
     id = Column(Text, primary_key=True)
     unidade_geografica_id = Column(UUID(as_uuid=True))
-    unidade_geografica_id_sus = Column(VARCHAR(length=15))
+    unidade_geografica_id_sus = Column(VARCHAR(length=6))
     competencia = Column(Date)
     atualizacao_data = Column(TIMESTAMP(timezone=True))
     a_partir_do_ano = Column(Text)
@@ -31,6 +31,7 @@ class AbandonoCoortes(Base):
     maior_taxa_estabelecimento = Column(Text)
     predominio_faixa_etaria = Column(Text)
     predominio_condicao_grupo_descricao_curta_cid10 = Column(Text)
+    predominio_condicao_grupo_usuarios_cid10 = Column(Integer)
     maior_taxa_perc = Column(Float)
     maior_taxa_usuarios_nao_aderiram = Column(Integer)
     maior_taxa_usuarios_total = Column(Integer)
