@@ -143,7 +143,7 @@ async def cadastro_lotes(
 
 
 @router.post("/suporte/usuarios/cadastro-lote-sem-ativacao")
-async def cadastro_lotes(
+async def cadastro_lotes_sem_ativacao(
     nome: str = Form(...),
     mail: str = Form(...),
     cpf: str = Form(...),
@@ -155,7 +155,7 @@ async def cadastro_lotes(
     perfil: str = Form(...),
     projeto: Optional[str] = Form("IP"),
     unidade_saude: Optional[str] = Form(None),
-    municipio_id_ibge: Optional[str] = Form(None),
+    municipio_id_sus: str = Form(...),
     username: Usuario = Depends(auth.get_current_user),
 ):
     return cadastro_usuarios.cadastrar_em_lote_sem_ativacao(
@@ -172,7 +172,7 @@ async def cadastro_lotes(
         perfil=perfil,
         projeto=projeto,
         unidade_saude=unidade_saude,
-        municipio_id_ibge=municipio_id_ibge,
+        municipio_id_sus=municipio_id_sus,
     )
 
 
