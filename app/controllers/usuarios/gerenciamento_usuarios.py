@@ -35,6 +35,10 @@ from app.models.usuarios import (
     usuarios_ip,
     usuarios_sm,
 )
+from app.controllers.usuarios.validacao_perfis_conflitantes import (
+    ValidationError,
+    validar_perfis_conflitantes
+)
 
 session = db.session
 Usuarios = usuarios.Usuario
@@ -224,7 +228,36 @@ def dados_usuarios(id_cod, id, username, acesso):
         return error
 
 
+# TODO checar se o perfil recebido é um dos perfis válidos
 def add_perfil(id_cod, id, perfil, username, acesso):
+    """Adiciona novo perfil a um usuário já cadastrado
+
+    Parameters
+    ----------
+    id_cod : int
+        Número que define como o usuário que receberá um novo perfil será encontrado.
+        Número 1 para encontrar o usuário pelo email ou
+        número 2 para encontrar o usuário pelo cpf
+    id : str
+        Identificador único (email ou cpf) do usuário que receberá um novo perfil.
+        Se id_cod for igual a 1, o id deve receber o email do usuário.
+        Se id_cod for igual a 2, o id deve receber o cpf do usuário
+    perfil : int
+        Número do perfil que será adicionado ao usuário
+    username : list[int]
+        Lista de perfis já cadastrados do usuário que está usando o endpoint
+        para adicionar um perfil a outro usuário. Este dado é necessário para
+        saber se quem está usando o endpoint tem permissão para modificar a
+        lista de perfis de outra pessoa.
+    acesso : int
+        Perfil que tem permissão para gerir dados de outros usuários
+
+    Returns
+    -------
+    dict ou Exception
+        Retorna um dict com mensagem de sucesso/validação/falha
+        ou uma Exception caso algum erro inesperado ocorra
+    """
     # controle de acesso
     controle = auth.controle_perfil(username, acesso)
     if controle != True:
@@ -258,6 +291,20 @@ def add_perfil(id_cod, id, perfil, username, acesso):
     for resultado in res:
         if resultado["perfil"] == perfil:
             return {"mensagem": "Usuário já possui perfil informado"}
+
+    perfis_cadastrados_de_usuario_encontrado = [linha["perfil"] for linha in res]
+
+    try:
+        validar_perfis_conflitantes(
+            novo_perfil=perfil,
+            perfis_cadastrados=perfis_cadastrados_de_usuario_encontrado
+        )
+    except ValidationError as erro:
+        raise HTTPException(status_code=400, detail=str(erro))
+    except Exception as erro:
+        print({"erro": str(erro)})
+        raise HTTPException(status_code=500, detail="Internal server error")
+
     try:
         query = db.session.query(Perfil_lista).filter_by(perfil=perfil).all()
         query_perfil_id = query[0].id
