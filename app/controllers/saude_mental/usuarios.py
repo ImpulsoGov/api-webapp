@@ -80,10 +80,7 @@ def consultar_usuarios_ativos_por_estabelecimento(
 
         return usuarios_ativos
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -142,10 +139,7 @@ def consultar_usuarios_novos_resumo(
 
         return usuarios_novos
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -166,10 +160,7 @@ def obter_perfil_usuarios_ativos_por_condicao(
 
         return usuarios_ativos_por_condicao
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -190,10 +181,7 @@ def obter_perfil_usuarios_ativos_por_genero_e_idade(
 
         return usuarios_ativos_por_genero_e_idade
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -214,10 +202,7 @@ def obter_perfil_usuarios_ativos_por_raca(
 
         return usuarios_ativos_por_raca
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -238,10 +223,7 @@ def obter_perfil_usuarios_ativos_por_cid(
 
         return usuarios_ativos_por_cid
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -263,10 +245,7 @@ def obter_perfil_usuarios_novos_por_condicao(
 
         return usuarios_novos_por_condicao
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -288,10 +267,7 @@ def obter_perfil_usuarios_novos_por_genero_e_idade(
 
         return usuarios_novos_por_genero_e_idade
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -313,10 +289,7 @@ def obter_perfil_usuarios_novos_por_raca(
 
         return usuarios_novos_por_raca
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -338,10 +311,7 @@ def obter_perfil_usuarios_novos_por_cid(
 
         return usuarios_novos_por_cid
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

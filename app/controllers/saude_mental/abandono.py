@@ -49,7 +49,6 @@ def consultar_dados_caps_adesao_evasao_coortes_resumo(
         abandono_coortes = query.all()
         return abandono_coortes
     except (Exception) as error:
-        session.rollback()
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
@@ -89,10 +88,7 @@ def obter_perfil_evadiram_no_mes_por_cid(
 
         return adesao_por_cid
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -115,10 +111,7 @@ def obter_perfil_evadiram_no_mes_por_genero_e_idade(
 
         return adesao_por_genero_e_idade
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
