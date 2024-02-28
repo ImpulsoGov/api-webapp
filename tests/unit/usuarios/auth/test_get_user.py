@@ -14,8 +14,7 @@ MOCK_USER = {
 }
 
 
-# ref: https://docs.python.org/3/library/unittest.mock-examples.html#mocking-chained-calls
-def test_get_user_success():
+def test_get_user_db_returns_list_of_users():
     with patch("app.controllers.usuarios.auth.db") as mock_db:
         config = {
             "session.query.return_value.filter_by.return_value.all.return_value": (
