@@ -25,3 +25,16 @@ def test_get_user_success():
         mock_db.configure_mock(**config)
         result = get_user(cpf="00000000000")
     assert result == MOCK_USER
+
+
+def test_get_user_db_raises_exception():
+    with patch("app.controllers.usuarios.auth.db") as mock_db:
+        config = {
+            "session.query.return_value.filter_by.return_value.all.side_effect": (
+                Exception("Error")
+            )
+        }
+        mock_db.configure_mock(**config)
+        result = get_user(cpf="00000000000")
+    assert result is None
+
