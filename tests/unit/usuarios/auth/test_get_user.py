@@ -38,3 +38,12 @@ def test_get_user_db_raises_exception():
         result = get_user(cpf="00000000000")
     assert result is None
 
+
+def test_get_user_db_returns_empty_list():
+    with patch("app.controllers.usuarios.auth.db") as mock_db:
+        config = {
+            "session.query.return_value.filter_by.return_value.all.return_value": []
+        }
+        mock_db.configure_mock(**config)
+        result = get_user(cpf="00000000000")
+    assert result is None
