@@ -5,6 +5,7 @@ from app.models import db
 
 # TODO: padronizar uso do patch
 # TODO: usar função util que encadeia métodos
+# TODO: adicionar validação de existência do retorno do banco com respostas descritivas
 
 MOCK_USER_1 = {
     "id": "1",

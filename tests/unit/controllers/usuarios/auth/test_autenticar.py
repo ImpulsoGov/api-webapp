@@ -7,6 +7,7 @@ import pytest
 
 # from app.models.usuarios.usuarios import Usuario
 # TODO: adicionar tratamento de erro na função autenticar
+# TODO: criar fixture para classe User
 
 
 @dataclass

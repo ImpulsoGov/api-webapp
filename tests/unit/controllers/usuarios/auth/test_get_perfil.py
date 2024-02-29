@@ -3,6 +3,9 @@ from app.controllers.usuarios.auth import get_perfil
 from app.models import db
 from dataclasses import dataclass
 
+# TODO: usar função util que encadeia métodos
+# TODO: adicionar validação de existência do retorno do banco com respostas descritivas
+
 
 @dataclass
 class UserProfile:
