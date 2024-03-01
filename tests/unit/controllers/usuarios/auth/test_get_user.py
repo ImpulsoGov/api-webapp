@@ -1,44 +1,23 @@
 from unittest.mock import patch
-from datetime import datetime
 from app.controllers.usuarios import auth
 from app.models import db
 
-# TODO: padronizar uso do patch
 # TODO: usar função util que encadeia métodos
 # TODO: adicionar validação de existência do retorno do banco com respostas descritivas
 
-MOCK_USER_1 = {
-    "id": "1",
-    "nome_usuario": "Usuário Teste 1",
-    "hash_senha": "",
-    "mail": "teste1@email.com",
-    "cpf": "00000000000",
-    "perfil_ativo": True,
-    "criacao_data": datetime.now(),
-    "atualizacao_data": datetime.now(),
-}
-MOCK_USER_2 = {
-    "id": "2",
-    "nome_usuario": "Usuário Teste 2",
-    "hash_senha": "",
-    "mail": "teste2@email.com",
-    "cpf": "11111111111",
-    "perfil_ativo": True,
-    "criacao_data": datetime.now(),
-    "atualizacao_data": datetime.now(),
-}
 
-
-def test_get_user_db_returns_list_of_users():
-    with patch.object(auth, "db") as mock_db:
+def test_get_user_db_returns_list_of_users(
+    user_1_with_active_profile, user_2_with_active_profile
+):
+    with patch.object(db, "session", autospec=True) as mock_session:
         config = {
-            "session.query.return_value.filter_by.return_value.all.return_value": (
-                [MOCK_USER_1, MOCK_USER_2]
+            "query.return_value.filter_by.return_value.all.return_value": (
+                [user_1_with_active_profile, user_2_with_active_profile]
             )
         }
-        mock_db.configure_mock(**config)
-        result = auth.get_user(cpf="00000000000")
-    assert result == MOCK_USER_1
+        mock_session.configure_mock(**config)
+        result = auth.get_user(cpf=user_1_with_active_profile.cpf)
+    assert result == user_1_with_active_profile
 
 
 def test_get_user_db_raises_exception():
@@ -54,10 +33,8 @@ def test_get_user_db_raises_exception():
 
 
 def test_get_user_db_returns_empty_list():
-    with patch("app.controllers.usuarios.auth.db") as mock_db:
-        config = {
-            "session.query.return_value.filter_by.return_value.all.return_value": []
-        }
-        mock_db.configure_mock(**config)
+    with patch.object(db, "session", autospec=True) as mock_session:
+        config = {"query.return_value.filter_by.return_value.all.return_value": []}
+        mock_session.configure_mock(**config)
         result = auth.get_user(cpf="00000000000")
     assert result is None

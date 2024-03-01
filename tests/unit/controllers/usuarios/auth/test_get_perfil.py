@@ -1,44 +1,26 @@
 from unittest.mock import patch
 from app.controllers.usuarios.auth import get_perfil
 from app.models import db
-from dataclasses import dataclass
 
 # TODO: usar função util que encadeia métodos
 # TODO: adicionar validação de existência do retorno do banco com respostas descritivas
 
 
-@dataclass
-class UserProfile:
-    perfil: int
-    id: str = "1"
-    mail: str = "teste1@email.com"
-    cpf: str = "00000000000"
-    perfil_ativo: bool = True
-    nome_usuario: str = "Usuário Teste 1"
-
-    def __getitem__(self, key):
-        try:
-            return getattr(self, key)
-        except AttributeError:
-            raise KeyError(key)
-
-
-MOCK_USER_1_PROFILE_1 = UserProfile(perfil=1)
-MOCK_USER_1_PROFILE_2 = UserProfile(perfil=2)
-
-
-def test_db_returns_list_of_user_profile():
+def test_db_returns_list_of_user_profile(
+    user_1_profile_1,
+    user_1_profile_2,
+):
     with patch.object(db, "session", autospec=True) as mock_session:
         config = {
             "query.return_value.join.return_value.join.return_value.with_entities.return_value.filter_by.return_value.all.return_value": (
-                [MOCK_USER_1_PROFILE_1, MOCK_USER_1_PROFILE_2]
+                [user_1_profile_1, user_1_profile_2]
             )
         }
         mock_session.configure_mock(**config)
         result = get_perfil(cpf="00000000000")
         expected = {
-            **MOCK_USER_1_PROFILE_1.__dict__,
-            "perfil": [MOCK_USER_1_PROFILE_1.perfil, MOCK_USER_1_PROFILE_2.perfil],
+            **user_1_profile_1.__dict__,
+            "perfil": [user_1_profile_1.perfil, user_1_profile_2.perfil],
         }
     assert result == expected
 
