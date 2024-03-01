@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker
 
 env_path = os.path.dirname(os.path.realpath(__file__)) + "/.env"
 load_dotenv(dotenv_path=env_path)
+
+
 credencial = {
     "PRODUCAO": {
         "USERNAME": os.getenv("USERNAME_PROD"),
@@ -51,7 +53,6 @@ credencial = {
         "DATABASE": os.getenv("DATABASE_IP_NOMINAL"),
     },
 }
-
 
 engine_usuarios = create_engine(
     "postgresql://{}:{}@{}:{}/{}?".format(
@@ -121,28 +122,25 @@ engine_impulso_previne_publico = create_engine(
     },
     echo=True,
 )
-
-
 ### CRIA AS BASES DE CADA UM DOS MODELOS ###
 Base_usuarios = declarative_base()
-Base_usuarios.metadata.drop_all(bind=engine_usuarios)
-Base_usuarios.metadata.create_all(bind=engine_usuarios)
-
 Base_PRODUCAO = declarative_base()
-Base_PRODUCAO.metadata.drop_all(bind=engine_PRODUCAO)
-Base_PRODUCAO.metadata.create_all(bind=engine_PRODUCAO)
-
 Base_PRODUCAO_APLICACOES = declarative_base()
-Base_PRODUCAO_APLICACOES.metadata.drop_all(bind=engine_PRODUCAO_APLICACOES)
-Base_PRODUCAO_APLICACOES.metadata.create_all(bind=engine_PRODUCAO_APLICACOES)
-
 Base_saude_mental = declarative_base()
-Base_saude_mental.metadata.drop_all(bind=engine_saude_mental)
-Base_saude_mental.metadata.create_all(bind=engine_saude_mental)
-
 Base_impulso_previne_publico = declarative_base()
-Base_impulso_previne_publico.metadata.drop_all(bind=engine_impulso_previne_publico)
-Base_impulso_previne_publico.metadata.create_all(bind=engine_impulso_previne_publico)
+
+if os.getenv("RUNNING_UNIT_TESTS", "").lower() in ["", "false", "0"]:
+    Base_usuarios.metadata.drop_all(bind=engine_usuarios)
+    Base_usuarios.metadata.create_all(bind=engine_usuarios)
+    Base_PRODUCAO.metadata.drop_all(bind=engine_PRODUCAO)
+    Base_PRODUCAO.metadata.create_all(bind=engine_PRODUCAO)
+    Base_PRODUCAO_APLICACOES.metadata.drop_all(bind=engine_PRODUCAO_APLICACOES)
+    Base_PRODUCAO_APLICACOES.metadata.create_all(bind=engine_PRODUCAO_APLICACOES)
+    Base_saude_mental.metadata.drop_all(bind=engine_saude_mental)
+    Base_saude_mental.metadata.create_all(bind=engine_saude_mental)
+    Base_impulso_previne_publico.metadata.drop_all(bind=engine_impulso_previne_publico)
+    Base_impulso_previne_publico.metadata.create_all(bind=engine_impulso_previne_publico)
+
 
 ### CRIADOR DE SESSÃO ###
 Session = sessionmaker(twophase=True)
@@ -155,4 +153,6 @@ Session.configure(
         Base_impulso_previne_publico: engine_impulso_previne_publico,
     }
 )
+
+
 session = Session()
