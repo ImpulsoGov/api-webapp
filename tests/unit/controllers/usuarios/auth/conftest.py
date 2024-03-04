@@ -88,3 +88,8 @@ def algorithm():
 @pytest.fixture
 def token_payload():
     return {"sub": "00000000000"}
+
+
+@pytest.fixture
+def token():
+    return "mock_token"
