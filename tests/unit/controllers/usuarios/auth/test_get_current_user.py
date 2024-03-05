@@ -4,7 +4,6 @@ import jose
 import fastapi
 import pytest
 
-# TODO: verificar mensagens dos erros
 UNAUTHORIZED_RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
 
 
@@ -48,6 +47,7 @@ async def test_invalid_token_payload(
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.detail == "Credencial Invalida"
 
 
 @pytest.mark.asyncio
@@ -63,6 +63,7 @@ async def test_invalid_token(
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.detail == "Credencial Invalida"
 
 
 @pytest.mark.asyncio
@@ -78,6 +79,7 @@ async def test_expired_token(
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.detail == "Credencial Invalida"
 
 
 @pytest.mark.asyncio
@@ -103,6 +105,7 @@ async def test_user_does_not_exist(
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.detail == "Credencial Invalida"
 
 
 @pytest.mark.asyncio
@@ -129,3 +132,4 @@ async def test_user_is_inactive(
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.detail == "Usuário Inativo"
