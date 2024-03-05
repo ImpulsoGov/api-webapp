@@ -4,7 +4,7 @@ import jose
 import fastapi
 import pytest
 
-UNAUTHORIZED_RESPONSE_STATUS_CODE = 401
+# TODO: verificar mensagens dos erros
 UNAUTHORIZED_RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
 
 
@@ -65,7 +65,7 @@ async def test_invalid_token_payload(
         mocks_auth["ALGORITHM"].return_value = algorithm
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == UNAUTHORIZED_RESPONSE_STATUS_CODE
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
 
 
@@ -93,7 +93,7 @@ async def test_invalid_token(
         mocks_auth["ALGORITHM"].return_value = algorithm
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == UNAUTHORIZED_RESPONSE_STATUS_CODE
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
 
 
@@ -121,7 +121,7 @@ async def test_expired_token(
         mocks_auth["ALGORITHM"].return_value = algorithm
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == UNAUTHORIZED_RESPONSE_STATUS_CODE
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
 
 
@@ -152,7 +152,7 @@ async def test_user_does_not_exist(
         mocks_auth["get_user"].return_value = None
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == UNAUTHORIZED_RESPONSE_STATUS_CODE
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
 
 
@@ -184,5 +184,5 @@ async def test_user_is_inactive(
         mocks_auth["get_user"].return_value = user_1_with_inactive_profile
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == UNAUTHORIZED_RESPONSE_STATUS_CODE
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
     assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
