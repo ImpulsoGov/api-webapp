@@ -2,6 +2,11 @@ import pytest
 from dataclasses import dataclass
 from typing import Union
 from datetime import datetime
+import os
+
+os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "30"
+os.environ["SECRET_KEY"] = "mock_secret"
+os.environ["ALGORITHM"] = "HS256"
 
 
 @dataclass
@@ -73,16 +78,6 @@ def user_1_profile_1():
 @pytest.fixture
 def user_1_profile_2():
     return UserProfile(perfil=2)
-
-
-@pytest.fixture
-def secret_key():
-    return "mock_secret"
-
-
-@pytest.fixture
-def algorithm():
-    return "HS256"
 
 
 @pytest.fixture
