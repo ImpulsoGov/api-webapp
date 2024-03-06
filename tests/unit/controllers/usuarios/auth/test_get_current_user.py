@@ -4,7 +4,7 @@ import jose
 import fastapi
 import pytest
 
-UNAUTHORIZED_RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
+RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
 
 
 @pytest.mark.asyncio
@@ -46,7 +46,7 @@ async def test_invalid_token_payload(
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
-    assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Credencial Invalida"
 
 
@@ -62,7 +62,7 @@ async def test_invalid_token(
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
-    assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Credencial Invalida"
 
 
@@ -78,7 +78,7 @@ async def test_expired_token(
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
-    assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Credencial Invalida"
 
 
@@ -104,7 +104,7 @@ async def test_user_does_not_exist(
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
-    assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Credencial Invalida"
 
 
@@ -131,5 +131,5 @@ async def test_user_is_inactive(
         await auth.get_current_user()
     assert exec_info.type is fastapi.HTTPException
     assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
-    assert exec_info.value.headers == UNAUTHORIZED_RESPONSE_HEADER
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Usuário Inativo"

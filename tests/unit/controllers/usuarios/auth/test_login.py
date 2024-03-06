@@ -4,7 +4,8 @@ from dataclasses import dataclass
 import pytest
 import fastapi
 
-BAD_REQUEST_RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
+# TODO: retornar erro 400 quando usuário envia credenciais de login estiverem incorretas
+RESPONSE_HEADER = {"WWW-Authenticate": "Bearer"}
 
 
 @dataclass
@@ -39,8 +40,8 @@ def test_incorrect_cpf(login_credentials):
         mock_autenticar.return_value = incorrect_cpf_code
         auth.login(form_data=login_credentials)
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == fastapi.status.HTTP_400_BAD_REQUEST
-    assert exec_info.value.headers == BAD_REQUEST_RESPONSE_HEADER
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "CPF Incorreto"
 
 
@@ -52,8 +53,8 @@ def test_incorrect_password(login_credentials):
         mock_autenticar.return_value = incorrect_password_code
         auth.login(form_data=login_credentials)
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == fastapi.status.HTTP_400_BAD_REQUEST
-    assert exec_info.value.headers == BAD_REQUEST_RESPONSE_HEADER
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Senha Inválida"
 
 
@@ -65,6 +66,6 @@ def test_user_is_inactive(login_credentials):
         mock_autenticar.return_value = inactive_user_code
         auth.login(form_data=login_credentials)
     assert exec_info.type is fastapi.HTTPException
-    assert exec_info.value.status_code == fastapi.status.HTTP_400_BAD_REQUEST
-    assert exec_info.value.headers == BAD_REQUEST_RESPONSE_HEADER
+    assert exec_info.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
+    assert exec_info.value.headers == RESPONSE_HEADER
     assert exec_info.value.detail == "Usuário Inativo"
