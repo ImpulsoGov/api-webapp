@@ -2,7 +2,6 @@ from unittest.mock import patch
 from app.controllers.usuarios import auth
 from app.models import db
 
-# TODO: usar função util que encadeia métodos
 # TODO: adicionar validação de existência do retorno do banco com respostas descritivas
 
 
