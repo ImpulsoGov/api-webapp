@@ -39,11 +39,13 @@ def test_db_returns_empty_list():
 
 def test_db_raises_exception():
     with patch.object(db, "session", autospec=True) as mock_session:
+        error = Exception("An error happened")
         config = {
             "query.return_value.join.return_value.join.return_value.with_entities.return_value.filter_by.return_value.all.side_effect": (
-                Exception("Error")
+                error
             )
         }
         mock_session.configure_mock(**config)
         result = get_perfil(cpf="00000000000")
     assert "erros" in result.keys()
+    assert error in result["erros"]
