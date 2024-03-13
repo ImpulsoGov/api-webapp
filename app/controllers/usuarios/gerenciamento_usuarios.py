@@ -546,12 +546,21 @@ def validar_cpf_primeiro_acesso(cpf):
     try:
         res = db.session.query(Usuarios).filter_by(cpf=cpf).all()
         if len(res) < 1:
-            return {"mensagem": "CPF não cadastrado", "success": False}
+            return {
+                "mensagem": "O CPF digitado não cadastrado ou inválido.",
+                "success": False,
+            }
         cpf_db = res[0].cpf
         if cpf_db == None or cpf != cpf_db:
-            return {"mensagem": "CPF não cadastrado", "success": False}
+            return {
+                "mensagem": "O CPF digitado não cadastrado ou inválido.",
+                "success": False,
+            }
         if res[0].hash_senha != None and res[0].perfil_ativo != None:
-            return {"mensagem": "CPF já possui senha cadastrada", "success": False}
+            return {
+                "mensagem": "CPF já possui senha cadastrada. Volte e clique em ENTRAR",
+                "success": False,
+            }
         return {"success": True}
     except Exception as error:
         print({"error": [error]})
@@ -561,16 +570,27 @@ def validar_cpf_primeiro_acesso(cpf):
 
 
 def consulta_primeiro_acesso(cpf):
+    validar_cpf = validar_cpf_primeiro_acesso(cpf)
+    if validar_cpf["success"] != True:
+        return validar_cpf
     try:
         res = db.session.query(Usuarios).filter_by(cpf=cpf).all()
+        print(res)
         telefone_usuario = (
-            db.session.query(Usuarios).filter_by(id_usuario=res[0].id).all().telefone
+            db.session.query(UsuariosIP)
+            .filter_by(id_usuario=res[0].id)
+            .all()[0]
+            .telefone
         )
+        print()
         criar_codigo_recuperacao(res[0].mail)
         codigo = criar_codigo_recuperacao(res[0].mail)
-        mensagem = "Seu código de criação de senha é " + str(codigo)
+        mensagem = (
+            "ImpulsoPrevine: Esse é o seu código de verificação para criação de senha - "
+            + str(codigo)
+        )
         enviar_sms(telefone_usuario, mensagem)
-        return {"success": True}
+        return {"success": True, "telefone": telefone_usuario[7:11]}
     except Exception as error:
         print({"error": [error]})
         raise HTTPException(
@@ -580,11 +600,13 @@ def consulta_primeiro_acesso(cpf):
 
 def criar_codigo_recuperacao(mail):
     res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
+    cpf = db.session.query(Usuarios).filter_by(mail=mail).all()[0].cpf
 
     def gravar_codigo():
         codigo_recuperacao = math.floor(random.random() * 1000000)
         novo_codigo = recuperacao_senha.Recuperar(
             mail=mail,
+            cpf=cpf,
             codigo_recuperacao=codigo_recuperacao,
             criacao_data=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
@@ -598,7 +620,7 @@ def criar_codigo_recuperacao(mail):
 
     if len(res) > 0:
         time_diff = datetime.now() - res[0].criacao_data
-        if time_diff.total_seconds() < 15 * 60:
+        if time_diff.total_seconds() < 2 * 60:
             return res[0].codigo_recuperacao
         else:
             apagar_codigo_recuperacao(mail)
@@ -614,10 +636,12 @@ def enviar_sms(telefone_usuario, mensagem):
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
-        body=mensagem, from_=os.environ["TWILIO_TELEFONE_IMPULSO"], to=telefone_usuario
+        body=mensagem,
+        from_=os.environ["TWILIO_TELEFONE_IMPULSO"],
+        to="+55" + telefone_usuario,
     )
     # GRAVAR REGISTRO DA MENSAGEM ENVIADA
-    print(message.sid)
+    return message.sid
 
 
 def apagar_codigo_recuperacao(mail):
@@ -631,7 +655,7 @@ def apagar_codigo_recuperacao(mail):
 
 
 def apagar_codigo_recuperacao_tempo(mail):
-    time.sleep(15 * 60)
+    time.sleep(2 * 60)
     apagar_codigo_recuperacao(mail)
 
 
@@ -676,59 +700,64 @@ def solicitar_nova_senha(mail):
     if mail_check == True:
         codigo = criar_codigo_recuperacao(mail)
         assunto = "Código de Recuperação - Login Integrado ImpulsoGov"
-        mensagem = "Seu código de recuperação de senha é " + str(codigo)
+        mensagem = "Seu código de recuperação de senha é " + str(codigo) + ";)"
         enviar_mail(mail, assunto, mensagem)
         return {"msg": "solicitação realizada com sucesso", "success": True}
     else:
         return {"msg": mail_check, "success": False}
 
 
-def validar_codigo(codigo, mail):
+def validar_codigo(codigo, cpf):
     try:
-        res = db.session.query(recuperacao_senha.Recuperar).filter_by(mail=mail).all()
+        res = db.session.query(recuperacao_senha.Recuperar).filter_by(cpf=cpf).all()
         if len(res) < 1:
-            return {"mensagem": "E-mail não cadastrado"}
-        mail_db = res[0].mail
+            return {"mensagem": "CPF não cadastrado", "success": False}
+        cpf_db = res[0].cpf
         codigo_db = str(res[0].codigo_recuperacao)
-        if mail_db == None or mail != mail_db:
-            return {"mensagem": "E-mail não cadastrado"}
+        if cpf_db == None or cpf != cpf_db:
+            return {"mensagem": "CPF não cadastrado", "success": False}
         if codigo_db == None or codigo != codigo_db:
-            return {"mensagem": "Codigo invalido"}
-        return True
+            return {
+                "mensagem": "Código digitado é inválido, tente novamente.",
+                "success": False,
+            }
+        return {"success": True}
     except Exception as error:
         print({"error": [error]})
-        return {"erros": [error]}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
+        )
 
 
-def alterar_senha(mail, codigo, senha):
+def alterar_senha(cpf, codigo, senha):
     try:
-        codigo_valido = validar_codigo(codigo, mail)
+        codigo_valido = validar_codigo(codigo, cpf)
         if codigo_valido != True:
             return codigo_valido
         validacao_senha = cadastro_usuarios.validar_senha(senha)
         if validacao_senha[1] != True:
             return validacao_senha[0]
         hash = auth.senha_hash(senha)
-        session.query(Usuarios).filter(Usuarios.mail == mail).update(
-            {"hash_senha": hash}
-        )
+        session.query(Usuarios).filter(Usuarios.cpf == cpf).update({"hash_senha": hash})
         session.commit()
-        apagar_codigo_recuperacao(mail)
+        apagar_codigo_recuperacao(cpf)
         return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
         print({"error": [error]})
-        return {"erros": [error]}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
+        )
 
 
-def senha_primeiro_acesso(mail, codigo, senha):
+def senha_primeiro_acesso(cpf, codigo, senha):
     try:
-        alterarSenha = alterar_senha(mail, codigo, senha)
+        alterarSenha = alterar_senha(cpf, codigo, senha)
         try:
             if alterarSenha["success"] != True:
                 return alterarSenha
         except:
             return alterarSenha
-        ativarPerfil = cadastro_usuarios.ativar_perfil(1, mail)
+        ativarPerfil = cadastro_usuarios.ativar_perfil(2, cpf)
         try:
             if ativarPerfil["error"] != None:
                 return ativarPerfil
@@ -737,7 +766,9 @@ def senha_primeiro_acesso(mail, codigo, senha):
         return {"msg": "alteração realizada com sucesso", "success": True}
     except Exception as error:
         print({"error": [error]})
-        return {"erros": [error]}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(error)
+        )
 
 
 def listar_usuarios_cadastrados_ip(perfis_usuario_autenticado: list):
