@@ -373,13 +373,16 @@ async def validate_token(username: Usuario = Depends(auth.get_current_user)):
 
 
 @router.post("/suporte/ger_usuarios/solicitar-nova-senha")
-async def solicitar_nova_senha(
-    background_tasks: BackgroundTasks, mail: str = Form(...)
-):
+async def solicitar_nova_senha(background_tasks: BackgroundTasks, cpf: str = Form(...)):
     background_tasks.add_task(
-        gerenciamento_usuarios.apagar_codigo_recuperacao_tempo, mail
+        gerenciamento_usuarios.apagar_codigo_recuperacao_tempo, cpf
     )
-    return gerenciamento_usuarios.solicitar_nova_senha(mail)
+    return gerenciamento_usuarios.solicitar_nova_senha(cpf)
+
+
+@router.post("/suporte/ger_usuarios/validar-cpf")
+async def validacao_cpf(cpf: str = Form(...)):
+    return gerenciamento_usuarios.verificar_cpf(cpf)
 
 
 @router.post("/suporte/ger_usuarios/validar-codigo")
@@ -389,9 +392,9 @@ async def validacao_codigo(cpf: str = Form(...), codigo: str = Form(...)):
 
 @router.post("/suporte/ger_usuarios/alterar-senha")
 async def alteracao_senha(
-    mail: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
+    cpf: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
 ):
-    return gerenciamento_usuarios.alterar_senha(mail, codigo, nova_senha)
+    return gerenciamento_usuarios.alterar_senha(cpf, codigo, nova_senha)
 
 
 @router.post("/suporte/ger_usuarios/criar-senha")

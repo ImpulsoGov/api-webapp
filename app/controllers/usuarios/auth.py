@@ -12,6 +12,7 @@ from requests import session
 
 from app.models import db
 from app.models.usuarios import perfil_acesso, perfil_usuario, usuarios
+import re
 
 Usuarios = usuarios.Usuario
 Perfil = perfil_usuario.Perfil
@@ -50,12 +51,20 @@ def verificar_senha(senha, hash_senha):
 
 
 def senha_hash(senha):
+    print("------------- : senha+hash")
+    print(senha)
+    print(pwd_context.hash(senha))
     return pwd_context.hash(senha)
 
 
 def get_user(cpf: str):
+    print(cpf)
     try:
-        res = db.session.query(usuarios.Usuario).filter_by(cpf=cpf).all()
+        res = (
+            db.session.query(usuarios.Usuario)
+            .filter_by(cpf=re.sub(r"\D", "", cpf))
+            .all()
+        )
         return res[0]
     except Exception as error:
         print({"error": error})
@@ -97,9 +106,9 @@ def get_perfil(cpf: str):
 
 
 def autenticar(cpf: str, senha: str):
-    usuario = get_user(cpf)
+    usuario = get_user(re.sub(r"\D", "", cpf))
     print(cpf, usuario)
-    if usuario == None or usuario.cpf != cpf:
+    if usuario == None or usuario.cpf != re.sub(r"\D", "", cpf):
         return 1
     if usuario.perfil_ativo == False or usuario.perfil_ativo == None:
         return 3
@@ -158,13 +167,16 @@ def controle_perfil(perfil_usuario, perfil_rota):
 
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     cpf = autenticar(form_data.username, form_data.password)
-    if cpf != form_data.username:
+    print("-----------------cpf")
+    print(cpf, form_data.username)
+    if cpf != re.sub(r"\D", "", form_data.username):
         if cpf == 1:
             erro = "CPF Incorreto"
         elif cpf == 2:
             erro = "Senha Inválida"
         elif cpf == 3:
             erro = "Usuário Inativo"
+        print("-----------------erro")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=erro,
