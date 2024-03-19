@@ -587,7 +587,7 @@ def validar_cpf_primeiro_acesso(cpf):
             }
         if res[0].hash_senha != None and res[0].perfil_ativo != None:
             return {
-                "mensagem": "CPF já possui senha cadastrada. Volte e clique em ENTRAR",
+                "mensagem": "<div>Esse CPF já possui senha cadastrada. Volte e clique em Entrar <br/>Precisa de ajuda nessa etapa? <a href='/' style='color: #FFF'>Clique aqui,</a></div>",
                 "success": False,
             }
         telefone_usuario = (
