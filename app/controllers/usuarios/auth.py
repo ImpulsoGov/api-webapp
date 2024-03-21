@@ -110,8 +110,10 @@ def autenticar(cpf: str, senha: str):
     print(cpf, usuario)
     if usuario == None or usuario.cpf != re.sub(r"\D", "", cpf):
         return 1
-    if usuario.perfil_ativo == False or usuario.perfil_ativo == None:
+    if usuario.perfil_ativo == False:
         return 3
+    if usuario.perfil_ativo == None:
+        return 4
     if not verificar_senha(senha, usuario.hash_senha):
         return 2
     return usuario.cpf
@@ -167,16 +169,15 @@ def controle_perfil(perfil_usuario, perfil_rota):
 
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     cpf = autenticar(form_data.username, form_data.password)
-    print("-----------------cpf")
-    print(cpf, form_data.username)
     if cpf != re.sub(r"\D", "", form_data.username):
         if cpf == 1:
             erro = "CPF Incorreto"
         elif cpf == 2:
             erro = "Senha Inválida"
         elif cpf == 3:
-            erro = "Usuário Inativo"
-        print("-----------------erro")
+            erro = "O CPF digitado foi desativado."
+        elif cpf == 4:
+            erro = "Esse CPF ainda não possui senha cadastrada. Clique em Primeiro Acesso e cadastre uma senha."
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=erro,
