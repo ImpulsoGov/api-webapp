@@ -65,7 +65,9 @@ async def consulta_municipio(
     estado_sigla: Optional[str] = None,
     estado_nome: Optional[str] = None,
 ):
-    res = municipios.consulta_municipio(id_sus, municipio_nome, estado_sigla, estado_nome)
+    res = municipios.consulta_municipio(
+        id_sus, municipio_nome, estado_sigla, estado_nome
+    )
     return res
 
 
@@ -371,35 +373,45 @@ async def validate_token(username: Usuario = Depends(auth.get_current_user)):
 
 
 @router.post("/suporte/ger_usuarios/solicitar-nova-senha")
-async def solicitar_nova_senha(background_tasks: BackgroundTasks, mail: str = Form(...)):
+async def solicitar_nova_senha(background_tasks: BackgroundTasks, cpf: str = Form(...)):
     background_tasks.add_task(
-        gerenciamento_usuarios.apagar_codigo_recuperacao_tempo, mail
+        gerenciamento_usuarios.apagar_codigo_recuperacao_tempo, cpf
     )
-    return gerenciamento_usuarios.solicitar_nova_senha(mail)
+    return gerenciamento_usuarios.solicitar_nova_senha(cpf)
+
+
+@router.post("/suporte/ger_usuarios/validar-cpf")
+async def validacao_cpf(cpf: str = Form(...)):
+    return gerenciamento_usuarios.verificar_cpf(cpf)
 
 
 @router.post("/suporte/ger_usuarios/validar-codigo")
-async def validacao_codigo(mail: str = Form(...), codigo: str = Form(...)):
-    return gerenciamento_usuarios.validar_codigo(codigo, mail)
+async def validacao_codigo(cpf: str = Form(...), codigo: str = Form(...)):
+    return gerenciamento_usuarios.validar_codigo(codigo, cpf)
 
 
 @router.post("/suporte/ger_usuarios/alterar-senha")
 async def alteracao_senha(
-    mail: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
+    cpf: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
 ):
-    return gerenciamento_usuarios.alterar_senha(mail, codigo, nova_senha)
+    return gerenciamento_usuarios.alterar_senha(cpf, codigo, nova_senha)
 
 
 @router.post("/suporte/ger_usuarios/criar-senha")
 async def alteracao_senha(
-    mail: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
+    cpf: str = Form(...), codigo: str = Form(...), nova_senha: str = Form(...)
 ):
-    return gerenciamento_usuarios.senha_primeiro_acesso(mail, codigo, nova_senha)
+    return gerenciamento_usuarios.senha_primeiro_acesso(cpf, codigo, nova_senha)
 
 
 @router.post("/suporte/ger_usuarios/primeiro-acesso")
-async def primeiro_acesso(mail: str = Form(...)):
-    return gerenciamento_usuarios.consulta_primeiro_acesso(mail)
+async def primeiro_acesso(cpf: str = Form(...)):
+    return gerenciamento_usuarios.consulta_primeiro_acesso(cpf)
+
+
+@router.post("/suporte/ger_usuarios/validar-cpf-primeiro-acesso")
+async def primeiro_acesso(cpf: str = Form(...)):
+    return gerenciamento_usuarios.validar_cpf_primeiro_acesso(cpf)
 
 
 @router.get("/suporte/nps/consulta")
@@ -418,7 +430,7 @@ async def avaliacao_nps(
 
 @router.get("/suporte/ger_usuarios/usuarios-ip")
 async def listar_usuarios_cadastrados(
-    usuario_autenticado=Depends(auth.get_current_user)
+    usuario_autenticado=Depends(auth.get_current_user),
 ):
     return gerenciamento_usuarios.listar_usuarios_cadastrados_ip(
         perfis_usuario_autenticado=usuario_autenticado["perfil"]
@@ -458,9 +470,9 @@ async def atualizar_dados_usuario(
             "cargo": dados_usuario.cargo,
             "telefone": dados_usuario.telefone,
             "municipio_id_sus": dados_usuario.municipio_id_sus,
-            "perfil_ativo": dados_usuario.perfil_ativo
+            "perfil_ativo": dados_usuario.perfil_ativo,
         },
-        perfis_usuario_autenticado=usuario_autenticado["perfil"]
+        perfis_usuario_autenticado=usuario_autenticado["perfil"],
     )
 
 
@@ -477,7 +489,7 @@ async def atualizar_perfis_usuario(
     return gerenciamento_usuarios.atualizar_perfis_usuario(
         usuario_id=usuario_id,
         perfis_ids=perfis.perfis_ids,
-        perfis_usuario_autenticado=usuario_autenticado["perfil"]
+        perfis_usuario_autenticado=usuario_autenticado["perfil"],
     )
 
 
@@ -513,7 +525,7 @@ async def cadastrar_usuario_ip(
             "telefone": telefone,
             "equipe": equipe,
             "whatsapp": whatsapp,
-            "municipio_id_sus": municipio_id_sus
+            "municipio_id_sus": municipio_id_sus,
         },
-        perfis_usuario_autenticado=usuario_autenticado["perfil"]
+        perfis_usuario_autenticado=usuario_autenticado["perfil"],
     )
