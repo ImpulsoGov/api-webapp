@@ -173,7 +173,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         if cpf == 1:
             erro = "CPF digitado inválido ou não cadastrado."
         elif cpf == 2:
-            erro = "Senha Inválida"
+            erro = "A senha digitada é incorreta"
         elif cpf == 3:
             erro = "O CPF digitado foi desativado."
         elif cpf == 4:

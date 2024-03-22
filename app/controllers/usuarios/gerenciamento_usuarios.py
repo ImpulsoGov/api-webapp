@@ -590,13 +590,14 @@ def validar_cpf_primeiro_acesso(cpf):
                 "mensagem": "<div>Esse CPF já possui senha cadastrada. Volte e clique em Entrar <br/>Precisa de ajuda nessa etapa? <a href='https://bit.ly/login-whatsapp-apoio' style='color: #FFF'>Clique aqui.</a></div>",
                 "success": False,
             }
-        telefone_usuario = (
-            db.session.query(UsuariosIP)
-            .filter_by(id_usuario=res[0].id)
-            .all()[0]
-            .telefone
-        )
+        usuario_ip = db.session.query(UsuariosIP).filter_by(id_usuario=res[0].id).all()
+        if len(usuario_ip) < 1:
+            return {
+                "mensagem": "CPF digitado não cadastrado ou inválido.",
+                "success": False,
+            }
 
+        telefone_usuario = usuario_ip[0].telefone
         return {"success": True, "telefone": telefone_usuario[7:11]}
     except Exception as error:
         print({"error": [error]})
