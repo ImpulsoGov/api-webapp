@@ -585,6 +585,11 @@ def validar_cpf_primeiro_acesso(cpf):
                 "mensagem": "CPF digitado não cadastrado ou inválido.",
                 "success": False,
             }
+        if res[0].perfil_ativo == False:
+            return {
+                "mensagem": "O CPF digitado foi desativado",
+                "success": False,
+            }
         if res[0].hash_senha != None and res[0].perfil_ativo != None:
             return {
                 "mensagem": "<div>Esse CPF já possui senha cadastrada. Volte e clique em Entrar. <br/>Precisa de ajuda nessa etapa? <a href='https://bit.ly/login-whatsapp-apoio' style='color: #FFF' target='_blank'>Clique aqui.</a></div>",
