@@ -587,7 +587,7 @@ def validar_cpf_primeiro_acesso(cpf):
             }
         if res[0].hash_senha != None and res[0].perfil_ativo != None:
             return {
-                "mensagem": "<div>Esse CPF já possui senha cadastrada. Volte e clique em Entrar <br/>Precisa de ajuda nessa etapa? <a href='https://bit.ly/login-whatsapp-apoio' style='color: #FFF'>Clique aqui.</a></div>",
+                "mensagem": "<div>Esse CPF já possui senha cadastrada. Volte e clique em Entrar. <br/>Precisa de ajuda nessa etapa? <a href='https://bit.ly/login-whatsapp-apoio' style='color: #FFF' target='_blank'>Clique aqui.</a></div>",
                 "success": False,
             }
         usuario_ip = db.session.query(UsuariosIP).filter_by(id_usuario=res[0].id).all()
