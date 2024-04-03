@@ -587,7 +587,7 @@ def validar_cpf_primeiro_acesso(cpf):
             }
         if res[0].perfil_ativo == False:
             return {
-                "mensagem": "O CPF digitado foi desativado",
+                "mensagem": "O CPF digitado foi desativado.",
                 "success": False,
             }
         if res[0].hash_senha != None and res[0].perfil_ativo != None:
