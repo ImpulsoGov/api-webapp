@@ -556,6 +556,12 @@ def verificar_cpf(cpf):
                 "mensagem": "CPF digitado não cadastrado ou inválido.",
                 "success": False,
             }
+        perfil_ativo_db = res[0].perfil_ativo
+        if perfil_ativo_db == False:
+            return {
+                "mensagem": "O CPF digitado foi desativado.",
+                "success": False,
+            }
         telefone_usuario = (
             db.session.query(UsuariosIP)
             .filter_by(id_usuario=res[0].id)
