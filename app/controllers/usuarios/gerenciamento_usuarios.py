@@ -562,6 +562,13 @@ def verificar_cpf(cpf):
                 "mensagem": "O CPF digitado foi desativado.",
                 "success": False,
             }
+        senha_db = res[0].hash_senha
+        if senha_db == None:
+            return {
+                "mensagem": "O CPF digitado ainda não realizou o primeiro acesso",
+                "success": False,
+            }
+
         telefone_usuario = (
             db.session.query(UsuariosIP)
             .filter_by(id_usuario=res[0].id)
