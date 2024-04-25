@@ -1,19 +1,20 @@
 import uuid
 from datetime import datetime
+from sqlalchemy import func
+from fastapi import HTTPException
 
 from passlib.context import CryptContext
 from validate_docbr import CPF
 
-from app.models import (
-    db,
-    municipios
-)
+from app.models import db, municipios
 from app.models.usuarios import (
     usuarios,
     perfil_acesso,
     perfil_usuario,
     usuarios_ip,
-    usuarios_sm)
+    usuarios_sm,
+)
+from app.utils.exceptions import ValidationError
 
 from .auth import controle_perfil
 
@@ -26,15 +27,22 @@ session = db.session
 
 
 def validar_senha(senha):
-    restricoes =[]
-    if len(senha)<8: restricoes.append({"mensagem1":"Senha deve conter ao menos 8 caracteres"})
-    if len(re.findall('[a-z]', senha))==0: restricoes.append({"mensagem2":"Senha deve conter letras minusculas"})
-    if len(re.findall('[A-Z]', senha))==0: restricoes.append({"mensagem3":"Senha deve conter letras maiusculas"})
-    if len(re.findall('[0-9]', senha))==0: restricoes.append({"mensagem4":"Senha deve conter numeros"})
-    if len(re.findall('\W', senha))==0: restricoes.append({"mensagem4":"Senha deve conter caracteres especiais"})
-    if len(re.findall('\s', senha))!=0: restricoes.append({"mensagem4":"Senha não deve conter espaços e quebras"})
-    validacao=True if len(restricoes)==0 else False
-    return restricoes,validacao
+    restricoes = []
+    if len(senha) < 8:
+        restricoes.append({"mensagem1": "Senha deve conter ao menos 8 caracteres"})
+    if len(re.findall("[a-z]", senha)) == 0:
+        restricoes.append({"mensagem2": "Senha deve conter letras minusculas"})
+    if len(re.findall("[A-Z]", senha)) == 0:
+        restricoes.append({"mensagem3": "Senha deve conter letras maiusculas"})
+    if len(re.findall("[0-9]", senha)) == 0:
+        restricoes.append({"mensagem4": "Senha deve conter numeros"})
+    if len(re.findall("\W", senha)) == 0:
+        restricoes.append({"mensagem4": "Senha deve conter caracteres especiais"})
+    if len(re.findall("\s", senha)) != 0:
+        restricoes.append({"mensagem4": "Senha não deve conter espaços e quebras"})
+    validacao = True if len(restricoes) == 0 else False
+    return restricoes, validacao
+
 
 def consulta_mail(email):
     try:
@@ -100,6 +108,28 @@ def validar_municipio_id_ibge(municipio_id_ibge):
         )
     except:
         return {"mensagem": "Internal server error", "error": True}
+
+
+def validar_se_municipio_corresponde_ao_id_sus(nome_uf: str, id_sus: str):
+    municipio = (
+        db.session.query(municipios.Municipios)
+        .filter(
+            func.concat(
+                municipios.Municipios.municipio_nome,
+                " - ",
+                municipios.Municipios.estado_sigla,
+            ).__eq__(nome_uf)
+        )
+        .first()
+    )
+
+    if municipio is None:
+        raise ValidationError(f"Município {nome_uf} não existe na base de dados")
+
+    if municipio.municipio_id_sus != id_sus:
+        raise ValidationError(
+            f"Município {nome_uf} e ID SUS {id_sus} não são correspondentes"
+        )
 
 
 def validar_cargo(cargo):
@@ -172,7 +202,6 @@ def cadastrar_usuario_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
     wp = True if whatsapp == "1" else False
     try:
         id_usuario = obter_id(mail)
-        print(id_usuario)
         # validar municipio
         # validar cargo
         # formato telefone
@@ -221,8 +250,6 @@ def cadastro_impulso(nome, mail, senha, cpf):
             return verifica_mail(mail)
         if consulta_mail(mail) != True:
             return consulta_mail(mail)
-        print(consulta_cpf(cpf) != True)
-        print(consulta_cpf(cpf))
         if consulta_cpf(cpf) != True:
             return {"mensagem": "CPF invalido", "error": True}
 
@@ -256,8 +283,6 @@ def cadastro_impulso_sem_ativacao(nome, mail, cpf):
             return verifica_mail(mail)
         if consulta_mail(mail) != True:
             return consulta_mail(mail)
-        print(consulta_cpf(cpf) != True)
-        print(consulta_cpf(cpf))
         if consulta_cpf(cpf) != True:
             return {"mensagem": "CPF invalido", "error": True}
 
@@ -273,13 +298,13 @@ def cadastro_impulso_sem_ativacao(nome, mail, cpf):
 
 
 # cadastrar usuario IP
-def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
+def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe, municipio_id_sus):
+    validar_se_municipio_corresponde_ao_id_sus(nome_uf=municipio, id_sus=municipio_id_sus)
     try:
         criacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         atualizacao_data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         wp = True if whatsapp == "1" else False
         id_usuario = obter_id(mail)
-        # validar municipio
         # validar cargo
         # formato telefone
     except:
@@ -296,6 +321,7 @@ def cadastro_ip(municipio, cargo, telefone, whatsapp, mail, equipe):
             equipe=equipe,
             criacao_data=criacao_data,
             atualizacao_data=atualizacao_data,
+            municipio_id_sus=municipio_id_sus,
         )
         session.add(usuario_dados)
         return {"mensagem": "dados cadastrados com sucesso", "error": None}
@@ -352,17 +378,12 @@ def liberar_acesso(id_cod, id, perfil):
     # informar perfil liberado
     try:
         id_db = {"mail": id} if id_cod == 1 else {"cpf": id}
-        print("-----------------00000000000000000000000")
-        print(id_cod, id, perfil)
         res = session.query(usuarios.Usuario).filter_by(**id_db).all()
-        print("-------------------------")
-        print(res)
     except Exception as error:
         session.rollback()
         print({"error": error})
         return error
     try:
-        print("---------------------------------------------------------")
         if res[0].perfil_ativo != None:
             return {"mensagem": "Usuário já passou pela primeira liberação de perfil"}
         usuario_id = session.query(usuarios.Usuario).filter_by(**id_db).all()[0].id
@@ -407,9 +428,7 @@ def ativar_perfil(id_cod, id):
         session.query(usuarios.Usuario).filter_by(**id_db).update(
             {
                 "perfil_ativo": True,
-                "atualizacao_data": datetime.now().strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                ),
+                "atualizacao_data": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
         )
         session.commit()
@@ -438,7 +457,6 @@ def cadastrar_em_lote(
     if controle != True:
         return controle
     cad_impulso = cadastro_impulso(nome, mail, senha, cpf)
-    print(cad_impulso)
     etapas = []
     if cad_impulso["error"] == None:
         cad_ip = cadastro_ip(municipio_uf, cargo, telefone, whatsapp, mail, equipe)
@@ -480,52 +498,60 @@ def cadastrar_em_lote_sem_ativacao(
     username,
     acesso,
     perfil,
+    municipio_id_sus,
     projeto="IP",
     unidade_saude=None,
-    municipio_id_ibge=None,
     municipio_uf=None,
 ):
-    # controle de acesso
-    controle = controle_perfil(username, acesso)
-    if controle != True:
-        return controle
-    cad_impulso = cadastro_impulso_sem_ativacao(nome, mail, cpf)
-    etapas = []
-    cadastros_projetos = {"IP": cadastro_ip, "SM": cadastro_sm}
-    proj_args = {
-        "IP": {
-            "municipio": municipio_uf,
-            "cargo": cargo,
-            "telefone": telefone,
-            "whatsapp": whatsapp,
-            "mail": mail,
-            "equipe": equipe,
-        },
-        "SM": {
-            "municipio_id_ibge": municipio_id_ibge,
-            "cargo": cargo,
-            "telefone": telefone,
-            "whatsapp": whatsapp,
-            "mail": mail,
-            "unidade_saude": unidade_saude,
-        },
-    }
-    if cad_impulso["error"] == None:
-        cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
-        etapas.append("Cadastro Impulso realizado com sucesso")
-    else:
-        return cad_impulso
+    try:
+        # controle de acesso
+        controle = controle_perfil(username, acesso)
+        if controle != True:
+            return controle
+        cad_impulso = cadastro_impulso_sem_ativacao(nome, mail, cpf)
+        etapas = []
+        cadastros_projetos = {"IP": cadastro_ip, "SM": cadastro_sm}
+        proj_args = {
+            "IP": {
+                "municipio": municipio_uf,
+                "cargo": cargo,
+                "telefone": telefone,
+                "whatsapp": whatsapp,
+                "mail": mail,
+                "equipe": equipe,
+                "municipio_id_sus": municipio_id_sus,
+            },
+            "SM": {
+                "municipio_id_ibge": municipio_id_sus,
+                "cargo": cargo,
+                "telefone": telefone,
+                "whatsapp": whatsapp,
+                "mail": mail,
+                "unidade_saude": unidade_saude,
+            },
+        }
+        if cad_impulso["error"] == None:
+            cad_proj = cadastros_projetos[projeto](**(proj_args[projeto]))
+            etapas.append("Cadastro Impulso realizado com sucesso")
+        else:
+            return cad_impulso
 
-    if cad_proj["error"] == None:
-        etapas.append("Cadastro IP realizado com sucesso")
-        lib_acess = liberar_acesso(1, mail, perfil)
-    else:
-        return cad_proj
-    if lib_acess["error"] == None:
-        etapas.append("Liberação de perfil realizada com sucesso")
-        if len(etapas) == 3:
-            session.commit()
-            print("commit realizado com sucesso")
-            return etapas
-    else:
-        return lib_acess
+        if cad_proj["error"] == None:
+            etapas.append("Cadastro IP realizado com sucesso")
+            try:
+                lib_acess = liberar_acesso(1, mail, perfil)
+            except ValidationError as error:
+                raise HTTPException(status_code=400, detail=str(error))
+        else:
+            return cad_proj
+        if lib_acess["error"] == None:
+            etapas.append("Liberação de perfil realizada com sucesso")
+            if len(etapas) == 3:
+                session.commit()
+                print("commit realizado com sucesso")
+                return etapas
+        else:
+            return lib_acess
+    except ValidationError as error:
+        session.rollback()
+        raise HTTPException(status_code=400, detail=str(error))

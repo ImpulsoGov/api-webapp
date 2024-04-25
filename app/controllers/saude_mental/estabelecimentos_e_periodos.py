@@ -84,14 +84,9 @@ def obter_estabelecimentos_de_entidade_por_id_sus(municipio_id_sus: str, entidad
 
         return estabelecimentos
     except HTTPException as error:
-        session.rollback()
-
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -121,14 +116,9 @@ def obter_periodos_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
 
         return periodos
     except HTTPException as error:
-        session.rollback()
-
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

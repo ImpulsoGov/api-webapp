@@ -21,6 +21,10 @@ from app.controllers.usuarios.validacao_permissao import (
     PermissionError,
     validar_permissao,
 )
+from app.controllers.usuarios.cadastro_usuarios import (
+    validar_se_municipio_corresponde_ao_id_sus,
+)
+from app.utils.exceptions import ValidationError
 from app.models import db
 from app.models.usuarios import (
     ativar_usuario,
@@ -974,6 +978,7 @@ def atualizar_cadastro_ip(
     municipio_id_sus: str,
 ) -> usuarios_ip.UsuarioIP:
     validar_telefone(telefone=telefone)
+    validar_se_municipio_corresponde_ao_id_sus(nome_uf=municipio, id_sus=municipio_id_sus)
 
     usuario_encontrado = encontrar_usuario_ip_por_id(id=id)
 
@@ -1029,15 +1034,14 @@ def atualizar_cadastro_geral_e_ip(
         }
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=(str(error)))
+    except ValidationError as error:
+        raise HTTPException(status_code=400, detail=(str(error)))
     except HTTPException as error:
         session.rollback()
-
         raise error
     except Exception as error:
         session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -1204,6 +1208,9 @@ def cadastrar_usuario_geral_e_ip(
         validar_email(dados_cadastro["mail"])
         validar_cpf(dados_cadastro["cpf"])
         validar_telefone(dados_cadastro["telefone"])
+        validar_se_municipio_corresponde_ao_id_sus(
+            nome_uf=dados_cadastro["municipio"], id_sus=dados_cadastro["municipio_id_sus"]
+        )
 
         novo_usuario = criar_usuario_geral(
             {
@@ -1244,15 +1251,14 @@ def cadastrar_usuario_geral_e_ip(
         }
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=(str(error)))
+    except ValidationError as error:
+        raise HTTPException(status_code=400, detail=(str(error)))
     except HTTPException as error:
         session.rollback()
-
         raise error
     except Exception as error:
         session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),

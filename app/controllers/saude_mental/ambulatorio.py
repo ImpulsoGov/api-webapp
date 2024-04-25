@@ -34,7 +34,6 @@ def consultar_dados_ambulatorio_atendimento_resumo(
         ambulatorio_atendimento_resumo = query.all()
         return ambulatorio_atendimento_resumo
     except (Exception) as error:
-        session.rollback()
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
@@ -54,10 +53,7 @@ def obter_ambulatorio_atendimento_resumo_ultimo_mes(
 
         return ambulatorio_atendimento_resumo_ultimo_mes
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -76,10 +72,7 @@ def obter_ambulatorio_procedimento_por_profissional(
 
         return ambulatorio_procedimento_por_profissional
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -109,7 +102,6 @@ def consultar_ambulatorio_usuario_perfil(
         return ambulatorio_usuario_perfil
 
     except (Exception) as error:
-        session.rollback()
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,

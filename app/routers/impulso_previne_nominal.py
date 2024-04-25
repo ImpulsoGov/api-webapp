@@ -6,6 +6,7 @@ from app.controllers.impulso_previne_nominal import (
     busca_ativa_diabeticos,
     busca_ativa_hipertensos,
     busca_ativa_citopatologico,
+    busca_ativa_vacinacao,
     cadastros_duplicados,
     TrilhaCapacitacao,
 )
@@ -111,6 +112,22 @@ async def hipertensao_equipe(
     municipio_id_sus, equipe, username: Usuario = Depends(get_current_user)
 ):
     res = busca_ativa_hipertensos.hipertensao_equipe(municipio_id_sus, equipe)
+    return res
+
+
+@router.get("/impulsoprevine/busca-ativa/vacinacao-por-municipio")
+async def vacinacao_aps(
+    municipio_id_sus, username: Usuario = Depends(get_current_user)
+):
+    res = busca_ativa_vacinacao.vacinacao_municipio(municipio_id_sus)
+    return res
+
+
+@router.get("/impulsoprevine/busca-ativa/vacinacao-por-equipe")
+async def vacinacao_equipe(
+    municipio_id_sus, equipe, username: Usuario = Depends(get_current_user)
+):
+    res = busca_ativa_vacinacao.vacinacao_equipe(municipio_id_sus, equipe)
     return res
 
 

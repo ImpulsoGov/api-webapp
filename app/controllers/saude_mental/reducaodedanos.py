@@ -46,10 +46,7 @@ def consultar_reducao_de_danos(
 
         return procedimentos_por_hora
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -67,10 +64,7 @@ def consultar_nomes_de_ocupacoes_reducao_de_danos(municipio_id_sus: str):
 
         return nomes_de_ocupacoes
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
@@ -89,10 +83,7 @@ def dados_reducaodedanos_12meses(
 
         return dados_reducaodedanos_12meses
     except (Exception) as error:
-        session.rollback()
-
         print({"error": str(error)})
-
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
