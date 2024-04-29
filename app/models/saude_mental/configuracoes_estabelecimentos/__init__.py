@@ -1,0 +1,1 @@
+from .configuracoes_estabelecimentos_ausentes_por_periodos import EstabelecimentosAusentesPorPeriodo
