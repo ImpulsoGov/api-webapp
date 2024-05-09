@@ -691,7 +691,7 @@ def enviar_sms(telefone_usuario, mensagem):
 
     message = client.messages.create(
         body=mensagem,
-        from_=os.environ["TWILIO_TELEFONE_IMPULSO"],
+        from_=os.environ["TWILIO_SENDER_ID"],
         to="+55" + telefone_usuario,
     )
     # GRAVAR REGISTRO DA MENSAGEM ENVIADA
@@ -978,7 +978,9 @@ def atualizar_cadastro_ip(
     municipio_id_sus: str,
 ) -> usuarios_ip.UsuarioIP:
     validar_telefone(telefone=telefone)
-    validar_se_municipio_corresponde_ao_id_sus(nome_uf=municipio, id_sus=municipio_id_sus)
+    validar_se_municipio_corresponde_ao_id_sus(
+        nome_uf=municipio, id_sus=municipio_id_sus
+    )
 
     usuario_encontrado = encontrar_usuario_ip_por_id(id=id)
 
@@ -1209,7 +1211,8 @@ def cadastrar_usuario_geral_e_ip(
         validar_cpf(dados_cadastro["cpf"])
         validar_telefone(dados_cadastro["telefone"])
         validar_se_municipio_corresponde_ao_id_sus(
-            nome_uf=dados_cadastro["municipio"], id_sus=dados_cadastro["municipio_id_sus"]
+            nome_uf=dados_cadastro["municipio"],
+            id_sus=dados_cadastro["municipio_id_sus"],
         )
 
         novo_usuario = criar_usuario_geral(
