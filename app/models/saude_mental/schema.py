@@ -1,1 +1,1 @@
-SCHEMA_SAUDE_MENTAL = "saude_mental_replica"
+SCHEMA_SAUDE_MENTAL = "_saude_mental_producao"
