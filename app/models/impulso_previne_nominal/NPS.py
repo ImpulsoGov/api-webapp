@@ -3,7 +3,7 @@ from app.models import db
 from app.models.usuarios import usuarios
 from app.models import db
 
-Base = db.Base_PRODUCAO
+Base = db.Base_usuarios
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
