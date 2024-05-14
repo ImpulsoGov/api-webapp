@@ -52,18 +52,6 @@ Model = Union[
     AmbulatorioAtendimentoResumo,
     AmbulatorioUsuariosPerfil
 ]
-def construir_novo_periodo(periodo: dict, entidade: str):
-    model = obter_model_de_entidade(entidade=entidade)
-    competencia = periodo["competencia"]
-    periodo_ordem = periodo["periodo_ordem"]
-    nome_mes = periodo["nome_mes"]
-    novo_periodo = converte_competencia_para_periodo(competencia)
-    return model(periodo=novo_periodo, competencia=competencia, periodo_ordem=periodo_ordem, nome_mes=nome_mes)
-
-
-def converte_competencia_para_periodo(competencia):
-    periodo = competencia.strftime("%b/%y")
-    return periodo
 
 def obter_lista_estabelecimentos_ausentes_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
     try: 
@@ -173,16 +161,9 @@ def obter_periodos_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
         periodos_ausentes = obter_lista_periodos_ausentes_de_entidade_por_id_sus(municipio_id_sus, entidade=entidade)
         if all(periodo_ausente in periodos for periodo_ausente in periodos_ausentes):
             return periodos
-        else: #O último período que retorna da TR(tabela referencia) é o verdadeiro último período
-               if any(periodo_ausente.periodo == "Último período" for periodo_ausente in periodos_ausentes):
-                    index_antigo_ultimo_periodo = next((index for index, periodos in enumerate(periodos) if periodos.periodo == "Último período"), None)
-                    if index_antigo_ultimo_periodo is not None:
-                        periodos[index_antigo_ultimo_periodo] = construir_novo_periodo(periodos[index_antigo_ultimo_periodo], entidade=entidade)
-                        periodos += periodos_ausentes
-                        return periodos
-               else:
-                    periodos += periodos_ausentes
-                    return periodos
+        else:
+                periodos += periodos_ausentes
+                return periodos
     except HTTPException as error:
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
