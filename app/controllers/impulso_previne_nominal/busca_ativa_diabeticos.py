@@ -25,6 +25,8 @@ def diabeticos_equipe(municipio_id_sus, equipe):
                 Diabeticos.equipe_nome_cadastro,
                 Diabeticos.dt_consulta_mais_recente,
                 Diabeticos.dt_registro_producao_mais_recente,
+                Diabeticos.cidadao_faixa_etaria,
+                Diabeticos.cidadao_idade,
             )
             .order_by(Diabeticos.cidadao_nome)
             .all()
@@ -60,6 +62,8 @@ def diabetes_aps(municipio_id_sus):
                     Diabeticos.dt_consulta_mais_recente,
                     Diabeticos.criacao_data,
                     Diabeticos.dt_registro_producao_mais_recente,
+                    Diabeticos.cidadao_faixa_etaria,
+                    Diabeticos.cidadao_idade,
                 )
                 .order_by(Diabeticos.cidadao_nome)
                 .all()
