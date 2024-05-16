@@ -27,6 +27,7 @@ class Hipertensos(Base):
     cidadao_sexo = Column(String, nullable=True)
     dt_nascimento = Column(DATE, nullable=True)
     cidadao_faixa_etaria = Column(String, nullable=True)
+    cidadao_idade = Column(Integer, nullable=True)
     estabelecimento_cnes_atendimento = Column(String, nullable=True)
     estabelecimento_cnes_cadastro = Column(String, nullable=True)
     estabelecimento_nome_atendimento = Column(String, nullable=True)
