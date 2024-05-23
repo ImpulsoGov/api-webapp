@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 from sqlalchemy import exc
-from app.models.saude_mental.estabelecimentos_e_periodos_ausentes import obter_model_de_entidade, EstabelecimentosAusentesPorPeriodo
 from app.models import db
 from app.models.saude_mental.atendimentos_individuais import (
     AtendimentoIndividualPorCID,
@@ -13,17 +12,6 @@ from app.utils.separar_string import separar_string
 
 session = db.session
 
-def obter_periodos_e_estabelecimentos_ausentes(
-        municipio_id_sus: str,
-        periodos: str,
-        estabelecimento_linha_idade: str,
-        entidade: str
-):
-    try:
-        model = obter_model_de_entidade(entidade=entidade)
-        query = session.query(
-            g
-        )
 
 def obter_atendimentos_individuais_por_caps_de_municipio(
     municipio_id_sus: str,
@@ -79,10 +67,7 @@ def obter_atendimentos_individuais_por_caps_de_municipio(
                 )
             )
         atendimentos_individuais_caps = query.all()
-        if not atendimentos_individuais_caps:
-            d
-        else:
-            return atendimentos_individuais_caps
+        return atendimentos_individuais_caps
     except (exc.SQLAlchemyError, Exception) as error:
         print({"error": str(error)})
         raise HTTPException(status_code=500, detail=("Internal Server Error"))

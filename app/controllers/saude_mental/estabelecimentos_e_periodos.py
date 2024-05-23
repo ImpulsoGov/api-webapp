@@ -2,7 +2,7 @@ from typing import Literal, Union
 
 from fastapi import HTTPException
 from sqlalchemy import exc
-
+from utils import separar_string
 from app.models.db import session
 from app.models.saude_mental.abandono import AbandonoPorCID
 from app.models.saude_mental.atendimentos_individuais import AtendimentoIndividualPorCID
@@ -104,7 +104,39 @@ def obter_model_de_entidade(entidade: Entidade) -> Model:
 
     return model
 
-
+def obter_ultima_competencia_ausente_de_entidade(
+        municipio_id_sus: str,
+        estabelecimento_linha_idade: str,
+        entidade: str
+): 
+    try:
+        model = obter_model_de_entidade(entidade=entidade)
+        query = session.query(
+            EstabelecimentosAusentesPorPeriodo.competencia,
+            EstabelecimentosAusentesPorPeriodo.nome_mes,
+            EstabelecimentosAusentesPorPeriodo.periodo_ordem,
+            EstabelecimentosAusentesPorPeriodo.estabelecimento
+        ).filter(
+            EstabelecimentosAusentesPorPeriodo.unidade_geografica_id_sus == municipio_id_sus,
+            EstabelecimentosAusentesPorPeriodo.tabela_referencia == model.__tablename__,
+            EstabelecimentosAusentesPorPeriodo.periodo == 'Último período'
+        )
+        if estabelecimento_linha_idade is not None:
+                    lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
+                    query = query.filter(
+                        model.estabelecimento_linha_idade.in_(
+                            lista_linhas_de_idade
+                        )
+                    )
+        ultima_competencia = query.all()
+        return ultima_competencia
+    except (exc.SQLAlchemyError, Exception) as error:
+        print({"error": str(error)})
+        raise HTTPException(
+            status_code=500,
+            detail=("Internal Server Error"),
+        )
+                    
 def obter_estabelecimentos_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
     try:
         model = obter_model_de_entidade(entidade=entidade)
@@ -167,13 +199,51 @@ def obter_periodos_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
     except HTTPException as error:
         raise error
     except (exc.SQLAlchemyError, Exception) as error:
-        error_details = {
-        "type": type(error).__name__,
-        "message": str(error)
-    }
-        print({"error": error_details})
         print({"error": str(error)})
         raise HTTPException(
             status_code=500,
             detail=("Internal Server Error"),
         )
+
+def obter_ultima_competencia_disponivel_por_entidade(
+    municipio_id_sus: str,
+    entidade: str,
+    estabelecimento_linha_idade: str,
+):
+        try:
+            model = obter_model_de_entidade(entidade=entidade)
+            query = session.query(
+                model.competencia,
+                model.periodo_ordem,
+                model.estabelecimento,
+                model.nome_mes
+            ).filter(
+                model.unidade_geografica_id_sus == municipio_id_sus,
+                model.periodo == 'Último período'
+            )
+            if estabelecimento_linha_idade is not None:
+                lista_linhas_de_idade = separar_string(",", estabelecimento_linha_idade)
+                query = query.filter(
+                    model.estabelecimento_linha_idade.in_(
+                        lista_linhas_de_idade
+                    )
+                )
+            ultima_competencia_ti = query.distinct.all()
+            if len(ultima_competencia_ti) == 0:
+                 ultima_competencia_tr = obter_ultima_competencia_ausente_de_entidade(
+                      municipio_id_sus,
+                      estabelecimento_linha_idade,
+                      entidade=entidade
+                 )
+                 return ultima_competencia_tr
+            else:
+                 return ultima_competencia_ti 
+    
+        except (exc.SQLAlchemyError, Exception) as error:
+            print({"error": str(error)})
+            raise HTTPException(
+                status_code=500,
+                detail=("Internal Server Error"),
+            )    
+            
+
