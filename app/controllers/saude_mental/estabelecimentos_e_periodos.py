@@ -2,9 +2,10 @@ from typing import Literal, Union
 
 from fastapi import HTTPException
 from sqlalchemy import exc
-from utils import separar_string
+from app.utils.separar_string import separar_string
 from app.models.db import session
 from app.models.saude_mental.abandono import AbandonoPorCID
+from app.models.saude_mental.abandono import AbandonoCoortes
 from app.models.saude_mental.atendimentos_individuais import AtendimentoIndividualPorCID
 from app.models.saude_mental.perfildeusuarios import UsuarioAtivoPorCondicao
 from app.models.saude_mental.usuariosnovos import UsuarioNovoPorCondicao
@@ -25,7 +26,8 @@ entidades = {
     "procedimentos_por_tipo": ProcedimentosPorTipo,
     "reducao_de_danos": ReducaoDanos,
     "atendimentos_resumo": AmbulatorioAtendimentoResumo,
-    "usuarios_perfil": AmbulatorioUsuariosPerfil
+    "usuarios_perfil": AmbulatorioUsuariosPerfil,
+    "abandono_coortes": AbandonoCoortes
 }
 
 Entidade = Literal[
@@ -38,7 +40,8 @@ Entidade = Literal[
     "procedimentos_por_tipo",
     "reducao_de_danos",
     "atendimentos_resumo",
-    "usuarios_perfil"
+    "usuarios_perfil",
+    "abandono_coortes"
 ]
 Model = Union[
     UsuarioAtivoPorCondicao,
@@ -50,7 +53,8 @@ Model = Union[
     ProcedimentosPorTipo,
     ReducaoDanos,
     AmbulatorioAtendimentoResumo,
-    AmbulatorioUsuariosPerfil
+    AmbulatorioUsuariosPerfil,
+    AbandonoCoortes
 ]
 
 def obter_lista_estabelecimentos_ausentes_de_entidade_por_id_sus(municipio_id_sus: str, entidade: str):
@@ -115,7 +119,8 @@ def obter_ultima_competencia_ausente_de_entidade(
             EstabelecimentosAusentesPorPeriodo.competencia,
             EstabelecimentosAusentesPorPeriodo.nome_mes,
             EstabelecimentosAusentesPorPeriodo.periodo_ordem,
-            EstabelecimentosAusentesPorPeriodo.estabelecimento
+            EstabelecimentosAusentesPorPeriodo.estabelecimento,
+            EstabelecimentosAusentesPorPeriodo.estabelecimento_linha_perfil
         ).filter(
             EstabelecimentosAusentesPorPeriodo.unidade_geografica_id_sus == municipio_id_sus,
             EstabelecimentosAusentesPorPeriodo.tabela_referencia == model.__tablename__,
@@ -216,6 +221,7 @@ def obter_ultima_competencia_disponivel_por_entidade(
                 model.competencia,
                 model.periodo_ordem,
                 model.estabelecimento,
+                model.estabelecimento_linha_perfil,
                 model.nome_mes
             ).filter(
                 model.unidade_geografica_id_sus == municipio_id_sus,
@@ -228,7 +234,7 @@ def obter_ultima_competencia_disponivel_por_entidade(
                         lista_linhas_de_idade
                     )
                 )
-            ultima_competencia_ti = query.distinct.all()
+            ultima_competencia_ti = query.all()
             if len(ultima_competencia_ti) == 0:
                  ultima_competencia_tr = obter_ultima_competencia_ausente_de_entidade(
                       municipio_id_sus,
