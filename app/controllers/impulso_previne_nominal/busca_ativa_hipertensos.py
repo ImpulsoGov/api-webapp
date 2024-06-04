@@ -29,6 +29,8 @@ def hipertensao_aps(municipio_id_sus):
                     Hipertensos.equipe_nome_cadastro,
                     Hipertensos.dt_consulta_mais_recente,
                     Hipertensos.dt_registro_producao_mais_recente,
+                    Hipertensos.cidadao_faixa_etaria,
+                    Hipertensos.cidadao_idade,
                 )
                 .order_by(Hipertensos.cidadao_nome)
                 .all()
@@ -60,6 +62,8 @@ def hipertensao_equipe(municipio_id_sus, equipe):
                 Hipertensos.equipe_nome_cadastro,
                 Hipertensos.dt_consulta_mais_recente,
                 Hipertensos.dt_registro_producao_mais_recente,
+                Hipertensos.cidadao_faixa_etaria,
+                Hipertensos.cidadao_idade,
             )
             .order_by(Hipertensos.cidadao_nome)
             .all()
